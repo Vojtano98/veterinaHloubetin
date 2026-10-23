@@ -101,8 +101,14 @@ import heroImg from '../assets/uploads/2024/05/Untitled-design-1920x1280-2.jpg';
     margin: 30px auto 0;
   }
 
+  /* Reservanto vkládá iframe s height:100 %, kontejner proto musí mít pevnou výšku (jinak spadne na 150 px) */
   .rez__widget .reservanto-iframe {
-    min-height: 500px;
+    height: 820px;
+    height: min(820px, calc(100svh - 140px));
+    min-height: 560px;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(51, 34, 17, 0.08);
   }
 
   @media (max-width: 767px) {
@@ -114,6 +120,12 @@ import heroImg from '../assets/uploads/2024/05/Untitled-design-1920x1280-2.jpg';
     }
     .rez__text {
       font-size: 15px;
+    }
+    .rez__widget .reservanto-iframe {
+      /* Místo mezi hlavičkou a spodní lištou Zavolat / Objednat se */
+      height: calc(100vh - 190px);
+      height: calc(100svh - 190px);
+      min-height: 520px;
     }
   }
 </style>
