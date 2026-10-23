@@ -1,0 +1,242 @@
+---
+import { Image } from 'astro:assets';
+import { footerNav, site } from '../data/site';
+import Icon from './Icon.astro';
+import logo from '../assets/uploads/2024/05/Upload-Image-removebg-preview.png';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="row cols cols--3 footer-cols">
+    <div class="footer-about">
+      <a href="/" class="footer-logo" aria-label={`${site.name} – úvodní stránka`}>
+        <Image src={logo} alt={site.name} width={400} />
+      </a>
+      <p class="about-1">
+        Veterinární klinika Hloubětín se zaměřuje na prevenci, diagnostiku a léčbu nemocí malých zvířat od roku 2008.
+      </p>
+      <p class="about-2">Veterinární klinika pro oblast Praha 9, Praha 14, Praha-Hloubětín a široké okolí.</p>
+      <ul class="footer-contact">
+        <li><a href={site.phones.main.href}><Icon name="phone" size={16} /> {site.phones.main.label}</a></li>
+        <li><a href={`mailto:${site.email}`}><Icon name="mail" size={16} /> {site.email}</a></li>
+      </ul>
+      <div class="footer-social">
+        <a href={site.social.facebook} target="_blank" rel="noopener" aria-label="Facebook"><Icon name="facebook" size={16} /></a>
+        <a href={site.social.instagram} target="_blank" rel="noopener" aria-label="Instagram"><Icon name="instagram" size={16} /></a>
+      </div>
+    </div>
+
+    <nav aria-labelledby="footer-menu">
+      <h2 id="footer-menu" class="footer-title">Menu</h2>
+      <ul class="footer-links">
+        {footerNav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="footer-title">Adresa</h2>
+      <address class="footer-text">
+        <a href={site.mapsUrl} target="_blank" rel="noopener" class="u-underline">{site.address.full}</a><br />
+        ({site.address.note})
+      </address>
+      <h2 class="footer-title footer-title--spaced">Ordinační hodiny</h2>
+      <ul class="footer-hours">
+        {site.hours.map((h) => <li>{h.days}: {h.time}</li>)}
+      </ul>
+    </div>
+  </div>
+  <div class="row footer-bottom">
+    <p>© {year} {site.company} · IČO {site.ico}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding: 19px 0 0;
+    background: var(--c-footer);
+    color: var(--c-black);
+  }
+
+  .footer-cols {
+    padding-top: 44px;
+  }
+
+  .footer-logo {
+    display: block;
+    max-width: 60%;
+    margin-bottom: 14px;
+  }
+
+  .footer-logo :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .about-1,
+  .about-2 {
+    margin-bottom: 4px;
+    padding-bottom: 1px;
+    font-family: var(--f-head);
+    font-size: 13px;
+    color: var(--c-black);
+  }
+
+  .about-1 {
+    font-weight: 500;
+  }
+
+  .about-2 {
+    font-weight: 300;
+  }
+
+  .footer-contact {
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer-contact a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 0;
+    color: var(--c-black);
+    font-family: var(--f-head);
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .footer-contact a:hover {
+    opacity: 1;
+    color: var(--c-orange-deep);
+  }
+
+  .footer-contact :global(svg) {
+    color: var(--c-orange);
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .footer-social a {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--c-white);
+    color: var(--c-ink);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: background 200ms ease, color 200ms ease;
+  }
+
+  .footer-social a:hover {
+    opacity: 1;
+    background: var(--c-orange);
+    color: var(--c-white);
+  }
+
+  .footer-title {
+    margin-bottom: 14px;
+    padding: 0;
+    font-family: var(--f-body);
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1em;
+    color: var(--c-heading);
+  }
+
+  .footer-title--spaced {
+    padding-top: 28px;
+  }
+
+  .footer-links,
+  .footer-hours {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer-links li {
+    margin-bottom: 4px;
+  }
+
+  .footer-links a,
+  .footer-text,
+  .footer-hours li {
+    font-family: var(--f-head);
+    font-size: 16px;
+    font-weight: 500;
+    font-style: normal;
+    line-height: 1.7em;
+    color: var(--c-black);
+  }
+
+  .footer-links a:hover,
+  .footer-text a:hover {
+    color: var(--c-orange);
+    opacity: 1;
+  }
+
+  .footer-text {
+    padding-bottom: 7px;
+  }
+
+  .footer-text a {
+    color: var(--c-black);
+  }
+
+  .u-underline {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .footer-hours li {
+    padding: 8px 0;
+    border-bottom: 1px solid #e8e8e8;
+  }
+
+  .footer-hours li:last-child {
+    border-bottom: 0;
+  }
+
+  .footer-bottom {
+    padding: 18px 0 22px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .footer-bottom p {
+    font-family: var(--f-head);
+    font-size: 13px;
+    color: #555;
+    text-align: center;
+  }
+
+  @media (max-width: 980px) {
+    .footer-logo {
+      max-width: 32%;
+      margin: 0 auto 14px;
+    }
+    .footer-about {
+      text-align: center;
+    }
+    .footer-social {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .footer-cols {
+      padding-top: 20px;
+    }
+
+    .footer-logo {
+      max-width: 46%;
+    }
+  }
+</style>

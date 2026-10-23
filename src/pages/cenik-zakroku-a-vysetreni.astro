@@ -1,0 +1,246 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactCards from '../components/ContactCards.astro';
+import { cenik } from '../data/cenik';
+import { site } from '../data/site';
+import heroImg from '../assets/uploads/2024/05/Untitled-design-1920x1280-1.jpg';
+
+// Nezlomitelné mezery v cenách a mezi číslem a „Kč“
+const nb = (s: string) => s.replace(/(\d) (\d)/g, '$1 $2').replace(/ Kč/g, ' Kč');
+const slug = (s: string) =>
+  s
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+---
+
+<Base
+  title="Ceník zákroků a vyšetření"
+  description="Ceník Veterinární kliniky Hloubětín – vakcinace psů, koček a králíků, kastrace, klinická a ortopedická vyšetření, sonografie, RTG, čištění zubů a další úkony."
+>
+  <PageHero title="Ceník služeb" image={heroImg} position="center 47%" />
+
+  <section class="section cenik-section">
+    <div class="row">
+      <nav class="cenik-toc" aria-label="Části ceníku">
+        {cenik.map((s) => <a href={`#${slug(s.title)}`}>{s.title}</a>)}
+      </nav>
+
+      <div class="vh-cenik">
+        {
+          cenik.map((s) => (
+            <section class="vh-sekce" id={slug(s.title)} aria-labelledby={`${slug(s.title)}-h`}>
+              <h2 class="vh-nadpis" id={`${slug(s.title)}-h`}>
+                {s.title}
+              </h2>
+              {s.subtitle && <p class="vh-podnadpis">{s.subtitle}</p>}
+              <table class="vh-tabulka">
+                <caption class="sr-only">{s.title} – ceny</caption>
+                <thead class="sr-only">
+                  <tr>
+                    <th scope="col">Úkon</th>
+                    <th scope="col">Cena</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {s.items.map((i) => (
+                    <tr>
+                      <th scope="row" class="vh-nazev">
+                        {i.name}
+                      </th>
+                      <td class="vh-cena">{nb(i.price)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {s.note && <p class="vh-poznamka">{s.note}</p>}
+            </section>
+          ))
+        }
+      </div>
+
+      <div class="cenik-cta card">
+        <p>
+          Z technických důvodů nepřijímáme platební karty. Máte dotaz k ceně konkrétního zákroku? Zavolejte nám na
+          <a href={site.phones.main.href}>{site.phones.main.label}</a>.
+        </p>
+        <a class="btn" href="/rezervace-sluzeb/">Objednat se online</a>
+      </div>
+    </div>
+  </section>
+
+  <ContactCards />
+</Base>
+
+<style>
+  .cenik-section {
+    padding-top: 30px;
+  }
+
+  .cenik-toc {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-width: 1080px;
+    margin: 0 auto 30px;
+  }
+
+  .cenik-toc a {
+    padding: 8px 18px;
+    border: 1px solid #f1d9c2;
+    border-radius: 100px;
+    background: var(--c-cream);
+    color: var(--c-ink);
+    font-family: var(--f-head);
+    font-size: 15px;
+    font-weight: 700;
+    transition: background 200ms ease, color 200ms ease;
+  }
+
+  .cenik-toc a:hover {
+    opacity: 1;
+    background: var(--c-orange);
+    border-color: var(--c-orange);
+    color: #fff;
+  }
+
+  .vh-cenik {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 20px 0 10px;
+    color: #010;
+    font-family: var(--f-head);
+  }
+
+  .vh-sekce {
+    margin: 0 0 56px;
+    scroll-margin-top: 20px;
+  }
+
+  .vh-nadpis {
+    margin: 0;
+    padding: 0;
+    color: #010;
+    font-family: var(--f-head);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .vh-podnadpis {
+    margin: 4px 0 0;
+    padding: 0;
+    color: #666;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .vh-tabulka {
+    width: 100%;
+    margin-top: 24px;
+    border-collapse: collapse;
+  }
+
+  .vh-tabulka tr {
+    border-bottom: 1px solid var(--c-line);
+    transition: background 150ms ease;
+  }
+
+  .vh-tabulka tbody tr:hover {
+    background: #fffaf5;
+  }
+
+  .vh-nazev,
+  .vh-cena {
+    width: 50%;
+    padding: 14px 16px 14px 33px;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #010;
+    text-align: left;
+  }
+
+  .vh-cena {
+    padding-left: 16px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .vh-poznamka {
+    margin: 16px 0 0;
+    padding-left: 33px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #010;
+  }
+
+  .cenik-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 30px;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 26px 30px;
+    font-family: var(--f-head);
+    font-size: 17px;
+    color: var(--c-ink);
+  }
+
+  .cenik-cta p {
+    flex: 1 1 420px;
+  }
+
+  .cenik-cta a:not(.btn) {
+    color: var(--c-link);
+    font-weight: 700;
+  }
+
+  @media (max-width: 767px) {
+    .vh-cenik {
+      padding: 10px 0 0;
+    }
+    .vh-sekce {
+      margin-bottom: 40px;
+    }
+    .vh-nadpis {
+      font-size: 24px;
+    }
+    .vh-tabulka tr {
+      display: flex;
+      flex-direction: column;
+      padding: 12px 0;
+      text-align: center;
+    }
+    .vh-nazev,
+    .vh-cena {
+      width: 100%;
+      padding: 0;
+      font-size: 17px;
+      text-align: center;
+      white-space: normal;
+    }
+    .vh-cena {
+      margin-top: 2px;
+      font-weight: 700;
+    }
+    .vh-poznamka {
+      padding-left: 0;
+      text-align: center;
+    }
+    .cenik-cta {
+      padding: 22px 18px;
+      text-align: center;
+      justify-content: center;
+    }
+  }
+</style>

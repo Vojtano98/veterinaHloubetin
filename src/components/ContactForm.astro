@@ -1,0 +1,257 @@
+---
+// Kontaktní formulář – odesílá na /odeslat.php (PHP na hostingu WEDOS).
+// Funguje i bez JavaScriptu (klasické odeslání + přesměrování zpět).
+const { source = 'kontakty' } = Astro.props as { source?: string };
+---
+
+<form class="cform" action="/odeslat.php" method="post" novalidate data-cform>
+  <input type="hidden" name="zdroj" value={source} />
+  <input type="hidden" name="ts" value="" data-ts />
+  <div class="cform__hp" aria-hidden="true">
+    <label>Nevyplňujte <input type="text" name="web" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  <div class="cform__grid">
+    <label class="field">
+      <span class="field__label">Jméno a příjmení <abbr title="povinné">*</abbr></span>
+      <input type="text" name="jmeno" required maxlength="120" autocomplete="name" />
+    </label>
+    <label class="field">
+      <span class="field__label">Telefon</span>
+      <input type="tel" name="telefon" maxlength="40" autocomplete="tel" inputmode="tel" />
+    </label>
+    <label class="field">
+      <span class="field__label">E-mail <abbr title="povinné">*</abbr></span>
+      <input type="email" name="email" required maxlength="160" autocomplete="email" />
+    </label>
+    <label class="field">
+      <span class="field__label">Zvíře (druh, jméno)</span>
+      <input type="text" name="zvire" maxlength="120" placeholder="např. pes – Rex" />
+    </label>
+    <label class="field field--full">
+      <span class="field__label">Zpráva <abbr title="povinné">*</abbr></span>
+      <textarea name="zprava" rows="6" required maxlength="5000"></textarea>
+    </label>
+    <label class="check field--full">
+      <input type="checkbox" name="souhlas" value="1" required />
+      <span>
+        Souhlasím se <a href="/ochrana-osobnich-udaju/" target="_blank">zpracováním osobních údajů</a> za účelem vyřízení
+        mého dotazu. <abbr title="povinné">*</abbr>
+      </span>
+    </label>
+  </div>
+
+  <p class="cform__note">
+    V akutních případech nám prosím volejte – zprávy z formuláře vyřizujeme v pracovní době.
+  </p>
+
+  <div class="cform__actions">
+    <button class="btn cform__submit" type="submit" data-submit>Odeslat zprávu</button>
+    <p class="cform__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</form>
+
+<style>
+  .cform {
+    font-family: var(--f-head);
+  }
+
+  .cform__hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .cform__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 20px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field--full {
+    grid-column: 1 / -1;
+  }
+
+  .field__label {
+    color: var(--c-ink);
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  abbr {
+    color: var(--c-orange-deep);
+    text-decoration: none;
+  }
+
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid #e3d9d0;
+    border-radius: 8px;
+    background: #fffdfb;
+    color: var(--c-ink);
+    font: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 140px;
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--c-orange);
+    box-shadow: 0 0 0 3px rgba(249, 148, 32, 0.2);
+  }
+
+  .field [aria-invalid='true'] {
+    border-color: #d64545;
+  }
+
+  .check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: var(--c-text);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .check input {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: var(--c-orange);
+  }
+
+  .check a {
+    color: var(--c-link);
+    text-decoration: underline;
+  }
+
+  .check.is-invalid span {
+    color: #d64545;
+  }
+
+  .cform__note {
+    margin-top: 16px;
+    color: #888;
+    font-size: 14px;
+  }
+
+  .cform__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 24px;
+    margin-top: 18px;
+  }
+
+  .cform__submit {
+    border: 0;
+    cursor: pointer;
+  }
+
+  .cform__submit[disabled] {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  .cform__status {
+    flex: 1 1 260px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .cform__status.is-ok {
+    color: #2f8a3a;
+  }
+
+  .cform__status.is-error {
+    color: #d64545;
+  }
+
+  @media (max-width: 767px) {
+    .cform__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-cform]').forEach((form) => {
+    const ts = form.querySelector<HTMLInputElement>('[data-ts]')!;
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    ts.value = String(Math.floor(Date.now() / 1000));
+
+    // Výsledek po odeslání bez JavaScriptu (přesměrování s ?odeslano=…)
+    const result = new URLSearchParams(location.search).get('odeslano');
+    if (result) {
+      setStatus(result === '1', result === '1' ? 'Děkujeme, zpráva byla odeslána. Ozveme se Vám co nejdříve.' : 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu nebo nám zavolejte.');
+      form.scrollIntoView({ block: 'center' });
+    }
+
+    function setStatus(ok: boolean, text: string) {
+      status.textContent = text;
+      status.classList.toggle('is-ok', ok);
+      status.classList.toggle('is-error', !ok);
+    }
+
+    function validate() {
+      let firstInvalid: HTMLElement | null = null;
+      form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required]').forEach((el) => {
+        const valid = el.type === 'checkbox' ? (el as HTMLInputElement).checked : el.checkValidity() && el.value.trim() !== '';
+        if (el.type === 'checkbox') el.closest('.check')?.classList.toggle('is-invalid', !valid);
+        else el.setAttribute('aria-invalid', String(!valid));
+        if (!valid && !firstInvalid) firstInvalid = el;
+      });
+      if (firstInvalid) (firstInvalid as HTMLElement).focus();
+      return !firstInvalid;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validate()) {
+        setStatus(false, 'Vyplňte prosím všechna povinná pole.');
+        return;
+      }
+      submit.disabled = true;
+      setStatus(true, 'Odesílám…');
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.ok) {
+          form.reset();
+          ts.value = String(Math.floor(Date.now() / 1000));
+          setStatus(true, 'Děkujeme, zpráva byla odeslána. Ozveme se Vám co nejdříve.');
+          (window as any).dataLayer?.push({ event: 'contactFormSubmit', formSource: form.zdroj?.value });
+        } else {
+          setStatus(false, data.error || 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu nebo nám zavolejte.');
+        }
+      } catch {
+        setStatus(false, 'Zprávu se nepodařilo odeslat (chyba připojení). Zkuste to prosím znovu nebo nám zavolejte.');
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  });
+</script>

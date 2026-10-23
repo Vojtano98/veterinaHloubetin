@@ -1,0 +1,579 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import InfoBox from '../components/InfoBox.astro';
+import ContactCards from '../components/ContactCards.astro';
+import Icon from '../components/Icon.astro';
+import { getArticles, relatedArticles, formatDate, isoDate, readingTime, type Article } from '../lib/articles';
+import { memberById } from '../data/team';
+import { site } from '../data/site';
+import heroImg from '../assets/uploads/2024/05/Untitled-design-1-scaled.jpg';
+
+export async function getStaticPaths() {
+  const all = await getArticles();
+  return all.map((article) => ({ params: { slug: article.id }, props: { article, all } }));
+}
+
+const { article, all } = Astro.props as { article: Article; all: Article[] };
+const { Content, headings } = await render(article);
+const toc = headings.filter((h) => h.depth === 2);
+const d = article.data;
+const url = `${site.url}/${article.id}/`;
+const author = memberById(d.author);
+const reviewer = memberById(d.reviewedBy);
+const related = relatedArticles(article, all);
+const minutes = readingTime(article.body);
+const mainImage = d.heroImage ?? d.cover;
+const ogImg = await getImage({ src: mainImage, width: 1200, format: 'jpg' });
+const showUpdated = d.updatedDate && d.updatedDate.toDateString() !== d.pubDate.toDateString();
+// Shrnutí a FAQ: na produkci jen po schválení veterinářem, ve vývoji jako označený návrh
+const showAi = d.aiContentApproved || import.meta.env.DEV;
+const aiDraft = !d.aiContentApproved;
+const summary = showAi ? d.summary : undefined;
+const faq = showAi ? (d.faq ?? []) : [];
+
+const person = (m: NonNullable<ReturnType<typeof memberById>>) => ({
+  '@type': 'Person',
+  name: m.name,
+  jobTitle: m.title,
+  worksFor: { '@id': `${site.url}/#organization` },
+  url: `${site.url}/#onas`,
+});
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': `${url}#article`,
+    headline: d.title,
+    description: d.description || undefined,
+    image: [new URL(ogImg.src, site.url).href],
+    datePublished: isoDate(d.pubDate),
+    dateModified: isoDate(d.updatedDate ?? d.pubDate),
+    inLanguage: 'cs-CZ',
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    author: author ? person(author) : { '@id': `${site.url}/#organization` },
+    ...(reviewer ? { reviewedBy: person(reviewer) } : {}),
+    publisher: { '@id': `${site.url}/#organization` },
+    isPartOf: { '@id': `${site.url}/clanky/` },
+    wordCount: (article.body ?? '').split(/\s+/).filter(Boolean).length,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Úvod', item: `${site.url}/` },
+      { '@type': 'ListItem', position: 2, name: 'Články', item: `${site.url}/clanky/` },
+      { '@type': 'ListItem', position: 3, name: d.title, item: url },
+    ],
+  },
+  ...(d.aiContentApproved && faq.length
+    ? [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faq.map((f) => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: { '@type': 'Answer', text: f.a },
+          })),
+        },
+      ]
+    : []),
+];
+---
+
+<Base
+  title={d.seoTitle ?? d.title}
+  description={d.description || d.excerpt || site.description}
+  image={mainImage}
+  type="article"
+  publishedTime={d.pubDate}
+  modifiedTime={d.updatedDate}
+  jsonLd={jsonLd}
+  section="clanky"
+>
+  <PageHero title="Články" subtitle="a ostatní zajímavá témata" image={heroImg} position="center 23%" as="p" />
+
+  <article class="post" aria-labelledby="post-title">
+    <div class="row">
+      <nav class="crumbs" aria-label="Drobečková navigace">
+        <a href="/clanky/" class="crumbs__back">zpět na články</a>
+      </nav>
+
+      <header class="post__header">
+        <h1 id="post-title" class="post__title">{d.title}</h1>
+        <p class="post__meta">
+          <span>
+            <Icon name="calendar" size={16} />
+            Publikováno <time datetime={isoDate(d.pubDate)}>{formatDate(d.pubDate)}</time>
+          </span>
+          {
+            showUpdated && (
+              <span>
+                Aktualizováno <time datetime={isoDate(d.updatedDate!)}>{formatDate(d.updatedDate!)}</time>
+              </span>
+            )
+          }
+          <span>
+            {author ? (
+              <>
+                Autor: <a href="/#onas">{author.name}</a>
+              </>
+            ) : (
+              <>Autor: {site.name}</>
+            )}
+          </span>
+          {
+            reviewer && (
+              <span>
+                Odborně zkontroloval(a): <a href="/#onas">{reviewer.name}</a>
+              </span>
+            )
+          }
+          <span>{minutes} min čtení</span>
+        </p>
+        {
+          summary && (
+            <div class:list={['post__summary', { 'is-draft': aiDraft }]}>
+              {aiDraft && <span class="draft-badge">Návrh – čeká na schválení</span>}
+              <p class="post__summary-label">Ve zkratce</p>
+              <p>{summary}</p>
+            </div>
+          )
+        }
+      </header>
+
+      {
+        toc.length >= 4 && (
+          <nav class="toc" aria-label="Obsah článku">
+            <details open>
+              <summary>Obsah článku</summary>
+              <ol>
+                {toc.map((h) => (
+                  <li>
+                    <a href={`#${h.slug}`}>{h.text.replace(/^[^\p{L}\p{N}]+/u, '')}</a>
+                  </li>
+                ))}
+              </ol>
+            </details>
+          </nav>
+        )
+      }
+
+      <div class="post__body">
+        <figure class="post__figure">
+          <Image
+            src={mainImage}
+            alt={d.heroAlt ?? d.title}
+            width={720}
+            widths={[360, 720, 1080]}
+            sizes="(max-width: 980px) 90vw, 420px"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </figure>
+        <div class="prose">
+          <Content />
+        </div>
+      </div>
+
+      {
+        faq.length > 0 && (
+          <section class:list={['faq', { 'is-draft': aiDraft }]} aria-labelledby="faq-h">
+            {aiDraft && <span class="draft-badge">Návrh – čeká na schválení</span>}
+            <h2 id="faq-h" class="faq__title">
+              Časté otázky
+            </h2>
+            {faq.map((f) => (
+              <details class="faq__item">
+                <summary>{f.q}</summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </section>
+        )
+      }
+
+      {
+        d.cta !== 'zadna' && (
+          <aside class="post-cta card" aria-label="Objednání na vyšetření">
+            <div>
+              <p class="post-cta__title">Potřebujete poradit nebo objednat svého mazlíčka?</p>
+              <p>
+                Objednat se můžete online, telefonicky na{' '}
+                <a href={site.phones.main.href}>{site.phones.main.label}</a> nebo přes{' '}
+                <a href="/kontakty/#napiste-nam">kontaktní formulář</a>.
+              </p>
+            </div>
+            <a class="btn" href="/rezervace-sluzeb/">
+              Online rezervace
+            </a>
+          </aside>
+        )
+      }
+    </div>
+  </article>
+
+  {
+    related.length > 0 && (
+      <section class="related" aria-labelledby="related-h">
+        <div class="row">
+          <h2 id="related-h" class="related__title">
+            Mohlo by vás zajímat
+          </h2>
+          <ul class="related__grid">
+            {related.map((a) => (
+              <li>
+                <ArticleCard article={a} headingLevel="h3" showExcerpt={false} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="ask">
+    <div class="row">
+      <InfoBox title="Máte nějaké dotazy?" subtitle="Zavolejte nám, nebo se u nás rovnou zastavte." layout="stacked" />
+    </div>
+  </section>
+
+  <ContactCards />
+</Base>
+
+<style>
+  .post .row {
+    padding-top: 8px;
+  }
+
+  .crumbs__back {
+    color: var(--c-text);
+    font-family: var(--f-head);
+    font-size: 17px;
+    font-weight: 300;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .crumbs__back:hover {
+    color: var(--c-orange-deep);
+    opacity: 1;
+  }
+
+  .post__header {
+    margin: 45px 0 30px;
+  }
+
+  .post__title {
+    padding-bottom: 14px;
+    color: var(--c-heading);
+    font-family: var(--f-head);
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1.15em;
+  }
+
+  .post__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    color: #8a8a8a;
+    font-family: var(--f-head);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .post__meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .post__meta a {
+    color: var(--c-orange-deep);
+  }
+
+  .post__meta :global(svg) {
+    color: var(--c-orange-meta);
+  }
+
+  .post__body {
+    display: flow-root;
+    padding: 0 2%;
+  }
+
+  .post__figure {
+    float: right;
+    margin: 15px 0 2% 4%;
+    max-width: 45%;
+  }
+
+  .post__figure :global(img) {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: 473px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 6px 6px 18px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .post__summary {
+    position: relative;
+    max-width: 860px;
+    margin-top: 22px;
+    padding: 18px 22px;
+    border-left: 4px solid var(--c-orange);
+    border-radius: 0 10px 10px 0;
+    background: var(--c-cream);
+    color: var(--c-ink);
+    font-family: var(--f-head);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+
+  .post__summary-label {
+    padding-bottom: 4px;
+    color: var(--c-orange-deep);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .toc {
+    max-width: 860px;
+    margin: 0 0 30px;
+    padding: 16px 22px;
+    border: 1px solid #f1e3d6;
+    border-radius: 10px;
+    background: var(--c-white);
+    font-family: var(--f-head);
+  }
+
+  .toc summary {
+    color: var(--c-heading);
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .toc ol {
+    columns: 2;
+    column-gap: 30px;
+    margin: 12px 0 0;
+    padding-left: 1.3em;
+    line-height: 1.5;
+  }
+
+  .toc li {
+    break-inside: avoid;
+    margin-bottom: 6px;
+  }
+
+  .toc li::marker {
+    color: var(--c-orange);
+    font-weight: 700;
+  }
+
+  .toc a {
+    color: var(--c-ink);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .toc a:hover {
+    opacity: 1;
+    color: var(--c-orange-deep);
+  }
+
+  @media (max-width: 767px) {
+    .toc ol {
+      columns: 1;
+    }
+  }
+
+  .faq {
+    position: relative;
+    clear: both;
+    margin-top: 40px;
+    padding: 0 2%;
+    font-family: var(--f-head);
+  }
+
+  .faq__title {
+    padding-bottom: 16px;
+    color: var(--c-heading);
+    font-family: var(--f-head);
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  .faq__item {
+    border-bottom: 1px solid var(--c-line);
+  }
+
+  .faq__item summary {
+    position: relative;
+    padding: 16px 40px 16px 0;
+    color: var(--c-ink);
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__item summary::after {
+    content: '+';
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--c-orange);
+    font-size: 26px;
+    font-weight: 400;
+  }
+
+  .faq__item[open] summary::after {
+    content: '–';
+  }
+
+  .faq__item p {
+    padding: 0 0 18px;
+    color: var(--c-text);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.7;
+  }
+
+  .is-draft {
+    outline: 2px dashed #e0574f;
+    outline-offset: 6px;
+  }
+
+  .draft-badge {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 2px 10px;
+    border-radius: 4px;
+    background: #e0574f;
+    color: #fff;
+    font-family: var(--f-head);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .post-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 30px;
+    margin-top: 40px;
+    padding: 26px 30px;
+    border-left: 5px solid var(--c-orange);
+    background: var(--c-cream-2);
+    font-family: var(--f-head);
+    font-size: 16px;
+    color: var(--c-ink);
+  }
+
+  .post-cta > div {
+    flex: 1 1 420px;
+  }
+
+  .post-cta__title {
+    padding-bottom: 6px;
+    font-size: 21px;
+    font-weight: 800;
+    color: var(--c-heading);
+  }
+
+  .post-cta a:not(.btn) {
+    color: var(--c-link);
+    font-weight: 700;
+  }
+
+  .related {
+    padding: 30px 0 10px;
+  }
+
+  .related__title {
+    padding-bottom: 24px;
+    color: var(--c-heading);
+    font-family: var(--f-head);
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .related__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px 5.5%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ask {
+    padding: 20px 0 23px;
+  }
+
+  @media (max-width: 980px) {
+    .post__title {
+      font-size: 36px;
+    }
+    .post__figure :global(img) {
+      height: 420px;
+    }
+    .related__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .post__header {
+      margin: 24px 0 20px;
+    }
+    .post__title {
+      font-size: 30px;
+    }
+    .crumbs__back {
+      font-size: 16px;
+    }
+    .post__figure {
+      float: none;
+      max-width: 100%;
+      margin: 0 0 20px;
+    }
+    .post__figure :global(img) {
+      width: 100%;
+      height: auto;
+      max-height: 420px;
+    }
+    .post__body {
+      padding: 0;
+    }
+    .post-cta {
+      padding: 22px 18px;
+    }
+    .related__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,321 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Wave from '../components/Wave.astro';
+import InfoBox from '../components/InfoBox.astro';
+import Reviews from '../components/Reviews.astro';
+import ContactCards from '../components/ContactCards.astro';
+import ServicesSection from '../components/ServicesSection.astro';
+import InfoSection from '../components/InfoSection.astro';
+import TeamSection from '../components/TeamSection.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+import heroDog from '../assets/uploads/2025/05/HP-pes.webp';
+
+const hero = await getImage({ src: heroDog, width: 1417, format: 'webp', quality: 75 });
+const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', quality: 70 });
+---
+
+<Base
+  title="Veterinární klinika Hloubětín - jsme tu pro vás a vaše mazlíčky"
+  rawTitle
+  description="Veterinární klinika Hloubětín se zaměřuje na prevenci, diagnostiku a léčbu nemocí malých zvířat od roku 2008. Psi, kočky, drobní savci, plazi i exotičtí ptáci. Praha 9 – u metra Hloubětín."
+>
+  <link slot="head" rel="preload" as="image" href={hero.src} media="(min-width: 768px)" fetchpriority="high" />
+
+  <!-- HERO -->
+  <section class="hero" style={`--hero:url(${hero.src});--hero-sm:url(${heroSm.src})`}>
+    <div class="row hero__row">
+      <div class="hero__text">
+        <p class="hero__eyebrow">Praha 9 – Hloubětín · od roku 2008</p>
+        <h1>Veterinární klinika Hloubětín</h1>
+        <p class="hero__lead">
+          Prevence, diagnostika a léčba psů, koček, drobných savců, plazů i exotických ptáků – přímo u metra Hloubětín.
+        </p>
+        <div class="hero__actions">
+          <a class="hero__btn hero__btn--primary" href="/rezervace-sluzeb/">
+            <Icon name="calendar" size={18} />
+            Objednat se online
+          </a>
+          <a class="hero__btn hero__btn--ghost" href="#sluzby">Naše služby</a>
+        </div>
+        <ul class="hero__facts">
+          <li><Icon name="check" size={16} /> Psi, kočky i exotická zvířata</li>
+          <li><Icon name="check" size={16} /> Pohotovost po telefonické domluvě</li>
+          <li><Icon name="check" size={16} /> TOP firma 2025 na Firmy.cz</li>
+        </ul>
+      </div>
+    </div>
+    <div class="row row--wide hero__box">
+      <InfoBox title="Jsme tu vždy pro Vás a Vaše mazlíčky." />
+    </div>
+    <Wave variant="curve" position="bottom" color="#FFFFFF" height="5vw" />
+  </section>
+
+  <!-- RECENZE -->
+  <section class="section reviews-section" aria-labelledby="recenze">
+    <div class="row">
+      <h2 id="recenze" class="reviews-title">Přečtěte si, co o nás říkají naši klienti</h2>
+      <Reviews />
+    </div>
+    <div class="row award">
+      <p class="award__text">Získali jsme ocenění TOP firma za rok 2025.</p>
+      <a href={site.firmyCz} target="_blank" rel="noopener" class="award__badge">
+        <img src="https://www.firmy.cz/top-firma/2025.svg" width="138" height="120" alt="TOP firma roku 2025 na Firmy.cz" loading="lazy" />
+      </a>
+    </div>
+  </section>
+
+  <ServicesSection />
+
+  <InfoSection />
+
+  <TeamSection />
+
+  <ContactCards />
+</Base>
+
+<style>
+  /* ---------- HERO ---------- */
+  .hero {
+    position: relative;
+    z-index: 10;
+    padding: 58px 0 0;
+    background-color: var(--c-brown);
+    background-image: linear-gradient(73deg, #b79371 22%, rgba(180, 166, 155, 0) 73%), var(--hero);
+    background-position: right bottom;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .hero__row {
+    z-index: 10;
+    padding: 0;
+  }
+
+  .hero__text {
+    width: 56%;
+    margin: 70px 0 56px;
+    color: var(--c-white);
+    font-family: var(--f-head);
+    text-shadow: 0 0 1.6em rgba(0, 0, 0, 0.3);
+  }
+
+  .hero__eyebrow {
+    display: inline-block;
+    margin-bottom: 18px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.18);
+    color: var(--c-white);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: none;
+    backdrop-filter: blur(4px);
+  }
+
+  .hero__text h1 {
+    padding-bottom: 16px;
+    color: var(--c-white);
+    font-family: var(--f-head);
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.5px;
+  }
+
+  .hero__lead {
+    max-width: 560px;
+    padding-bottom: 28px;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.55;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 14px;
+    margin-bottom: 26px;
+  }
+
+  .hero__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 15px 28px;
+    border-radius: 100px;
+    font-family: var(--f-head);
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: none;
+    text-transform: uppercase;
+    transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+  }
+
+  .hero__btn:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+
+  .hero__btn--primary {
+    background: var(--c-orange);
+    color: var(--c-white);
+    box-shadow: 0 14px 24px -10px rgba(120, 50, 0, 0.6);
+  }
+
+  .hero__btn--primary:hover {
+    background: #ff8a00;
+  }
+
+  .hero__btn--ghost {
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    color: var(--c-white);
+  }
+
+  .hero__btn--ghost:hover {
+    background: var(--c-white);
+    color: var(--c-ink);
+  }
+
+  .hero__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .hero__facts li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .hero__facts :global(svg) {
+    flex: 0 0 auto;
+    padding: 2px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  .hero__box {
+    z-index: 10;
+    margin-top: 6vw;
+    padding: 0 0 27px;
+  }
+
+  /* ---------- RECENZE ---------- */
+  .reviews-section {
+    padding: 60px 0 18px;
+  }
+
+  .reviews-section .row {
+    padding-top: 0;
+  }
+
+  .reviews-title {
+    margin-bottom: 8px;
+    padding-right: 14px;
+    color: var(--c-heading);
+    font-family: var(--f-head);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.4em;
+    text-align: center;
+  }
+
+  .award {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    max-width: 900px;
+    padding: 8px 0 5px;
+  }
+
+  .award__text {
+    flex: 1;
+    color: var(--c-black);
+    font-family: var(--f-head);
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  /* ---------- RESPONZIVITA ---------- */
+  @media (max-width: 980px) {
+    .hero {
+      background-image: linear-gradient(76deg, #b79371 50%, rgba(183, 147, 113, 0.35) 99%), var(--hero);
+      background-position: right center;
+    }
+    .hero__text {
+      width: 100%;
+      margin: 40px 0 40px;
+    }
+    .hero__text h1 {
+      font-size: 54px;
+    }
+    .hero__box {
+      margin-top: 0;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .hero {
+      padding-top: 30px;
+      background-image:
+        linear-gradient(180deg, #b79371 0%, rgba(183, 147, 113, 0.94) 48%, rgba(183, 147, 113, 0.25) 72%, rgba(183, 147, 113, 0.6) 100%),
+        var(--hero-sm);
+      background-size: 230% auto;
+      background-position: 78% 62%;
+    }
+    .hero__text {
+      margin: 10px 0 30px;
+    }
+    .hero__eyebrow {
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+    .hero__text h1 {
+      font-size: 38px;
+    }
+    .hero__lead {
+      font-size: 17px;
+      padding-bottom: 22px;
+    }
+    .hero__actions {
+      flex-direction: column;
+    }
+    .hero__btn {
+      justify-content: center;
+    }
+    .hero__facts {
+      display: none;
+    }
+    .hero__box {
+      padding-bottom: 20px;
+    }
+    .reviews-section {
+      padding-top: 40px;
+    }
+    .reviews-title {
+      font-size: 22px;
+      padding-right: 0;
+    }
+    .award {
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+    }
+    .award__text {
+      font-size: 20px;
+    }
+  }
+</style>

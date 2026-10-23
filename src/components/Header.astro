@@ -1,0 +1,380 @@
+---
+import { Image } from 'astro:assets';
+import { nav, site } from '../data/site';
+import OpenStatus from './OpenStatus.astro';
+import logo from '../assets/uploads/2024/10/Upload-Image-removebg-preview-e1729528892565.png';
+
+// Cesta bez podsložky náhledu (BASE_URL je v produkci „/“)
+const path = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
+const isActive = (href: string) => {
+  if (href.startsWith('/#')) return false;
+  if (href === '/clanky/') return path.startsWith('/clanky/') || Astro.props.section === 'clanky';
+  return path === href;
+};
+---
+
+<header class="site-header" data-header>
+  <div class="row header-row">
+    <a class="logo" href="/" aria-label={`${site.name} – úvodní stránka`}>
+      <Image src={logo} alt={site.name} width={360} loading="eager" fetchpriority="high" />
+    </a>
+
+    <nav class="main-nav" aria-label="Hlavní menu">
+      <button class="burger" type="button" aria-expanded="false" aria-controls="menu" data-burger>
+        <span class="sr-only">Menu</span>
+        <span class="burger__bar"></span>
+        <span class="burger__bar"></span>
+        <span class="burger__bar"></span>
+      </button>
+      <ul id="menu" class="menu" data-menu>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li class="menu__mobile-cta">
+          <a class="menu__call" href={site.phones.main.href}>Zavolat {site.phones.main.label}</a>
+        </li>
+      </ul>
+      <a class="header-status" href="/kontakty/" aria-label="Ordinační hodiny"><OpenStatus compact /></a>
+      <a class="header-cta" href="/rezervace-sluzeb/">Objednat se</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--c-white);
+    padding-bottom: 3px;
+    transition: box-shadow 250ms ease;
+  }
+
+  .site-header.is-scrolled {
+    box-shadow: 0 6px 20px -10px rgba(0, 0, 0, 0.18);
+  }
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0;
+  }
+
+  .logo {
+    display: block;
+    flex: 0 0 auto;
+    width: 17%;
+    min-width: 130px;
+    padding: 4px 0;
+    transition: width 250ms ease;
+  }
+
+  .is-scrolled .logo {
+    width: 12%;
+  }
+
+  .logo img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .main-nav {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .menu {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    line-height: 1em;
+  }
+
+  .menu a {
+    position: relative;
+    display: block;
+    padding: 31px 9px;
+    color: var(--c-black);
+    white-space: nowrap;
+    font-family: var(--f-head);
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: color 200ms ease, padding 250ms ease;
+  }
+
+  .is-scrolled .menu a {
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+
+  /* Jemné podtržení aktivní a najeté položky */
+  .menu a::after {
+    content: '';
+    position: absolute;
+    left: 9px;
+    right: 9px;
+    bottom: 22px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--c-orange);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 250ms ease, bottom 250ms ease;
+  }
+
+  .is-scrolled .menu a::after {
+    bottom: 14px;
+  }
+
+  .menu a:hover::after,
+  .menu a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  .menu a:hover {
+    opacity: 1;
+    color: var(--c-orange);
+  }
+
+  .menu a[aria-current='page'] {
+    color: var(--c-orange);
+  }
+
+  .menu__mobile-cta {
+    display: none;
+  }
+
+  .header-cta {
+    flex: 0 0 auto;
+    padding: 10px 22px;
+    border-radius: 100px;
+    background: var(--c-orange);
+    color: var(--c-white);
+    font-family: var(--f-head);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: var(--sh-btn);
+    transition: background 200ms ease, transform 200ms ease;
+  }
+
+  .header-cta:hover {
+    opacity: 1;
+    background: #ff8a00;
+    transform: translateY(-1px);
+  }
+
+  .burger {
+    display: none;
+  }
+
+  .header-status {
+    display: flex;
+    flex: 0 0 auto;
+  }
+
+  .header-status:hover {
+    opacity: 0.85;
+  }
+
+  /* Tlačítko v hlavičce jen tam, kde se vejde vedle menu */
+  /* Co se vejde vedle menu: od 1360 px ukazatel i tlačítko, od 1120 px jen ukazatel */
+  @media (max-width: 1359px) and (min-width: 981px) {
+    .header-cta {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1119px) and (min-width: 981px) {
+    .header-status {
+      display: none;
+    }
+  }
+
+  @media (max-width: 980px) {
+    .logo,
+    .is-scrolled .logo {
+      width: 22%;
+    }
+
+    .main-nav {
+      position: static;
+      gap: 10px;
+    }
+
+    .burger {
+      order: 2;
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 44px;
+      height: 44px;
+      padding: 8px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .burger__bar {
+      display: block;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--c-orange-soft);
+      transition: transform 250ms ease, opacity 250ms ease;
+    }
+
+    .burger[aria-expanded='true'] .burger__bar:nth-child(2) {
+      transform: translateY(8px) rotate(45deg);
+    }
+    .burger[aria-expanded='true'] .burger__bar:nth-child(3) {
+      opacity: 0;
+    }
+    .burger[aria-expanded='true'] .burger__bar:nth-child(4) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .header-status {
+      order: 0;
+    }
+
+    .header-cta {
+      order: 1;
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    .menu {
+      position: absolute;
+      top: 100%;
+      left: 10%;
+      right: 10%;
+      display: none;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      gap: 0;
+      padding: 5% 0;
+      background: var(--c-white);
+      border-top: 3px solid var(--c-orange);
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.2);
+    }
+
+    .menu.is-open {
+      display: flex;
+    }
+
+    .menu a,
+    .menu li:last-child a,
+    .is-scrolled .menu a {
+      padding: 13px 5%;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      font-size: 15px;
+    }
+
+    .menu a::after {
+      display: none;
+    }
+
+    .menu__mobile-cta {
+      display: block;
+      padding: 14px 5% 4px;
+    }
+
+    .menu .menu__call {
+      display: block;
+      padding: 12px 16px;
+      border: 0;
+      border-radius: 100px;
+      background: var(--c-cream);
+      color: var(--c-orange-deep);
+      font-weight: 800;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .logo,
+    .is-scrolled .logo {
+      width: 34%;
+      min-width: 0;
+      max-width: 124px;
+    }
+
+    .header-status :global(.open-status) {
+      gap: 7px;
+      padding: 7px 13px;
+      font-size: 14px;
+    }
+
+    .header-status :global(.open-status__dot) {
+      width: 9px;
+      height: 9px;
+    }
+
+    .header-row {
+      width: calc(100% - 32px);
+      gap: 10px;
+      padding: 4px 0;
+    }
+
+    .header-cta {
+      display: none;
+    }
+
+    .main-nav {
+      gap: 4px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .header-status :global(.open-status) {
+      padding: 6px 11px;
+      font-size: 13px;
+    }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+
+  if (header) {
+    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 120);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  if (burger && menu) {
+    const setOpen = (open: boolean) => {
+      burger.setAttribute('aria-expanded', String(open));
+      menu.classList.toggle('is-open', open);
+    };
+    burger.addEventListener('click', () => setOpen(burger.getAttribute('aria-expanded') !== 'true'));
+    menu.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+    document.addEventListener('click', (e) => {
+      if (!(e.target as HTMLElement).closest('[data-header]')) setOpen(false);
+    });
+  }
+</script>

@@ -1,0 +1,68 @@
+---
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+---
+
+<nav class="mobile-bar" aria-label="Rychlý kontakt">
+  <a class="mobile-bar__btn mobile-bar__btn--call" href={site.phones.main.href}>
+    <Icon name="phone" size={18} />
+    Zavolat
+  </a>
+  <a class="mobile-bar__btn mobile-bar__btn--book" href="/rezervace-sluzeb/">
+    <Icon name="calendar" size={18} />
+    Objednat se
+  </a>
+</nav>
+
+<style>
+  .mobile-bar {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    .mobile-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 45;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 -6px 20px -8px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(6px);
+    }
+
+    .mobile-bar__btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 10px;
+      border-radius: 100px;
+      font-family: var(--f-head);
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .mobile-bar__btn--call {
+      background: var(--c-cream);
+      color: var(--c-orange-deep);
+      border: 1px solid #f6d5b6;
+    }
+
+    .mobile-bar__btn--book {
+      background: var(--c-orange);
+      color: var(--c-white);
+      box-shadow: var(--sh-btn);
+    }
+
+    :global(body) {
+      padding-bottom: calc(66px + env(safe-area-inset-bottom));
+    }
+  }
+</style>

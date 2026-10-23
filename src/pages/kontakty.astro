@@ -1,0 +1,350 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactCards from '../components/ContactCards.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Icon from '../components/Icon.astro';
+import OpenStatus from '../components/OpenStatus.astro';
+import { site } from '../data/site';
+import heroImg from '../assets/uploads/2024/05/Untitled-design-1920x1280-1-1.jpg';
+import mapa from '../assets/uploads/2025/12/Mapa-Veterina-min.jpg';
+import budova1 from '../assets/uploads/2024/05/Web-Photos-DSC6556.webp';
+import budova2 from '../assets/uploads/2024/05/Photos-for-Web.webp';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: 'Kontakty',
+  url: `${site.url}/kontakty/`,
+  about: { '@id': `${site.url}/#organization` },
+};
+---
+
+<Base
+  title="Kontakty"
+  description="Kontakt na Veterinární kliniku Hloubětín: Mochovská 535, Praha 9 (OD Havana u metra Hloubětín). Telefon +420 773 665 751, e-mail ordinace@veterinahloubetin.cz, ordinační hodiny."
+  jsonLd={jsonLd}
+>
+  <PageHero title="Kontakty" image={heroImg} position="56% 43%" as="p" />
+
+  <section class="section intro">
+    <div class="row">
+      <h1 class="intro__title">Kontaktujte nás</h1>
+      <p class="intro__sub">Jsme tu vždy pro Vás a Vaše mazlíčky.</p>
+      <p class="intro__text">Poskytujeme tu nejlepší péči a vytvořili jsme prostředí, kam se i váš kamarád bude rád vracet.</p>
+    </div>
+
+    <div class="row cols cols--2 details">
+      <div class="blurbs">
+        <a class="blurb" href={site.mapsUrl} target="_blank" rel="noopener">
+          <Icon name="map" size={26} class="blurb__icon" />
+          <div>
+            <h2 class="blurb__title">Adresa</h2>
+            <p>
+              <strong>{site.name}</strong><br />
+              <span class="u">{site.address.full}</span><br />
+              IČO: {site.ico}
+            </p>
+          </div>
+        </a>
+        <div class="blurb">
+          <Icon name="clock" size={26} class="blurb__icon" />
+          <div>
+            <h2 class="blurb__title">Ordinační hodiny</h2>
+            <p>{site.hours.map((h) => <>{h.days}: {h.time}<br /></>)}</p>
+            <OpenStatus class="blurb__status" />
+          </div>
+        </div>
+        <div class="blurb">
+          <Icon name="phone" size={26} class="blurb__icon" />
+          <div>
+            <h2 class="blurb__title">Kontakty</h2>
+            <p>
+              Ordinace &amp; pohotovost:<br />
+              <a class="blurb__phone" href={site.phones.main.href}>{site.phones.main.label}</a>
+            </p>
+          </div>
+        </div>
+        <div class="blurb">
+          <Icon name="mail" size={26} class="blurb__icon" />
+          <div>
+            <h2 class="blurb__title">Email</h2>
+            <p><a class="u" href={`mailto:${site.email}`}>{site.email}</a></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="directions">
+        <p class="directions__head">
+          Naše klinika se nachází v obchodním domě Havana, přímo u výstupu ze stanice metra Hloubětín.
+        </p>
+        <h2 class="directions__label">MHD</h2>
+        <p>Metro – trasa B – stanice Hloubětín</p>
+        <h2 class="directions__label">Autem</h2>
+        <p>Příjezd k ordinaci je možný pouze z ulice Kolbenova ve směru červených šipek. Podrobnější mapa níže.</p>
+        <a href={mapa.src} target="_blank" class="directions__map">
+          <Image
+            src={mapa}
+            alt="Plánek příjezdu ke klinice: vjezd z ulice Kolbenova, klinika v ulici Mochovská u stanice metra Hloubětín"
+            width={848}
+          />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section form-section" id="napiste-nam" aria-labelledby="form-title">
+    <div class="row">
+      <div class="form-card card">
+        <div class="form-card__intro">
+          <h2 id="form-title" class="form-card__title">Napište nám</h2>
+          <p>
+            Máte dotaz nebo se chcete objednat ke konkrétnímu lékaři? Zanechte nám zprávu a ozveme se Vám co nejdříve zpět.
+          </p>
+          <p>
+            Na základní úkony (vakcinace, čipování…) se můžete objednat také přes
+            <a href="/rezervace-sluzeb/">online rezervaci</a>.
+          </p>
+        </div>
+        <ContactForm />
+      </div>
+    </div>
+  </section>
+
+  <section class="photos" aria-label="Budova kliniky">
+    <div class="row cols cols--2">
+      <Image src={budova1} alt="Obchodní dům Havana, ve kterém sídlí Veterinární klinika Hloubětín" width={1024} class="photo" />
+      <Image src={budova2} alt="Budova obchodního domu Havana u metra Hloubětín" width={1024} class="photo" />
+    </div>
+  </section>
+
+  <section class="section map-section" aria-label="Mapa">
+    <div class="row">
+      <div class="map card">
+        <iframe
+          src={site.mapsEmbed}
+          title="Mapa – Veterinární klinika Hloubětín"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+
+  <ContactCards />
+</Base>
+
+<style>
+  .intro {
+    padding: 4px 0 3px;
+  }
+
+  .intro__title {
+    padding-bottom: 10px;
+    color: var(--c-black);
+    font-family: var(--f-head);
+    font-size: 34px;
+    font-weight: 500;
+    line-height: 1.1em;
+    text-align: center;
+  }
+
+  .intro__sub {
+    padding-bottom: 10px;
+    color: var(--c-black);
+    font-family: var(--f-head);
+    font-size: 24px;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .intro__text {
+    color: var(--c-black);
+    font-family: var(--f-head);
+    font-size: 18px;
+    font-weight: 300;
+    text-align: center;
+  }
+
+  .details {
+    align-items: flex-start;
+  }
+
+  .blurb {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(66, 43, 43, 0.1);
+    color: var(--c-text);
+    font-family: var(--f-head);
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.6;
+  }
+
+  .blurb:last-child {
+    border-bottom: 0;
+  }
+
+  a.blurb:hover {
+    opacity: 1;
+    color: var(--c-heading);
+  }
+
+  .blurb :global(.blurb__icon) {
+    flex: 0 0 auto;
+    margin-top: 2px;
+    color: var(--c-orange-icon);
+  }
+
+  .blurb__title {
+    padding-bottom: 4px;
+    color: var(--c-heading);
+    font-family: var(--f-head);
+    font-size: 18px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  .blurb :global(.blurb__status) {
+    margin-top: 8px;
+  }
+
+  .blurb strong {
+    font-weight: 700;
+  }
+
+  .blurb__phone {
+    color: var(--c-link);
+    font-style: italic;
+    font-weight: 700;
+  }
+
+  .u {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .directions {
+    padding-top: 14px;
+    font-family: var(--f-head);
+    font-size: 17px;
+  }
+
+  .directions__head {
+    color: var(--c-heading);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .directions__label {
+    padding: 4px 0 6px;
+    color: var(--c-heading);
+    font-family: var(--f-head);
+    font-size: 17px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .directions__map {
+    display: block;
+    margin-top: 14px;
+  }
+
+  .directions__map :global(img) {
+    display: block;
+    width: 100%;
+    max-width: 424px;
+    border-radius: 6px;
+  }
+
+  .form-section {
+    padding-top: 30px;
+    padding-bottom: 10px;
+  }
+
+  .form-card {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+    padding: 40px;
+    box-shadow: var(--sh-card);
+  }
+
+  .form-card__title {
+    padding-bottom: 14px;
+    color: var(--c-heading);
+    font-family: var(--f-head);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2em;
+  }
+
+  .form-card__intro {
+    font-family: var(--f-head);
+    font-size: 17px;
+    line-height: 1.7em;
+  }
+
+  .form-card__intro a {
+    color: var(--c-link);
+    text-decoration: underline;
+  }
+
+  .photos .row {
+    padding-top: 50px;
+  }
+
+  .photos :global(.photo) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .map-section {
+    padding: 4px 0 40px;
+  }
+
+  .map {
+    border-radius: 10px;
+    box-shadow: 6px 6px 18px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .map iframe {
+    display: block;
+    width: 100%;
+    height: 450px;
+    border: 0;
+  }
+
+  @media (max-width: 980px) {
+    .form-card {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding: 30px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .intro__title {
+      font-size: 30px;
+    }
+    .intro__sub {
+      font-size: 21px;
+    }
+    .form-card {
+      padding: 22px 18px;
+    }
+    .form-card__title {
+      font-size: 26px;
+    }
+    .map iframe {
+      height: 340px;
+    }
+  }
+</style>

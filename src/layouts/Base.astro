@@ -1,0 +1,252 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site';
+import TopBar from '../components/TopBar.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+import favicon from '../assets/uploads/2024/06/Navrh-bez-nazvu-6.png';
+import ogDefault from '../assets/uploads/2025/05/HP-pes.webp';
+import { getImage } from 'astro:assets';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Plný titulek bez přípony „ - Veterinární klinika Hloubětín“ */
+  rawTitle?: boolean;
+  image?: ImageMetadata;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  /** Sekce menu, která má být zvýrazněná (např. „clanky“ u detailu článku) */
+  section?: string;
+}
+
+const {
+  title,
+  description = site.description,
+  rawTitle = false,
+  image,
+  type = 'website',
+  noindex = false,
+  jsonLd,
+  publishedTime,
+  modifiedTime,
+  section,
+} = Astro.props;
+
+const fullTitle = rawTitle ? title : `${title} - ${site.name}`;
+// Náhledová verze (GitHub Pages): neindexovat a nespouštět měření
+const isPreview = import.meta.env.PUBLIC_PREVIEW === '1';
+const robots = noindex || isPreview ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+const canonical = new URL(Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/', site.url).href;
+const og = await getImage({ src: image ?? ogDefault, width: 1200, format: 'jpg' });
+const ogUrl = new URL(og.src, site.url).href;
+const icon32 = await getImage({ src: favicon, width: 32, height: 32, format: 'png' });
+const icon192 = await getImage({ src: favicon, width: 192, height: 192, format: 'png' });
+const icon180 = await getImage({ src: favicon, width: 180, height: 180, format: 'png' });
+
+// Strukturovaná data organizace jsou na každé stránce (jednou, bez duplicit)
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'VeterinaryCare',
+  '@id': `${site.url}/#organization`,
+  name: site.name,
+  legalName: site.company,
+  url: `${site.url}/`,
+  logo: `${site.url}/logo.png`,
+  image: ogUrl,
+  email: site.email,
+  telephone: '+420773665751',
+  taxID: site.ico,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    addressLocality: site.address.city,
+    postalCode: site.address.zip,
+    addressCountry: 'CZ',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: site.address.lat, longitude: site.address.lng },
+  hasMap: site.mapsUrl,
+  openingHoursSpecification: site.hours.map((h) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: h.schema.map(
+      (d) =>
+        ({ Mo: 'Monday', Tu: 'Tuesday', We: 'Wednesday', Th: 'Thursday', Fr: 'Friday', Sa: 'Saturday', Su: 'Sunday' })[d],
+    ),
+    opens: h.opens,
+    closes: h.closes,
+  })),
+  areaServed: ['Praha 9', 'Praha 14', 'Praha-Hloubětín'],
+  foundingDate: '2008',
+  sameAs: [site.social.facebook, site.social.instagram, site.firmyCz],
+};
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${site.url}/#website`,
+  url: `${site.url}/`,
+  name: site.name,
+  inLanguage: 'cs-CZ',
+  publisher: { '@id': `${site.url}/#organization` },
+};
+const ld = [org, website, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [])];
+---
+
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={robots} />
+    <meta name="theme-color" content="#f99521" />
+
+    <meta property="og:locale" content="cs_CZ" />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content={String(og.attributes.width ?? 1200)} />
+    <meta property="og:image:height" content={String(og.attributes.height ?? '')} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime.toISOString()} />}
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href={icon32.src} sizes="32x32" />
+    <link rel="icon" href={icon192.src} sizes="192x192" />
+    <link rel="apple-touch-icon" href={icon180.src} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- CookieYes musí být načten před GTM kvůli správě souhlasů -->
+    {!isPreview && <script is:inline id="cookieyes" type="text/javascript" src={site.integrations.cookieyes}></script>}
+
+    <!-- Google Tag Manager -->
+    {!isPreview && (<script is:inline define:vars={{ gtmId: site.integrations.gtm }}>
+      window.dataLayer = window.dataLayer || [];
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', gtmId);
+    </script>)}
+
+    <!-- Plynulé zobrazování bloků při posouvání (jen s JS a bez omezení animací) -->
+    <script is:inline>
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-reveal');
+    </script>
+
+    {ld.map((item) => <script type="application/ld+json" set:html={JSON.stringify(item)} />)}
+    <slot name="head" />
+  </head>
+  <body>
+    {!isPreview && <noscript>
+      <iframe
+        src={`https://www.googletagmanager.com/ns.html?id=${site.integrations.gtm}`}
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+        title="Google Tag Manager"></iframe>
+    </noscript>}
+    <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+    <TopBar />
+    <Header section={section} />
+    <main id="obsah">
+      <slot />
+    </main>
+    <Footer />
+    <MobileBar />
+    <a href="#obsah" class="to-top" aria-label="Zpět nahoru" data-to-top>
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </a>
+  </body>
+</html>
+
+<style>
+  .to-top {
+    position: fixed;
+    right: 20px;
+    bottom: 24px;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--c-white);
+    color: var(--c-orange-deep);
+    box-shadow: 0 6px 18px -4px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 300ms ease, visibility 300ms ease, transform 300ms ease, background 200ms ease;
+  }
+
+  .to-top:hover {
+    opacity: 1;
+    background: var(--c-orange);
+    color: var(--c-white);
+  }
+
+  .to-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  @media (max-width: 767px) {
+    .to-top {
+      right: 12px;
+      bottom: calc(80px + env(safe-area-inset-bottom));
+      width: 40px;
+      height: 40px;
+    }
+  }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLElement>('[data-to-top]');
+  if (btn) {
+    const onScroll = () => btn.classList.toggle('is-visible', window.scrollY > 800);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0 });
+    });
+  }
+
+  // Plynulé zobrazení bloků při posouvání
+  const root = document.documentElement;
+  if (root.classList.contains('js-reveal')) {
+    const targets = document.querySelectorAll<HTMLElement>(
+      '.card, .svc-card, .fact, .doc, .nurse, .acard, .review__card, .cc, .vh-sekce',
+    );
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((en) => {
+            if (en.isIntersecting) {
+              en.target.classList.add('is-in');
+              io.unobserve(en.target);
+            }
+          }),
+        { rootMargin: '0px 0px -40px 0px' },
+      );
+      targets.forEach((t) => io.observe(t));
+    }
+    // Pojistka: nic nesmí zůstat skryté
+    setTimeout(() => targets.forEach((t) => t.classList.add('is-in')), 2500);
+  }
+</script>

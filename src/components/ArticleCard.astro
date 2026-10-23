@@ -1,0 +1,120 @@
+---
+import { Image } from 'astro:assets';
+import { formatDate, isoDate, type Article } from '../lib/articles';
+
+interface Props {
+  article: Article;
+  headingLevel?: 'h2' | 'h3';
+  showExcerpt?: boolean;
+}
+
+const { article, headingLevel: H = 'h2', showExcerpt = true } = Astro.props;
+const { title, cover, pubDate, excerpt, description } = article.data;
+const href = `/${article.id}/`;
+const perex = excerpt || description;
+---
+
+<article class="acard">
+  <a href={href} class="acard__img" tabindex="-1" aria-hidden="true">
+    <Image src={cover} alt="" width={400} height={250} widths={[400, 800]} sizes="(max-width: 767px) 90vw, 360px" />
+  </a>
+  <div class="acard__body">
+    <H class="acard__title"><a href={href}>{title}</a></H>
+    <time class="acard__date" datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
+    {showExcerpt && perex && <p class="acard__excerpt">{perex}</p>}
+    <a href={href} class="acard__more" aria-hidden="true" tabindex="-1">Číst článek →</a>
+  </div>
+</article>
+
+<style>
+  .acard {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--c-white);
+    box-shadow: 0 12px 18px -6px rgba(0, 0, 0, 0.12);
+    transition: transform 250ms ease, box-shadow 250ms ease;
+  }
+
+  .acard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 24px -8px rgba(0, 0, 0, 0.2);
+  }
+
+  .acard__img {
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 8 / 5;
+  }
+
+  .acard__img :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 400ms ease;
+  }
+
+  .acard:hover .acard__img :global(img) {
+    transform: scale(1.04);
+  }
+
+  .acard__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 19px;
+  }
+
+  .acard__title {
+    padding-bottom: 9px;
+    font-family: var(--f-head);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    line-height: 1.4em;
+    text-transform: uppercase;
+  }
+
+  .acard__title a {
+    color: var(--c-heading);
+  }
+
+  .acard__title a:hover {
+    color: var(--c-orange-deep);
+    opacity: 1;
+  }
+
+  .acard__date {
+    color: var(--c-orange-meta);
+    font-family: var(--f-head);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .acard__excerpt {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 10px;
+    padding: 0;
+    color: var(--c-text);
+    font-family: var(--f-head);
+    font-size: 14px;
+    line-height: 1.7em;
+  }
+
+  .acard__more {
+    margin-top: auto;
+    padding-top: 12px;
+    color: var(--c-orange-deep);
+    font-family: var(--f-head);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+</style>

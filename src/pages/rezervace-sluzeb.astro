@@ -1,0 +1,113 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactCards from '../components/ContactCards.astro';
+import { site } from '../data/site';
+import heroImg from '../assets/uploads/2024/05/Untitled-design-1920x1280-2.jpg';
+---
+
+<Base
+  title="Rezervace služeb"
+  description="Vyberte si čas dle vaší potřeby a zarezervujte si návštěvu na naší klinice ještě dnes. Veterinární klinika Hloubětín – online objednání na vakcinaci, čipování i vyšetření."
+>
+  <PageHero title="Rezervace služeb" image={heroImg} position="center 10%" />
+
+  <section class="section rez">
+    <div class="row">
+      <p class="rez__lead"><strong>Pro objednání na základní úkony vašeho mazlíka můžete využít tento objednávací formulář.</strong></p>
+
+      <div class="rez__text">
+        <p>
+          Pro objednání na kontrolu, s jinými problémy, než najdete ve formuláři, nebo pro objednání s
+          <strong>PLAZY (MVDr. Pavelková)</strong> či nemocnými <strong>DROBNÝMI SAVCI (MVDr. Škubal)</strong>, prosím využijte
+          tel. číslo: <strong><a href={site.phones.landline.href}>{site.phones.landline.label}</a></strong> nebo
+          <strong><a href="/kontakty/#napiste-nam">kontaktní formulář</a></strong> v záložce <strong>„Kontakty“</strong>.
+        </p>
+        <p><em>Je potřeba Vás objednat ke konkrétnímu doktorovi.</em></p>
+        <p>
+          V případě, že telefon nezvedáme, máme jak doktor, tak sestřička plné ruce pacienta v ordinaci.<br />
+          V neakutních případech nám tedy prosím zašlete <strong><a href={`mailto:${site.email}`}>email</a></strong> s
+          telefonním číslem a Vaším požadavkem – zavoláme Vám co nejdříve zpět.
+        </p>
+        <p><strong>Děkujeme</strong></p>
+      </div>
+
+      <div class="rez__widget">
+        <!-- Rezervační formulář Reservanto -->
+        <div class="reservanto-iframe" data-id={site.integrations.reservantoId}></div>
+        <noscript>
+          <p>Pro zobrazení rezervačního formuláře je potřeba povolit JavaScript. Objednat se můžete také telefonicky na {site.phones.landline.label}.</p>
+        </noscript>
+      </div>
+    </div>
+  </section>
+
+  <ContactCards />
+</Base>
+
+<script is:inline defer src="https://booking.reservanto.cz/Script/reservanto-iframe.js"></script>
+<script is:inline>
+  // Odeslání úspěšné rezervace z Reservanta do GTM (převzato z původního webu)
+  document.addEventListener('ReservantoBookingSuccess', function (e) {
+    var n = e.detail.booking;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'reservationComplete',
+      reservationConfirmed: n.confirmed,
+      customerId: n.customerId,
+      priceWithVat: n.priceWithVat,
+      reservationId: n.id,
+    });
+  });
+</script>
+
+<style>
+  .rez {
+    padding: 8px 0 117px;
+  }
+
+  .rez .row {
+    padding-bottom: 0;
+  }
+
+  .rez__lead {
+    margin-bottom: 33px;
+    color: var(--c-text);
+    font-family: var(--f-head);
+    font-size: 22px;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .rez__text {
+    margin-top: 20px;
+    font-family: var(--f-head);
+    font-size: 17px;
+    line-height: 1.8em;
+  }
+
+  .rez__text a {
+    color: var(--c-link);
+  }
+
+  .rez__widget {
+    max-width: 950px;
+    margin: 30px auto 0;
+  }
+
+  .rez__widget .reservanto-iframe {
+    min-height: 500px;
+  }
+
+  @media (max-width: 767px) {
+    .rez {
+      padding-bottom: 50px;
+    }
+    .rez__lead {
+      font-size: 19px;
+    }
+    .rez__text {
+      font-size: 15px;
+    }
+  }
+</style>

@@ -1,0 +1,185 @@
+---
+import { Image } from 'astro:assets';
+import { site } from '../data/site';
+import Wave from './Wave.astro';
+import Icon from './Icon.astro';
+import iconMessage from '../assets/uploads/2024/05/veterinarian-icon-6.png';
+import iconClinic from '../assets/uploads/2024/05/veterinarian-icon-11.png';
+import iconFirstAid from '../assets/uploads/2024/05/veterinarian-icon-2.png';
+import iconFollow from '../assets/uploads/2024/10/PNG-to-WEBP-conversion.webp';
+import pets from '../assets/uploads/2024/10/Vet-13.webp';
+---
+
+<section class="contact-cards" aria-label="Kontakty">
+  <div class="row cols cols--2 cc-row">
+    <a class="cc card" href={`mailto:${site.email}`}>
+      <Image src={iconMessage} alt="" width={90} height={90} class="cc__icon" />
+      <h2 class="cc__title">Zanechte nám zprávu</h2>
+      <span class="cc__value cc__value--mail">{site.email.split('@')[0]}@<wbr />{site.email.split('@')[1]}</span>
+    </a>
+    <a class="cc card" href={site.mapsUrl} target="_blank" rel="noopener">
+      <Image src={iconClinic} alt="" width={90} height={90} class="cc__icon" />
+      <h2 class="cc__title">Jsme vám vždy nablízku</h2>
+      <span class="cc__value">{site.address.full}</span>
+    </a>
+    <a class="cc card" href={site.phones.main.href}>
+      <Image src={iconFirstAid} alt="" width={90} height={90} class="cc__icon" />
+      <h2 class="cc__title">Pohotovost na telefonu</h2>
+      <span class="cc__value">{site.phones.main.label}</span>
+    </a>
+    <div class="cc card cc--follow" style={`--pets:url(${pets.src})`}>
+      <Image src={iconFollow} alt="" width={90} height={90} class="cc__icon" />
+      <h2 class="cc__title">Sledujte nás</h2>
+      <div class="social">
+        <a href={site.social.facebook} target="_blank" rel="noopener" class="social__fb" aria-label="Facebook">
+          <Icon name="facebook" size={16} />
+        </a>
+        <a href={site.social.instagram} target="_blank" rel="noopener" class="social__ig" aria-label="Instagram">
+          <Icon name="instagram" size={16} />
+        </a>
+      </div>
+    </div>
+  </div>
+  <Wave variant="waves" position="bottom" color="#f3eded" height="72px" class="cc-wave" />
+</section>
+
+<style>
+  .contact-cards {
+    position: relative;
+    padding: var(--section-pad) 0 57px;
+    background: var(--c-white);
+  }
+
+  .cc-row {
+    position: relative;
+    z-index: 2;
+    row-gap: 10px;
+    padding-top: 0;
+  }
+
+  .cc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    padding: 20px 10px;
+    border-radius: var(--r-card);
+    box-shadow: var(--sh-card-strong);
+    text-align: center;
+    color: var(--c-blue);
+    font-family: var(--f-head);
+    font-weight: 700;
+    transition: transform 250ms ease, box-shadow 250ms ease;
+  }
+
+  a.cc:hover {
+    opacity: 1;
+    transform: translateY(-3px);
+    box-shadow: 6px 10px 24px 0 rgba(0, 0, 0, 0.22);
+  }
+
+  .cc :global(.cc__icon) {
+    width: 76px;
+    height: auto;
+    margin-bottom: 26px;
+  }
+
+  .cc__title {
+    padding-bottom: 6px;
+    color: var(--c-heading);
+    font-family: var(--f-head);
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.1em;
+  }
+
+  .cc__value {
+    color: var(--c-blue);
+    font-size: 20px;
+    line-height: 1.4;
+    overflow-wrap: break-word;
+  }
+
+  .cc--follow {
+    padding-bottom: 46px;
+    background-color: var(--c-white);
+    background-image: var(--pets);
+    background-repeat: no-repeat;
+    background-position: right bottom;
+  }
+
+  .social {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .social a {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 30px;
+    color: var(--c-white);
+    transition: transform 200ms ease;
+  }
+
+  .social a:hover {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  .social__fb {
+    background: #495e99;
+  }
+
+  .social__ig {
+    background: linear-gradient(151deg, #feda77 0%, #dd2a7b 74%);
+  }
+
+  .cc-wave {
+    z-index: 1;
+  }
+
+  @media (max-width: 980px) {
+    .cc-row {
+      row-gap: 10px;
+    }
+    .cc-wave {
+      height: 67px !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cc-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: calc(100% - 32px);
+    }
+    .cc-row > * {
+      width: auto;
+    }
+    .cc {
+      padding: 16px 8px;
+    }
+    .cc :global(.cc__icon) {
+      width: 48px;
+      margin-bottom: 12px;
+    }
+    .cc--follow {
+      padding-bottom: 16px;
+      background-image: none;
+    }
+    .cc__title {
+      font-size: 15px;
+    }
+    .cc__value {
+      font-size: 13px;
+    }
+    .cc-wave {
+      height: 44px !important;
+    }
+  }
+</style>

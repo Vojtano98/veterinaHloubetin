@@ -1,0 +1,261 @@
+---
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+import OpenStatus from './OpenStatus.astro';
+
+// Kompaktní box s adresou, telefonem a otevírací dobou (úvod + konec článků)
+interface Props {
+  title: string;
+  subtitle?: string;
+  class?: string;
+  /** „stacked“ = nadpis nahoře uprostřed a pod ním tři stejně široké dlaždice */
+  layout?: 'row' | 'stacked';
+}
+
+const { title, subtitle, class: className, layout = 'row' } = Astro.props;
+---
+
+<div class:list={['info-box', `info-box--${layout}`, className]}>
+  <div class="info-box__intro">
+    <h2 class="info-box__title">{title}</h2>
+    {subtitle && <p class="info-box__subtitle">{subtitle}</p>}
+  </div>
+
+  <a class="tile" href={site.mapsUrl} target="_blank" rel="noopener">
+    <span class="tile__icon"><Icon name="pin" size={20} /></span>
+    <span class="tile__body">
+      <span class="tile__label">Kde nás najdete</span>
+      <span class="tile__value">{site.address.short}</span>
+      <span class="tile__hint">U metra Hloubětín · navigovat</span>
+    </span>
+  </a>
+
+  <a class="tile" href={site.phones.main.href}>
+    <span class="tile__icon"><Icon name="phone" size={20} /></span>
+    <span class="tile__body">
+      <span class="tile__label">Ordinace a pohotovost</span>
+      <span class="tile__value">{site.phones.main.label}</span>
+      <span class="tile__hint">Zavolat</span>
+    </span>
+  </a>
+
+  <div class="tile tile--hours">
+    <span class="tile__icon"><Icon name="clock" size={20} /></span>
+    <span class="tile__body">
+      <span class="tile__label">Ordinační hodiny</span>
+      <dl class="hours">
+        {
+          site.hours.map((h) => (
+            <div>
+              <dt>{h.short}</dt>
+              <dd>{h.time.replace(/ – /g, '–')}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <OpenStatus compact class="tile__status" />
+    </span>
+  </div>
+</div>
+
+<style>
+  .info-box {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1fr 1.05fr;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 20px;
+    background: var(--c-white);
+    box-shadow: 0 20px 40px -24px rgba(0, 0, 0, 0.4);
+    font-family: var(--f-head);
+  }
+
+  .info-box__intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px 14px;
+  }
+
+  .info-box__title {
+    padding: 0;
+    color: var(--c-heading);
+    font-family: var(--f-head);
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+  .info-box__subtitle {
+    margin-top: 6px;
+    color: var(--c-text);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .tile {
+    min-width: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 14px;
+    background: #fbf7f3;
+    color: var(--c-ink);
+    transition: background 200ms ease, transform 200ms ease;
+  }
+
+  a.tile:hover {
+    opacity: 1;
+    background: var(--c-cream);
+    transform: translateY(-2px);
+  }
+
+  .tile__icon {
+    display: grid;
+    flex: 0 0 auto;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--c-white);
+    color: var(--c-orange-deep);
+    box-shadow: 0 4px 10px -6px rgba(0, 0, 0, 0.25);
+  }
+
+  .tile__body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .tile__label {
+    color: var(--c-orange-deep);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .tile__value {
+    margin-top: 2px;
+    color: var(--c-ink);
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.35;
+  }
+
+  .tile__hint {
+    margin-top: 2px;
+    color: #8a7a6c;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .hours {
+    display: grid;
+    gap: 1px;
+    margin: 4px 0 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .hours div {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+  }
+
+  .hours dt {
+    color: #8a7a6c;
+    font-weight: 700;
+  }
+
+  .hours dd {
+    margin: 0;
+    color: var(--c-ink);
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .tile :global(.tile__status) {
+    align-self: flex-start;
+    margin-top: 10px;
+    font-size: 13px;
+  }
+
+  /* Varianta pod články: vycentrovaný nadpis, dlaždice pod ním */
+  .info-box--stacked {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 28px 24px 24px;
+    border: 1px solid #f2e8de;
+  }
+
+  .info-box--stacked .info-box__intro {
+    grid-column: 1 / -1;
+    align-items: center;
+    padding: 0 0 12px;
+    text-align: center;
+  }
+
+  .info-box--stacked .info-box__title {
+    font-size: 28px;
+  }
+
+  .info-box--stacked .info-box__subtitle {
+    font-size: 16px;
+  }
+
+  @media (max-width: 1100px) {
+    .info-box {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    .info-box__intro {
+      grid-column: 1 / -1;
+      padding-bottom: 4px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .info-box {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+      padding: 12px;
+      border-radius: 18px;
+    }
+    .info-box__intro {
+      padding: 8px 6px 4px;
+    }
+    .info-box__title,
+    .info-box--stacked .info-box__title {
+      font-size: 20px;
+    }
+    .info-box--stacked {
+      padding: 18px 12px 12px;
+    }
+    .info-box--stacked .info-box__intro {
+      padding-bottom: 6px;
+    }
+    .info-box__subtitle {
+      font-size: 14px;
+    }
+    .tile {
+      align-items: center;
+      padding: 12px;
+    }
+    .tile--hours {
+      align-items: flex-start;
+    }
+    .tile__hint {
+      display: none;
+    }
+    .tile__value {
+      font-size: 15px;
+    }
+    .hours div {
+      grid-template-columns: 52px 1fr;
+    }
+  }
+</style>

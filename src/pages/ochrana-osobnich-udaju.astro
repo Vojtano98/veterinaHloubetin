@@ -1,0 +1,50 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Wave from '../components/Wave.astro';
+
+const page = (await getEntry('stranky', 'ochrana-osobnich-udaju'))!;
+const { Content } = await render(page);
+---
+
+<Base
+  title="Zásady ochrany osobních údajů"
+  description="Zásady ochrany osobních údajů společnosti Veterina Hloubětín s.r.o. – jaké údaje zpracováváme, za jakým účelem a jaká máte práva."
+>
+  <section class="section legal">
+    <div class="row">
+      <h1 class="legal__title">Zásady ochrany osobních údajů</h1>
+      <div class="prose legal__body">
+        <Content />
+      </div>
+    </div>
+    <Wave variant="curve" position="bottom" color="#f3eded" height="5vw" />
+  </section>
+</Base>
+
+<style>
+  .legal {
+    padding-bottom: calc(var(--section-pad) + 5vw);
+  }
+
+  .legal__title {
+    padding-bottom: 24px;
+    color: var(--c-heading);
+    font-family: var(--f-head);
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.2em;
+  }
+
+  .legal__body {
+    font-family: var(--f-body);
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  @media (max-width: 767px) {
+    .legal__title {
+      font-size: 28px;
+    }
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import Reviews from '../components/Reviews.astro';
+import InfoBox from '../components/InfoBox.astro';
+import ContactCards from '../components/ContactCards.astro';
+import Wave from '../components/Wave.astro';
+import { getArticles } from '../lib/articles';
+import { site } from '../data/site';
+import heroImg from '../assets/uploads/2024/05/Untitled-design-1-scaled.jpg';
+
+const articles = await getArticles();
+const url = `${site.url}/clanky/`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': url,
+    url,
+    name: 'Články o péči o domácí mazlíčky',
+    description:
+      'Odborné články veterinářů z Veterinární kliniky Hloubětín o péči o psy, kočky, drobné savce a plazy.',
+    inLanguage: 'cs-CZ',
+    isPartOf: { '@id': `${site.url}/#website` },
+    publisher: { '@id': `${site.url}/#organization` },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: articles.length,
+      itemListElement: articles.map((a, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${site.url}/${a.id}/`,
+        name: a.data.title,
+      })),
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Úvod', item: `${site.url}/` },
+      { '@type': 'ListItem', position: 2, name: 'Články', item: url },
+    ],
+  },
+];
+---
+
+<Base
+  title="Články o péči o domácí mazlíčky"
+  description="Objevte nejnovější články o péči o domácí mazlíčky. Získejte odborné rady od našich zkušených veterinářů – kastrace, parazité, zuby, chov želv a gekonů a další témata."
+  jsonLd={jsonLd}
+  section="clanky"
+>
+  <PageHero title="Články" subtitle="a další zajímavá témata" image={heroImg} position="center 27%" />
+
+  <section class="listing" aria-label="Seznam článků">
+    <Wave variant="arch" position="top" color="#FFFFFF" height="54vw" class="listing__wave" />
+    <div class="row">
+      <ul class="listing__grid">
+        {
+          articles.map((a) => (
+            <li>
+              <ArticleCard article={a} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="row">
+      <h2 class="reviews-title">Přečtěte si, co o nás říkají naši klienti</h2>
+      <Reviews />
+    </div>
+  </section>
+
+  <section class="ask">
+    <div class="row">
+      <InfoBox title="Máte nějaké dotazy?" subtitle="Zavolejte nám, nebo se u nás rovnou zastavte." layout="stacked" />
+    </div>
+  </section>
+
+  <ContactCards />
+</Base>
+
+<style>
+  .listing {
+    position: relative;
+    padding: 54px 0 35px;
+    background-color: var(--c-cream);
+    background-image: linear-gradient(180deg, #fff6ef 0%, #ffffff 100%);
+  }
+
+  .listing :global(.listing__wave) {
+    max-height: 520px;
+  }
+
+  .listing .row {
+    z-index: 2;
+  }
+
+  .listing__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px 5.5%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .reviews-title {
+    padding: 25px 0 8px;
+    color: var(--c-black);
+    font-family: var(--f-head);
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1.2em;
+    text-align: center;
+  }
+
+  .ask {
+    padding: 0 0 23px;
+  }
+
+  @media (max-width: 980px) {
+    .listing__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .listing__grid {
+      grid-template-columns: 1fr;
+    }
+    .reviews-title {
+      font-size: 24px;
+    }
+  }
+</style>

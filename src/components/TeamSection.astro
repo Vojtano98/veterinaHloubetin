@@ -1,0 +1,369 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { team } from '../data/team';
+
+const doctors = team.filter((m) => m.doctor);
+const nurses = team.filter((m) => !m.doctor);
+const initials = (name: string) =>
+  name
+    .replace(/^(\S+\.\s*)+/, '')
+    .split(/\s+/)
+    .map((p) => p[0])
+    .join('')
+    .slice(0, 2);
+---
+
+<section class="crew" id="onas" aria-labelledby="tym-title">
+  <div class="row">
+    <header class="crew__head">
+      <p class="eyebrow">O nás</p>
+      <h2 id="tym-title" class="crew__title">Poznejte náš sehraný tým</h2>
+      <p class="crew__lead">
+        Jsme tu pro vaše chlupaté, opeřené i šupinaté přátele. Stále si doplňujeme vzdělání, abychom byli tou nejlepší
+        pomocí pro vaše mazlíčky.
+      </p>
+    </header>
+
+    <ul class="crew__doctors">
+      {
+        doctors.map((m) => (
+          <li class="doc">
+            <div class="doc__photo">
+              {m.photo && (
+                <Image src={m.photo} alt={m.name} width={420} height={560} widths={[280, 420, 640]} sizes="(max-width: 767px) 90vw, 260px" loading="lazy" />
+              )}
+            </div>
+            <div class="doc__body">
+              <span class="badge">
+                <Icon name="stethoscope" size={14} /> {m.title}
+              </span>
+              <h3 class="doc__name">{m.name}</h3>
+              <ul class="chips" aria-label="Zaměření">
+                {m.role.split(/,\s*/).map((r) => (
+                  <li>{r}</li>
+                ))}
+              </ul>
+              {m.phone && (
+                <a class="doc__call" href={m.phone.href}>
+                  <Icon name="phone" size={16} />
+                  {m.phone.label}
+                </a>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <ul class="crew__nurses">
+      {
+        nurses.map((m) => (
+          <li class="nurse">
+            <div class="nurse__photo">
+              {m.photo ? (
+                <Image src={m.photo} alt={m.name} width={400} height={480} widths={[300, 400, 600]} sizes="(max-width: 767px) 90vw, 300px" loading="lazy" />
+              ) : (
+                <span class="nurse__placeholder" aria-hidden="true">
+                  {initials(m.name)}
+                </span>
+              )}
+            </div>
+            <div class="nurse__body">
+              <h3 class="nurse__name">{m.name}</h3>
+              <p class="nurse__role">{m.title}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .crew {
+    padding: 40px 0 50px;
+    background-image: linear-gradient(180deg, rgba(255, 246, 239, 0) 0%, #fff6ef 30%, #fff7f4 85%, rgba(255, 255, 255, 0) 100%);
+    scroll-margin-top: 80px;
+  }
+
+  .crew__head {
+    max-width: 720px;
+    margin: 0 auto 34px;
+    text-align: center;
+  }
+
+  .crew__title {
+    padding-bottom: 10px;
+    color: var(--c-ink);
+    font-family: var(--f-head);
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .crew__lead {
+    color: #555;
+    font-family: var(--f-head);
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .crew__doctors,
+  .crew__nurses {
+    display: grid;
+    gap: 22px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .crew__doctors {
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 22px;
+  }
+
+  .crew__nurses {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* ---------- Lékař ---------- */
+  .doc {
+    display: grid;
+    grid-template-columns: 42% 1fr;
+    overflow: hidden;
+    border: 1px solid #f0e6dc;
+    border-radius: 20px;
+    background: var(--c-white);
+    box-shadow: 0 14px 34px -22px rgba(0, 0, 0, 0.45);
+    transition: transform 250ms ease, box-shadow 250ms ease;
+  }
+
+  .doc:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px -22px rgba(0, 0, 0, 0.5);
+  }
+
+  .doc__photo {
+    position: relative;
+    min-height: 300px;
+    background: #f5ede6;
+  }
+
+  .doc__photo :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+  }
+
+  .doc__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 26px 24px;
+    font-family: var(--f-head);
+  }
+
+  .doc__name {
+    padding: 12px 0 12px;
+    color: var(--c-heading);
+    font-family: var(--f-head);
+    font-size: 23px;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 0 20px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .chips li {
+    padding: 4px 12px;
+    border-radius: 100px;
+    background: #f6f1ec;
+    color: #5b4a3b;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .chips li::first-letter {
+    text-transform: uppercase;
+  }
+
+  .doc__call {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding: 10px 18px;
+    border-radius: 100px;
+    background: var(--c-orange);
+    color: var(--c-white);
+    font-size: 15px;
+    font-weight: 800;
+    box-shadow: var(--sh-btn);
+    transition: background 200ms ease;
+  }
+
+  .doc__call:hover {
+    opacity: 1;
+    background: #ff8a00;
+  }
+
+  .badge {
+    white-space: nowrap;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: var(--c-cream);
+    color: var(--c-orange-deep);
+    font-family: var(--f-head);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .nurse__role {
+    position: relative;
+    padding: 0 0 0 14px;
+    color: var(--c-orange-deep);
+    font-family: var(--f-head);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    line-height: 1.35;
+    text-transform: uppercase;
+  }
+
+  .nurse__role::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.45em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  /* ---------- Sestra ---------- */
+  .nurse {
+    overflow: hidden;
+    border: 1px solid #f0e6dc;
+    border-radius: 20px;
+    background: var(--c-white);
+    box-shadow: 0 14px 34px -24px rgba(0, 0, 0, 0.45);
+    transition: transform 250ms ease, box-shadow 250ms ease;
+  }
+
+  .nurse:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px -24px rgba(0, 0, 0, 0.5);
+  }
+
+  .nurse__photo {
+    position: relative;
+    aspect-ratio: 5 / 6;
+    background: #f5ede6;
+  }
+
+  .nurse__photo :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+  }
+
+  .nurse__placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(160deg, #fde3c8 0%, #f8efe7 100%);
+    color: #e9a467;
+    font-family: var(--f-head);
+    font-size: 64px;
+    font-weight: 800;
+    letter-spacing: 2px;
+  }
+
+  .nurse__body {
+    padding: 18px 20px 20px;
+    font-family: var(--f-head);
+  }
+
+  .nurse__name {
+    padding-bottom: 8px;
+    color: var(--c-heading);
+    font-family: var(--f-head);
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+  @media (max-width: 1100px) {
+    .crew__doctors {
+      grid-template-columns: 1fr;
+    }
+    .doc {
+      grid-template-columns: 260px 1fr;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .crew {
+      padding: 30px 0 36px;
+    }
+    .crew__title {
+      font-size: 30px;
+    }
+    .crew__lead {
+      font-size: 16px;
+    }
+    .doc {
+      grid-template-columns: 1fr;
+    }
+    .doc__photo {
+      min-height: 0;
+      aspect-ratio: 4 / 3;
+    }
+    .doc__body {
+      padding: 20px;
+    }
+    .crew__nurses {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .nurse__body {
+      padding: 12px 14px 16px;
+    }
+    .nurse__name {
+      font-size: 16px;
+      line-height: 1.25;
+    }
+    .nurse__placeholder {
+      font-size: 42px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .nurse__role {
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+  }
+</style>

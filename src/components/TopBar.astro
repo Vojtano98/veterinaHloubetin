@@ -1,0 +1,52 @@
+---
+import { site } from '../data/site';
+---
+
+<a class="info-bar" href="/kontakty/">
+  <span class="info-bar__full">{site.hoursBar} <strong>Těšíme se na Vás.</strong></span>
+  <span class="info-bar__short">Po–Pá 8–19 · So 8–12 · Ne 16–18 · <strong class="nowrap">Pohotovost {site.phones.main.label}</strong></span>
+</a>
+
+<style>
+  .info-bar {
+    display: block;
+    padding: 10px 16px;
+    background: var(--c-orange-bar);
+    color: var(--c-white);
+    font-family: var(--f-body);
+    font-size: 18px;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .info-bar:hover {
+    opacity: 1;
+  }
+
+  @media (max-width: 980px) {
+    .info-bar {
+      font-size: 17px;
+    }
+  }
+
+  .info-bar__short {
+    display: none;
+  }
+
+  .nowrap {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 767px) {
+    .info-bar {
+      font-size: 13px;
+      padding: 7px 10px;
+    }
+    .info-bar__full {
+      display: none;
+    }
+    .info-bar__short {
+      display: inline;
+    }
+  }
+</style>
