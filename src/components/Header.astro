@@ -356,9 +356,28 @@ const isActive = (href: string) => {
   const menu = document.querySelector<HTMLElement>('[data-menu]');
 
   if (header) {
-    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 120);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+    // Hystereze: zmenšit až po 160 px, zvětšit až pod 40 px. Rozdíl je větší než změna výšky hlavičky,
+    // takže zmenšení samo neposune stránku zpět pod práh (jinak hlavička „klepe“).
+    let scrolled = false;
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const y = window.scrollY;
+      if (!scrolled && y > 160) scrolled = true;
+      else if (scrolled && y < 40) scrolled = false;
+      header.classList.toggle('is-scrolled', scrolled);
+    };
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true },
+    );
+    update();
   }
 
   if (burger && menu) {

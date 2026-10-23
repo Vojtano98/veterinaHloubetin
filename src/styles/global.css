@@ -72,6 +72,8 @@ html {
   scroll-behavior: smooth;
   /* Kotvy (#sluzby, #onas…) nesmí zajet pod přichycenou hlavičku */
   scroll-padding-top: 90px;
+  /* Změna výšky přichycené hlavičky nesmí posouvat stránku (scroll anchoring) */
+  overflow-anchor: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
