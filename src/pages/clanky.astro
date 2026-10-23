@@ -6,6 +6,7 @@ import Reviews from '../components/Reviews.astro';
 import InfoBox from '../components/InfoBox.astro';
 import ContactCards from '../components/ContactCards.astro';
 import Wave from '../components/Wave.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { getArticles } from '../lib/articles';
 import { site } from '../data/site';
 import heroImg from '../assets/uploads/2024/05/Untitled-design-1-scaled.jpg';
@@ -35,15 +36,7 @@ const jsonLd = [
         name: a.data.title,
       })),
     },
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Úvod', item: `${site.url}/` },
-      { '@type': 'ListItem', position: 2, name: 'Články', item: url },
-    ],
-  },
+  }
 ];
 ---
 
@@ -58,6 +51,7 @@ const jsonLd = [
   <section class="listing" aria-label="Seznam článků">
     <Wave variant="arch" position="top" color="#FFFFFF" height="54vw" class="listing__wave" />
     <div class="row">
+      <Breadcrumbs items={[{ label: 'Články' }]} class="listing__crumbs" />
       <ul class="listing__grid">
         {
           articles.map((a) => (
@@ -98,6 +92,10 @@ const jsonLd = [
 
   .listing .row {
     z-index: 2;
+  }
+
+  .listing :global(.listing__crumbs) {
+    margin-bottom: 26px;
   }
 
   .listing__grid {

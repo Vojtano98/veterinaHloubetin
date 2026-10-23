@@ -1,0 +1,135 @@
+---
+import { site } from '../data/site';
+
+// Drobečková navigace – viditelná i jako strukturovaná data BreadcrumbList (jediný zdroj, bez duplicit)
+interface Crumb {
+  label: string;
+  href?: string;
+}
+interface Props {
+  items: Crumb[];
+  class?: string;
+}
+
+const { items, class: className } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const all: Crumb[] = [{ label: 'Úvod', href: '/' }, ...items];
+const currentPath = Astro.url.pathname.replace(base, '') || '/';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: all.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.label,
+    item: new URL(c.href ?? currentPath, site.url).href,
+  })),
+};
+---
+
+<nav class:list={['crumbs', className]} aria-label="Drobečková navigace">
+  <ol>
+    {
+      all.map((c, i) => {
+        const last = i === all.length - 1;
+        return (
+          <li>
+            {last ? (
+              <span aria-current="page" class="crumbs__current" title={c.label}>
+                {c.label}
+              </span>
+            ) : (
+              <a href={c.href} class:list={{ crumbs__home: i === 0 }}>
+                {i === 0 && (
+                  <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+                    <path fill="currentColor" d="M12 3 2 11.5h3V21h5.5v-6h3v6H19v-9.5h3z" />
+                  </svg>
+                )}
+                {c.label}
+              </a>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+<style>
+  .crumbs {
+    font-family: var(--f-head);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    line-height: 1.4;
+  }
+
+  .crumbs li {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .crumbs li + li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    margin: 0 12px 0 10px;
+    border-top: 2px solid #d4c3b3;
+    border-right: 2px solid #d4c3b3;
+    transform: rotate(45deg);
+  }
+
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: var(--c-cream);
+    color: var(--c-ink);
+    transition: background 200ms ease, color 200ms ease;
+  }
+
+  .crumbs a:hover {
+    opacity: 1;
+    background: var(--c-orange);
+    color: var(--c-white);
+  }
+
+  .crumbs__home svg {
+    color: var(--c-orange-deep);
+  }
+
+  .crumbs a:hover svg {
+    color: inherit;
+  }
+
+  .crumbs__current {
+    overflow: hidden;
+    max-width: 46ch;
+    color: #8a7a6c;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 767px) {
+    .crumbs {
+      font-size: 13px;
+    }
+    .crumbs__current {
+      max-width: 22ch;
+    }
+  }
+</style>

@@ -7,6 +7,7 @@ import ArticleCard from '../components/ArticleCard.astro';
 import InfoBox from '../components/InfoBox.astro';
 import ContactCards from '../components/ContactCards.astro';
 import Icon from '../components/Icon.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { getArticles, relatedArticles, formatDate, isoDate, readingTime, type Article } from '../lib/articles';
 import { memberById } from '../data/team';
 import { site } from '../data/site';
@@ -61,15 +62,6 @@ const jsonLd = [
     isPartOf: { '@id': `${site.url}/clanky/` },
     wordCount: (article.body ?? '').split(/\s+/).filter(Boolean).length,
   },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Úvod', item: `${site.url}/` },
-      { '@type': 'ListItem', position: 2, name: 'Články', item: `${site.url}/clanky/` },
-      { '@type': 'ListItem', position: 3, name: d.title, item: url },
-    ],
-  },
   ...(d.aiContentApproved && faq.length
     ? [
         {
@@ -100,9 +92,7 @@ const jsonLd = [
 
   <article class="post" aria-labelledby="post-title">
     <div class="row">
-      <nav class="crumbs" aria-label="Drobečková navigace">
-        <a href="/clanky/" class="crumbs__back">zpět na články</a>
-      </nav>
+      <Breadcrumbs items={[{ label: 'Články', href: '/clanky/' }, { label: d.title }]} />
 
       <header class="post__header">
         <h1 id="post-title" class="post__title">{d.title}</h1>
@@ -222,9 +212,14 @@ const jsonLd = [
     related.length > 0 && (
       <section class="related" aria-labelledby="related-h">
         <div class="row">
-          <h2 id="related-h" class="related__title">
-            Mohlo by vás zajímat
-          </h2>
+          <div class="related__head">
+            <h2 id="related-h" class="related__title">
+              Mohlo by vás zajímat
+            </h2>
+            <a class="related__all" href="/clanky/">
+              Všechny články <Icon name="arrow" size={18} />
+            </a>
+          </div>
           <ul class="related__grid">
             {related.map((a) => (
               <li>
@@ -248,25 +243,11 @@ const jsonLd = [
 
 <style>
   .post .row {
-    padding-top: 8px;
-  }
-
-  .crumbs__back {
-    color: var(--c-text);
-    font-family: var(--f-head);
-    font-size: 17px;
-    font-weight: 300;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .crumbs__back:hover {
-    color: var(--c-orange-deep);
-    opacity: 1;
+    padding-top: 26px;
   }
 
   .post__header {
-    margin: 45px 0 30px;
+    margin: 28px 0 30px;
   }
 
   .post__title {
@@ -512,13 +493,39 @@ const jsonLd = [
     padding: 30px 0 10px;
   }
 
-  .related__title {
+  .related__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 20px;
     padding-bottom: 24px;
+  }
+
+  .related__all {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--c-orange-deep);
+    font-family: var(--f-head);
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .related__all:hover {
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .related__title {
+    padding-bottom: 0;
     color: var(--c-heading);
     font-family: var(--f-head);
     font-size: 30px;
     font-weight: 700;
-    text-align: center;
   }
 
   .related__grid {
@@ -552,9 +559,6 @@ const jsonLd = [
     }
     .post__title {
       font-size: 30px;
-    }
-    .crumbs__back {
-      font-size: 16px;
     }
     .post__figure {
       float: none;

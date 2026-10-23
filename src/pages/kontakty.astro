@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
 import ContactCards from '../components/ContactCards.astro';
 import ContactForm from '../components/ContactForm.astro';
@@ -30,6 +31,7 @@ const jsonLd = {
 
   <section class="section intro">
     <div class="row">
+      <Breadcrumbs items={[{ label: 'Kontakty' }]} class="page-crumbs" />
       <h1 class="intro__title">Kontaktujte nás</h1>
       <p class="intro__sub">Jsme tu vždy pro Vás a Vaše mazlíčky.</p>
       <p class="intro__text">Poskytujeme tu nejlepší péči a vytvořili jsme prostředí, kam se i váš kamarád bude rád vracet.</p>
@@ -136,6 +138,10 @@ const jsonLd = {
 </Base>
 
 <style>
+  :global(.page-crumbs) {
+    margin: 4px 0 28px;
+  }
+
   .intro {
     padding: 4px 0 3px;
   }

@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
 import ContactCards from '../components/ContactCards.astro';
 import { cenik } from '../data/cenik';
@@ -25,6 +26,7 @@ const slug = (s: string) =>
 
   <section class="section cenik-section">
     <div class="row">
+      <Breadcrumbs items={[{ label: 'Ceník zákroků a vyšetření' }]} class="page-crumbs" />
       <nav class="cenik-toc" aria-label="Části ceníku">
         {cenik.map((s) => <a href={`#${slug(s.title)}`}>{s.title}</a>)}
       </nav>
@@ -76,6 +78,10 @@ const slug = (s: string) =>
 </Base>
 
 <style>
+  :global(.page-crumbs) {
+    margin: 4px 0 28px;
+  }
+
   .cenik-section {
     padding-top: 30px;
   }
