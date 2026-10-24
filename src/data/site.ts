@@ -13,8 +13,6 @@ export const site = {
   phones: {
     // Hlavní číslo ordinace a pohotovosti (uváděné na webu)
     main: { label: '+420 773 665 751', href: 'tel:+420773665751' },
-    // Pevná linka ordinace (uvedená na stránce Rezervace)
-    landline: { label: '+420 281 863 796', href: 'tel:+420281863796' },
   },
 
   address: {

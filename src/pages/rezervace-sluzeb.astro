@@ -24,7 +24,7 @@ import heroImg from '../assets/uploads/2024/05/Untitled-design-1920x1280-2.jpg';
         <!-- Rezervační formulář Reservanto -->
         <div class="reservanto-iframe" data-id={site.integrations.reservantoId}></div>
         <noscript>
-          <p>Pro zobrazení rezervačního formuláře je potřeba povolit JavaScript. Objednat se můžete také telefonicky na {site.phones.landline.label}.</p>
+          <p>Pro zobrazení rezervačního formuláře je potřeba povolit JavaScript. Objednat se můžete také telefonicky na {site.phones.main.label}.</p>
         </noscript>
       </div>
 
@@ -46,11 +46,7 @@ import heroImg from '../assets/uploads/2024/05/Untitled-design-1920x1280-2.jpg';
           </div>
           <ul class="rez__phones">
             <li>
-              <span class="rez__phones-label">Objednání (pevná linka)</span>
-              <a class="rez__phones-num" href={site.phones.landline.href}><Icon name="phone" size={18} />{site.phones.landline.label}</a>
-            </li>
-            <li>
-              <span class="rez__phones-label">Ordinace a pohotovost (mobil)</span>
+              <span class="rez__phones-label">Objednání, ordinace a pohotovost</span>
               <a class="rez__phones-num" href={site.phones.main.href}><Icon name="phone" size={18} />{site.phones.main.label}</a>
             </li>
             <li>
