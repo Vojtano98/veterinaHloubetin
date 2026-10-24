@@ -36,7 +36,6 @@ export const site = {
     { days: 'Sobota', short: 'So', time: '8:00 – 12:00', schema: ['Sa'], opens: '08:00', closes: '12:00' },
     { days: 'Neděle', short: 'Ne', time: '16:00 – 18:00', schema: ['Su'], opens: '16:00', closes: '18:00' },
   ],
-  hoursBar: 'Standardní provoz: Po–Pá 8:00-19:00, sobota 8:00–12:00, neděle: 16:00-18:00.',
 
   social: {
     facebook: 'https://www.facebook.com/veterinahloubetin',

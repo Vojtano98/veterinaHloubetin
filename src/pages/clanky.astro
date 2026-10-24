@@ -7,11 +7,15 @@ import InfoBox from '../components/InfoBox.astro';
 import ContactCards from '../components/ContactCards.astro';
 import Wave from '../components/Wave.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import { getArticles } from '../lib/articles';
+import { animals, getArticles } from '../lib/articles';
 import { site } from '../data/site';
 import heroImg from '../assets/uploads/2024/05/Untitled-design-1-scaled.jpg';
 
 const articles = await getArticles();
+// Filtr nabízí jen zvířata, ke kterým existuje aspoň jeden článek
+const filters = (Object.keys(animals) as (keyof typeof animals)[])
+  .map((z) => ({ id: z, label: animals[z], count: articles.filter((a) => a.data.zvirata.includes(z)).length }))
+  .filter((f) => f.count > 0);
 const url = `${site.url}/clanky/`;
 
 const jsonLd = [
@@ -52,10 +56,20 @@ const jsonLd = [
     <Wave variant="arch" position="top" color="#FFFFFF" height="54vw" class="listing__wave" />
     <div class="row">
       <Breadcrumbs items={[{ label: 'Články' }]} class="listing__crumbs" />
-      <ul class="listing__grid">
+      <div class="filter" role="group" aria-label="Filtrovat články podle zvířete" data-filter hidden>
+        <button type="button" class="filter__btn" aria-pressed="true" data-value="">Vše <span>{articles.length}</span></button>
+        {
+          filters.map((f) => (
+            <button type="button" class="filter__btn" aria-pressed="false" data-value={f.id}>
+              {f.label} <span>{f.count}</span>
+            </button>
+          ))
+        }
+      </div>
+      <ul class="listing__grid" data-list>
         {
           articles.map((a) => (
-            <li>
+            <li data-zvirata={a.data.zvirata.join(' ')}>
               <ArticleCard article={a} />
             </li>
           ))
@@ -78,7 +92,75 @@ const jsonLd = [
   <ContactCards />
 </Base>
 
+<script>
+  // Filtr článků podle zvířete – bez JavaScriptu se zobrazí všechny články
+  const box = document.querySelector<HTMLElement>('[data-filter]');
+  const items = document.querySelectorAll<HTMLElement>('[data-list] > li');
+  if (box) {
+    box.hidden = false;
+    box.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-value]');
+      if (!btn) return;
+      const value = btn.dataset.value ?? '';
+      box.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      items.forEach((li) => {
+        li.hidden = value !== '' && !(li.dataset.zvirata ?? '').split(' ').includes(value);
+      });
+    });
+  }
+</script>
+
 <style>
+  .filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .filter[hidden] {
+    display: none;
+  }
+
+  .filter__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1px solid #f1d9c2;
+    border-radius: 100px;
+    background: var(--c-white);
+    color: var(--c-ink);
+    font-family: var(--f-head);
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+  }
+
+  .filter__btn span {
+    color: #8a7a6c;
+    font-size: 13px;
+  }
+
+  .filter__btn:hover {
+    border-color: var(--c-orange);
+  }
+
+  .filter__btn[aria-pressed='true'] {
+    border-color: var(--c-orange);
+    background: var(--c-orange);
+    color: var(--c-white);
+  }
+
+  .filter__btn[aria-pressed='true'] span {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .listing__grid > li[hidden] {
+    display: none;
+  }
+
   .listing {
     position: relative;
     padding: 54px 0 35px;
@@ -101,7 +183,7 @@ const jsonLd = [
   .listing__grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 40px 5.5%;
+    gap: 32px 3.5%;
     margin: 0;
     padding: 0;
     list-style: none;

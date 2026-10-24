@@ -21,6 +21,8 @@ const clanky = defineCollection({
       reviewedBy: z.string().optional(),
       // Ručně vybrané související články (slugy); jinak se doplní automaticky
       related: z.array(z.string()).optional(),
+      // Pro jaká zvířata je článek určen (filtr v seznamu článků)
+      zvirata: z.array(z.enum(['psi', 'kocky', 'drobni-savci', 'plazi'])).default([]),
       // Odkazy na služby, ke kterým se článek vztahuje (zobrazí výzvu k objednání)
       cta: z.enum(['rezervace', 'telefon', 'zadna']).default('rezervace'),
       // Shrnutí pod nadpisem a časté otázky (SEO/GEO). Na produkci se zobrazí,

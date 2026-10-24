@@ -1,42 +1,45 @@
 ---
-import { Image } from 'astro:assets';
 import { site } from '../data/site';
 import Wave from './Wave.astro';
 import Icon from './Icon.astro';
-import iconMessage from '../assets/uploads/2024/05/veterinarian-icon-6.png';
-import iconClinic from '../assets/uploads/2024/05/veterinarian-icon-11.png';
-import iconFirstAid from '../assets/uploads/2024/05/veterinarian-icon-2.png';
-import iconFollow from '../assets/uploads/2024/10/PNG-to-WEBP-conversion.webp';
 import pets from '../assets/uploads/2024/10/Vet-13.webp';
 ---
 
 <section class="contact-cards" aria-label="Kontakty">
-  <div class="row cols cols--2 cc-row">
-    <a class="cc card" href={`mailto:${site.email}`}>
-      <Image src={iconMessage} alt="" width={90} height={90} class="cc__icon" />
-      <h2 class="cc__title">Zanechte nám zprávu</h2>
-      <span class="cc__value cc__value--mail">{site.email.split('@')[0]}@<wbr />{site.email.split('@')[1]}</span>
+  <div class="row cc-grid">
+    <a class="cc" href={`mailto:${site.email}`}>
+      <span class="cc__icon"><Icon name="mail" size={24} /></span>
+      <div class="cc__body">
+        <h2 class="cc__title">Zanechte nám zprávu</h2>
+        <span class="cc__value">{site.email.split('@')[0]}@<wbr />{site.email.split('@')[1]}</span>
+      </div>
     </a>
-    <a class="cc card" href={site.mapsUrl} target="_blank" rel="noopener">
-      <Image src={iconClinic} alt="" width={90} height={90} class="cc__icon" />
-      <h2 class="cc__title">Jsme vám vždy nablízku</h2>
-      <span class="cc__value">{site.address.full}</span>
+    <a class="cc" href={site.mapsUrl} target="_blank" rel="noopener">
+      <span class="cc__icon"><Icon name="pin" size={24} /></span>
+      <div class="cc__body">
+        <h2 class="cc__title">Jsme vám vždy nablízku</h2>
+        <span class="cc__value">{site.address.full}</span>
+      </div>
     </a>
-    <a class="cc card" href={site.phones.main.href}>
-      <Image src={iconFirstAid} alt="" width={90} height={90} class="cc__icon" />
-      <h2 class="cc__title">Pohotovost na telefonu</h2>
-      <span class="cc__value">{site.phones.main.label}</span>
+    <a class="cc cc--alert" href={site.phones.main.href}>
+      <span class="cc__icon"><Icon name="phone" size={24} /></span>
+      <div class="cc__body">
+        <h2 class="cc__title">Pohotovost na telefonu</h2>
+        <span class="cc__value">{site.phones.main.label}</span>
+      </div>
     </a>
-    <div class="cc card cc--follow" style={`--pets:url(${pets.src})`}>
-      <Image src={iconFollow} alt="" width={90} height={90} class="cc__icon" />
-      <h2 class="cc__title">Sledujte nás</h2>
-      <div class="social">
-        <a href={site.social.facebook} target="_blank" rel="noopener" class="social__fb" aria-label="Facebook">
-          <Icon name="facebook" size={16} />
-        </a>
-        <a href={site.social.instagram} target="_blank" rel="noopener" class="social__ig" aria-label="Instagram">
-          <Icon name="instagram" size={16} />
-        </a>
+    <div class="cc cc--follow" style={`--pets:url(${pets.src})`}>
+      <span class="cc__icon"><Icon name="heart" size={24} /></span>
+      <div class="cc__body">
+        <h2 class="cc__title">Sledujte nás</h2>
+        <div class="social">
+          <a href={site.social.facebook} target="_blank" rel="noopener">
+            <Icon name="facebook" size={16} /> Facebook
+          </a>
+          <a href={site.social.instagram} target="_blank" rel="noopener">
+            <Icon name="instagram" size={16} /> Instagram
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -44,139 +47,166 @@ import pets from '../assets/uploads/2024/10/Vet-13.webp';
 </section>
 
 <style>
+  /* Stejný styl jako karty „Důležité informace“ */
   .contact-cards {
     position: relative;
-    padding: var(--section-pad) 0 57px;
+    padding: var(--section-pad) 0 90px;
     background: var(--c-white);
   }
 
-  .cc-row {
+  .cc-grid {
     position: relative;
     z-index: 2;
-    row-gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
     padding-top: 0;
   }
 
   .cc {
+    position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100%;
-    padding: 20px 10px;
-    border-radius: var(--r-card);
-    box-shadow: var(--sh-card-strong);
-    text-align: center;
-    color: var(--c-link);
+    gap: 16px;
+    padding: 24px 22px;
+    border: 1px solid #f0e8e0;
+    border-radius: 18px;
+    background: var(--c-white);
+    box-shadow: 0 10px 30px -20px rgba(0, 0, 0, 0.35);
+    color: var(--c-ink);
     font-family: var(--f-head);
-    font-weight: 700;
-    transition: transform 250ms ease, box-shadow 250ms ease;
+    transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease;
   }
 
   a.cc:hover {
     opacity: 1;
+    border-color: #f6d3b3;
     transform: translateY(-3px);
-    box-shadow: 6px 10px 24px 0 rgba(0, 0, 0, 0.22);
+    box-shadow: 0 16px 34px -20px rgba(0, 0, 0, 0.45);
   }
 
-  .cc :global(.cc__icon) {
-    width: 76px;
-    height: auto;
-    margin-bottom: 26px;
+  .cc__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--c-cream);
+    color: var(--c-orange-deep);
+  }
+
+  .cc__body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
   }
 
   .cc__title {
-    padding-bottom: 6px;
-    color: var(--c-heading);
+    padding: 0;
+    color: #8a7a6c;
     font-family: var(--f-head);
-    font-size: 19px;
-    font-weight: 700;
-    line-height: 1.1em;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    line-height: 1.3;
+    text-transform: uppercase;
   }
 
   .cc__value {
-    color: var(--c-link);
-    font-size: 20px;
-    line-height: 1.4;
+    color: var(--c-ink);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.35;
     overflow-wrap: break-word;
   }
 
+  a.cc:hover .cc__value {
+    color: var(--c-orange-deep);
+  }
+
+  .cc--alert .cc__icon {
+    background: var(--c-orange);
+    color: var(--c-white);
+  }
+
   .cc--follow {
-    padding-bottom: 46px;
-    background-color: var(--c-white);
+    padding-right: 90px;
     background-image: var(--pets);
     background-repeat: no-repeat;
-    background-position: right bottom;
+    background-position: right 8px bottom 0;
+    background-size: auto 78px;
   }
 
   .social {
     display: flex;
-    gap: 8px;
-    margin-top: 4px;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-top: 2px;
   }
 
   .social a {
-    display: grid;
-    place-items: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 30px;
-    color: var(--c-white);
-    transition: transform 200ms ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--c-ink);
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .social a :global(svg) {
+    color: var(--c-orange-deep);
   }
 
   .social a:hover {
     opacity: 1;
-    transform: scale(1.08);
-  }
-
-  .social__fb {
-    background: #495e99;
-  }
-
-  .social__ig {
-    background: linear-gradient(151deg, #feda77 0%, #dd2a7b 74%);
+    color: var(--c-orange-deep);
   }
 
   .cc-wave {
     z-index: 1;
   }
 
-  @media (max-width: 980px) {
-    .cc-row {
-      row-gap: 10px;
-    }
-    .cc-wave {
-      height: 67px !important;
+  @media (max-width: 1100px) {
+    .cc-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 767px) {
-    .cc-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .contact-cards {
+      padding-bottom: 60px;
+    }
+    .cc-grid {
       gap: 10px;
       width: calc(100% - 32px);
     }
-    .cc-row > * {
-      width: auto;
-    }
     .cc {
-      padding: 16px 8px;
+      gap: 10px;
+      padding: 16px 14px;
+      border-radius: 14px;
     }
-    .cc :global(.cc__icon) {
-      width: 48px;
-      margin-bottom: 12px;
-    }
-    .cc--follow {
-      padding-bottom: 16px;
-      background-image: none;
+    .cc__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
     }
     .cc__title {
-      font-size: 15px;
+      font-size: 11px;
     }
     .cc__value {
-      font-size: 13px;
+      font-size: 14px;
+    }
+    .cc--follow {
+      padding-right: 14px;
+      background-image: none;
+    }
+    .social {
+      flex-direction: column;
+    }
+    .social a {
+      font-size: 14px;
     }
     .cc-wave {
       height: 44px !important;

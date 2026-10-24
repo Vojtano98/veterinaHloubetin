@@ -77,20 +77,21 @@ const jsonLd = {
         </div>
       </div>
 
-      <div class="directions">
+      <div class="directions card">
         <p class="directions__head">
           Naše klinika se nachází v obchodním domě Havana, přímo u výstupu ze stanice metra Hloubětín.
         </p>
-        <h2 class="directions__label">MHD</h2>
+        <h2 class="directions__label"><Icon name="pin" size={18} /> MHD</h2>
         <p>Metro – trasa B – stanice Hloubětín</p>
-        <h2 class="directions__label">Autem</h2>
+        <h2 class="directions__label"><Icon name="arrow" size={18} /> Autem</h2>
         <p>Příjezd k ordinaci je možný pouze z ulice Kolbenova ve směru červených šipek. Podrobnější mapa níže.</p>
-        <a href={mapa.src} target="_blank" class="directions__map">
+        <a href={mapa.src} target="_blank" rel="noopener" class="directions__map">
           <Image
             src={mapa}
             alt="Plánek příjezdu ke klinice: vjezd z ulice Kolbenova, klinika v ulici Mochovská u stanice metra Hloubětín"
             width={848}
           />
+          <span class="directions__zoom">Zvětšit plánek ↗</span>
         </a>
       </div>
     </div>
@@ -115,7 +116,7 @@ const jsonLd = {
   </section>
 
   <section class="photos" aria-label="Budova kliniky">
-    <div class="row cols cols--2">
+    <div class="row photos__grid">
       <Image src={budova1} alt="Obchodní dům Havana, ve kterém sídlí Veterinární klinika Hloubětín" width={1024} class="photo" />
       <Image src={budova2} alt="Budova obchodního domu Havana u metra Hloubětín" width={1024} class="photo" />
     </div>
@@ -147,70 +148,82 @@ const jsonLd = {
   }
 
   .intro__title {
-    padding-bottom: 10px;
-    color: var(--c-black);
+    padding-bottom: 8px;
+    color: var(--c-ink);
     font-family: var(--f-head);
-    font-size: 34px;
-    font-weight: 500;
-    line-height: 1.1em;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.15;
     text-align: center;
   }
 
   .intro__sub {
-    padding-bottom: 10px;
-    color: var(--c-black);
+    padding-bottom: 6px;
+    color: var(--c-orange-deep);
     font-family: var(--f-head);
-    font-size: 24px;
-    font-weight: 500;
+    font-size: 20px;
+    font-weight: 800;
     text-align: center;
   }
 
   .intro__text {
-    color: var(--c-black);
+    color: var(--c-text);
     font-family: var(--f-head);
-    font-size: 18px;
-    font-weight: 300;
+    font-size: 17px;
+    font-weight: 500;
     text-align: center;
   }
 
   .details {
     align-items: flex-start;
+    padding-top: 30px;
+  }
+
+  .blurbs {
+    display: grid;
+    gap: 12px;
   }
 
   .blurb {
     display: flex;
     align-items: flex-start;
-    gap: 18px;
-    padding: 14px 0;
-    border-bottom: 1px solid rgba(66, 43, 43, 0.1);
+    gap: 16px;
+    padding: 18px 20px;
+    border: 1px solid #f0e8e0;
+    border-radius: 16px;
+    background: var(--c-white);
+    box-shadow: 0 10px 30px -22px rgba(0, 0, 0, 0.35);
     color: var(--c-text);
     font-family: var(--f-head);
-    font-size: 17px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 600;
     line-height: 1.6;
-  }
-
-  .blurb:last-child {
-    border-bottom: 0;
+    transition: border-color 200ms ease, transform 200ms ease;
   }
 
   a.blurb:hover {
     opacity: 1;
-    color: var(--c-heading);
+    border-color: #f6d3b3;
+    color: var(--c-ink);
+    transform: translateY(-2px);
   }
 
   .blurb :global(.blurb__icon) {
-    flex: 0 0 auto;
-    margin-top: 2px;
-    color: var(--c-orange-icon);
+    flex: none;
+    box-sizing: content-box;
+    padding: 11px;
+    border-radius: 14px;
+    background: var(--c-cream);
+    color: var(--c-orange-deep);
   }
 
   .blurb__title {
-    padding-bottom: 4px;
-    color: var(--c-heading);
+    padding-bottom: 2px;
+    color: #8a7a6c;
     font-family: var(--f-head);
-    font-size: 18px;
-    font-weight: 500;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
@@ -219,13 +232,19 @@ const jsonLd = {
   }
 
   .blurb strong {
-    font-weight: 700;
+    color: var(--c-ink);
+    font-weight: 800;
   }
 
   .blurb__phone {
-    color: var(--c-link);
-    font-style: italic;
-    font-weight: 700;
+    color: var(--c-ink);
+    font-size: 20px;
+    font-weight: 800;
+  }
+
+  .blurb__phone:hover {
+    opacity: 1;
+    color: var(--c-orange-deep);
   }
 
   .u {
@@ -235,36 +254,71 @@ const jsonLd = {
   }
 
   .directions {
-    padding-top: 14px;
+    padding: 24px 26px;
+    color: var(--c-text);
     font-family: var(--f-head);
-    font-size: 17px;
+    font-size: 16px;
+    font-weight: 500;
   }
 
   .directions__head {
-    color: var(--c-heading);
-    font-weight: 700;
-    text-transform: uppercase;
+    padding-bottom: 10px;
+    color: var(--c-ink);
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.4;
   }
 
   .directions__label {
-    padding: 4px 0 6px;
-    color: var(--c-heading);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 0 2px;
+    color: #8a7a6c;
     font-family: var(--f-head);
-    font-size: 17px;
-    font-weight: 700;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
+  .directions__label :global(svg) {
+    color: var(--c-orange-deep);
+  }
+
   .directions__map {
+    position: relative;
     display: block;
-    margin-top: 14px;
+    margin-top: 16px;
   }
 
   .directions__map :global(img) {
     display: block;
     width: 100%;
-    max-width: 424px;
-    border-radius: 6px;
+    height: auto;
+    border-radius: 12px;
+  }
+
+  .directions__zoom {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    padding: 6px 12px;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color: var(--c-ink);
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .directions__map:hover {
+    opacity: 1;
+  }
+
+  .directions__map:hover .directions__zoom {
+    background: var(--c-orange);
+    color: var(--c-white);
   }
 
   .form-section {
@@ -300,7 +354,10 @@ const jsonLd = {
     text-decoration: underline;
   }
 
-  .photos .row {
+  .photos__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
     padding-top: 50px;
   }
 
@@ -309,6 +366,7 @@ const jsonLd = {
     width: 100%;
     height: auto;
     aspect-ratio: 3 / 2;
+    border-radius: 16px;
     object-fit: cover;
   }
 
@@ -317,8 +375,9 @@ const jsonLd = {
   }
 
   .map {
-    border-radius: 10px;
-    box-shadow: 6px 6px 18px 0 rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.4);
   }
 
   .map iframe {
@@ -341,7 +400,21 @@ const jsonLd = {
       font-size: 30px;
     }
     .intro__sub {
-      font-size: 21px;
+      font-size: 18px;
+    }
+    .details {
+      padding-top: 16px;
+    }
+    .blurb {
+      padding: 14px 16px;
+    }
+    .directions {
+      padding: 20px 18px;
+    }
+    .photos__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+      padding-top: 30px;
     }
     .form-card {
       padding: 22px 18px;

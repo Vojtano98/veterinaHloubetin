@@ -2,6 +2,7 @@
 title: "Koprologické vyšetření trusu: Vše, co potřebujete vědět"
 description: "Koprologické vyšetření trusu - Co to je, informace o vyšetření trusu, diagnostice parazitů a přípravě vzorku vašeho mazlíčka."
 author: helena-pavelkova
+zvirata: [psi, kocky, plazi, drobni-savci]
 pubDate: 2024-05-30T15:00:58+00:00
 updatedDate: 2025-02-19T20:40:44+00:00
 cover: "../../assets/uploads/2024/05/Clear-Glass-Jars-Flasks.jpg"

@@ -3,6 +3,7 @@ title: "Chov vodních želv – vše, co potřebujete vědět"
 seoTitle: "Chov vodních želv: vše, co potřebujete vědět"
 description: "Chov vodních želv a vše, co potřebujete vědět k jejich osvětlení, potravě i teplotám na jednom místě. Veterinární klinika Hloubětín."
 author: helena-pavelkova
+zvirata: [plazi]
 pubDate: 2024-11-07T13:33:55+00:00
 updatedDate: 2025-02-19T20:30:28+00:00
 cover: "../../assets/uploads/2024/11/Pakino-Veterina-Frame-4.webp"

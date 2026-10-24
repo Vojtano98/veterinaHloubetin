@@ -2,6 +2,7 @@
 title: "Centrální evidence psů od 1. července 2026: co potřebují vědět majitelé psů?"
 description: "Od 1. 7. 2026 začíná platit Centrální evidence psů. Zjistěte, koho se registrace týká, kdy ji vyřešit a zda musíte se psem ihned k veterináři."
 author: petr-skubal
+zvirata: [psi]
 pubDate: 2026-06-12T10:02:43+00:00
 updatedDate: 2026-06-12T13:06:18+00:00
 cover: "../../assets/uploads/2026/06/Centralni-evidence-psu-1.png"

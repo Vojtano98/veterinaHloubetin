@@ -3,6 +3,7 @@ title: "Kastrace kočky: Vše, co potřebujete vědět"
 seoTitle: "Kastrace kočky - vše, co potřebujete vědět"
 description: "Kastrace kočky - Vše, co potřebujete vědět o kastraci kočky. Výhody, příprava, pooperační péče a tipy pro rychlé zotavení vaší kočičky."
 author: petr-skubal
+zvirata: [kocky]
 pubDate: 2024-05-27T12:11:05+00:00
 updatedDate: 2026-10-23T09:00:00+00:00
 cover: "../../assets/uploads/2024/05/Sleeping-Cat-Close-up-scaled.jpg"

@@ -3,6 +3,7 @@ title: "Kastrace psa: Vše, co potřebujete vědět"
 seoTitle: "Kastrace psa - vše, co potřebujete vědět"
 description: "Důležité informace o kastraci psů - výhody, příprava, pooperační péče a tipy pro rychlé zotavení vašeho čtyřnohého mazlíčka."
 author: petr-skubal
+zvirata: [psi]
 pubDate: 2024-05-27T12:10:12+00:00
 updatedDate: 2026-10-23T09:00:00+00:00
 cover: "../../assets/uploads/2024/05/2woja1-1920x1280-1.jpg"

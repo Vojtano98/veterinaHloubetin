@@ -2,6 +2,7 @@
 title: "Psincový kašel u psů – příznaky, léčba a prevence"
 description: "Psincový kašel je nakažlivé onemocnění dýchacích cest psů. Zjistěte, jak poznat příznaky, jak probíhá léčba a proč je důležité očkování. Objednejte svého psa na vyšetření."
 author: helena-pavelkova
+zvirata: [psi]
 pubDate: 2025-10-08T07:05:26+00:00
 updatedDate: 2026-06-12T10:34:09+00:00
 cover: "../../assets/uploads/2025/10/HERO-min.jpg"

@@ -3,6 +3,7 @@ title: "Pooperační péče: Jak se starat o svého mazlíčka po operaci"
 seoTitle: "Pooperační péče: Jak se starat o mazlíčka po operaci"
 description: "Pooperační péče o vašeho mazlíčka - Tipy a rady pro rychlé zotavení, ošetřování ran, správnou stravu a pohodlí vašeho mazlíčka po operaci."
 author: petr-skubal
+zvirata: [psi, kocky]
 pubDate: 2024-05-30T15:29:07+00:00
 updatedDate: 2025-02-19T20:37:51+00:00
 cover: "../../assets/uploads/2024/05/Sleeping-Dog-Close-Up-scaled.jpg"

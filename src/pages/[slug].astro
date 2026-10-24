@@ -2,7 +2,6 @@
 import { Image, getImage } from 'astro:assets';
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import PageHero from '../components/PageHero.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import InfoBox from '../components/InfoBox.astro';
 import ContactCards from '../components/ContactCards.astro';
@@ -11,7 +10,6 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { getArticles, relatedArticles, formatDate, isoDate, readingTime, type Article } from '../lib/articles';
 import { memberById } from '../data/team';
 import { site } from '../data/site';
-import heroImg from '../assets/uploads/2024/05/Untitled-design-1-scaled.jpg';
 
 export async function getStaticPaths() {
   const all = await getArticles();
@@ -88,8 +86,6 @@ const jsonLd = [
   jsonLd={jsonLd}
   section="clanky"
 >
-  <PageHero title="Články" subtitle="a ostatní zajímavá témata" image={heroImg} position="center 23%" as="p" />
-
   <article class="post" aria-labelledby="post-title">
     <div class="row">
       <Breadcrumbs items={[{ label: 'Články', href: '/clanky/' }, { label: d.title }]} />
@@ -242,8 +238,17 @@ const jsonLd = [
 </Base>
 
 <style>
+  /* Bez obecného banneru – článek začíná hned pod hlavičkou */
+  .post {
+    background: linear-gradient(180deg, var(--c-cream) 0, #fff 340px);
+  }
+
   .post .row {
-    padding-top: 26px;
+    padding-top: 30px;
+  }
+
+  .post :global(.crumbs a:not(:hover)) {
+    background: var(--c-white);
   }
 
   .post__header {

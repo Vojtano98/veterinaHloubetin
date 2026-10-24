@@ -3,6 +3,7 @@ title: "Zubní kámen u psů i koček – vše, co potřebujete vědět"
 seoTitle: "Zubní kámen u psů i koček: vše, co potřebujete vědět"
 description: "Zubní kámen u psů a koček: jak vzniká, jaké má následky, jak ho poznat a jak probíhá odstranění ultrazvukem na Veterinární klinice Hloubětín. Včetně tipů na prevenci."
 author: petr-skubal
+zvirata: [psi, kocky]
 pubDate: 2024-10-21T08:19:20+00:00
 updatedDate: 2025-02-19T20:29:40+00:00
 cover: "../../assets/uploads/2024/10/Veterina-Hloubetin-article.jpg"

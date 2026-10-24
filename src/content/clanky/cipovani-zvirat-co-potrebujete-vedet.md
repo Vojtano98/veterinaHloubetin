@@ -2,6 +2,7 @@
 title: "Čipování domácích mazlíčků: Vše, co potřebujete vědět"
 description: "Zjistěte vše o čipování domácích mazlíčků. Jak čipování funguje, jeho výhody a proč je důležité pro bezpečnost vašeho zvířete."
 author: petr-skubal
+zvirata: [psi, kocky]
 pubDate: 2024-05-30T15:50:04+00:00
 updatedDate: 2026-10-23T09:00:00+00:00
 cover: "../../assets/uploads/2024/05/White-Dog-on-Rock.jpg"

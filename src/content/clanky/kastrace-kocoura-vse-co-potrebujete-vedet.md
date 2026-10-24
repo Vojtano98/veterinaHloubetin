@@ -3,6 +3,7 @@ title: "Kastrace kocoura: Vše, co potřebujete vědět"
 seoTitle: "Kastrace kocoura - vše, co potřebujete vědět"
 description: "Kastrace kocoura - výhody, příprava, pooperační péče a jak zajistit rychlé zotavení vašeho čtyřnohého mazlíčka."
 author: petr-skubal
+zvirata: [kocky]
 pubDate: 2024-05-30T14:53:36+00:00
 updatedDate: 2026-10-23T09:00:00+00:00
 cover: "../../assets/uploads/2024/05/Silver-Tabby-Cat.jpg"

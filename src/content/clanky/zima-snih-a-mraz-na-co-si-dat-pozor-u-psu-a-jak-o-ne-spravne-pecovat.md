@@ -2,6 +2,7 @@
 title: "Zima, sníh a mráz: Na co si dát pozor u psů a jak o ně správně pečovat"
 description: "Sníh a mráz přinášejí psům i zdravotní rizika. Na co si dát v zimě pozor – podchlazení, péče o tlapky, posypová sůl a další tipy, jak psa chladným obdobím bezpečně provést."
 author: helena-pavelkova
+zvirata: [psi]
 pubDate: 2026-01-11T12:15:48+00:00
 updatedDate: 2026-06-12T10:33:16+00:00
 cover: "../../assets/uploads/2026/01/Hero-2.webp"

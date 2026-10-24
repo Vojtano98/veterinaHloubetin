@@ -3,6 +3,7 @@ title: "Bravecto injekční: Nejnovější forma ochrany proti klíšťatům pro
 seoTitle: "Celoroční ochrana proti parazitům pro psy - vyzkoušejte Bravecto"
 description: "Zajistěte svému psovi až 12 měsíců ochrany proti klíšťatům a blechám jedinou injekcí. Bravecto injekční je bezpečné a bez nutnosti opakovaného podávání."
 author: helena-pavelkova
+zvirata: [psi]
 pubDate: 2025-06-05T06:52:55+00:00
 updatedDate: 2026-06-12T09:59:55+00:00
 cover: "../../assets/uploads/2025/06/Thumbnail_2-min.webp"

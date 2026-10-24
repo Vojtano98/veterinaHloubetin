@@ -3,6 +3,7 @@ title: "Gekončík noční – kompletní průvodce chovem, péčí a výběrem 
 seoTitle: "Gekončík noční – kompletní průvodce chovem, péčí a teráriem"
 description: "Gekončík noční je vhodný i pro začátečníky. Poradíme, jak velké terárium zvolit, jaký substrát, osvětlení a teplotu nastavit, čím krmit a na co dát pozor při společném chovu."
 author: helena-pavelkova
+zvirata: [plazi]
 pubDate: 2025-09-17T10:44:32+00:00
 updatedDate: 2026-06-12T09:59:28+00:00
 cover: "../../assets/uploads/2025/09/Grekoncik-min.jpg"

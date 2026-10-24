@@ -1,12 +1,16 @@
 ---
 import allReviews from '../data/reviews.json';
 
-// Zobrazujeme jen recenze se 4 a více hvězdičkami, nejnovější první (datum ve formátu DD/MM/RRRR)
+// Zobrazujeme jen recenze se 4 a více hvězdičkami (datum ve formátu DD/MM/RRRR).
+// Pořadí: vyšší hodnocení, pak výstižné recenze (aspoň pár vět) před jednoslovnými, pak nejnovější.
 const toTime = (d: string) => {
   const [day, month, year] = d.split('/').map(Number);
   return new Date(year, month - 1, day).getTime();
 };
-const reviews = allReviews.filter((r) => r.rating >= 4).sort((a, b) => toTime(b.date) - toTime(a.date));
+const detailed = (t: string) => (t.length >= 80 ? 1 : 0);
+const reviews = allReviews
+  .filter((r) => r.rating >= 4)
+  .sort((a, b) => b.rating - a.rating || detailed(b.text) - detailed(a.text) || toTime(b.date) - toTime(a.date));
 
 // Recenze z Google (statický snímek). Pro aktualizaci stačí upravit src/data/reviews.json.
 const initials = (name: string) =>
@@ -92,10 +96,11 @@ const palette = ['#f99420', '#316eff', '#2bb3a3', '#a35ad6', '#e0574f', '#4c9a2a
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding: 16px 18px 14px;
-    border-radius: 6px;
+    padding: 18px 20px 16px;
+    border: 1px solid #f0e8e0;
+    border-radius: 16px;
     background: var(--c-white);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.13);
+    box-shadow: 0 10px 26px -18px rgba(0, 0, 0, 0.35);
     font-family: var(--f-head);
   }
 
@@ -157,6 +162,8 @@ const palette = ['#f99420', '#316eff', '#2bb3a3', '#a35ad6', '#e0574f', '#4c9a2a
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    /* Pojistka proti useknutému šestému řádku (5 × výška řádku) */
+    max-height: calc(5 * 1.55em);
     color: #222;
     font-size: 14px;
     line-height: 1.55;
@@ -165,17 +172,21 @@ const palette = ['#f99420', '#316eff', '#2bb3a3', '#a35ad6', '#e0574f', '#4c9a2a
 
   .review__text.is-open {
     display: block;
+    max-height: none;
   }
 
   .review__more {
     align-self: center;
-    margin-top: 8px;
-    padding: 2px 6px;
+    margin-top: auto;
+    padding: 10px 6px 0;
     border: 0;
     background: none;
-    color: #888;
+    color: var(--c-link);
     font: inherit;
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 3px;
     cursor: pointer;
   }
 

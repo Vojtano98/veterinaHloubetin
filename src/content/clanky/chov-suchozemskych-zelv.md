@@ -2,6 +2,7 @@
 title: "Chov suchozemských želv – vše, co potřebujete vědět"
 description: "Jak správně chovat suchozemské želvy: velikost a vybavení terária, substrát, osvětlení s UVB zdrojem, teploty a krmení. Praktický přehled od veterinářů z Veterinární kliniky Hloubětín."
 author: helena-pavelkova
+zvirata: [plazi]
 pubDate: 2024-11-15T23:54:22+00:00
 updatedDate: 2026-06-12T10:00:45+00:00
 cover: "../../assets/uploads/2024/11/Tortoise-Head-Close-Up.webp"

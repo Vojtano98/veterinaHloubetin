@@ -2,22 +2,23 @@
 import { site } from '../data/site';
 ---
 
+<!-- Hodiny jsou v hlavičce (stav Otevřeno) a v boxu pod bannerem, lišta proto nese jen pohotovost -->
 <div class="info-bar">
-  <a class="info-bar__full" href="/kontakty/">{site.hoursBar} <strong>Těšíme se na Vás.</strong></a>
-  <span class="info-bar__short">
-    <a href="/kontakty/">Po–Pá 8–19 · So 8–12 · Ne 16–18</a> ·
-    <a class="nowrap info-bar__tel" href={site.phones.main.href}><strong>Pohotovost {site.phones.main.label}</strong></a>
-  </span>
+  <a class="info-bar__tel" href={site.phones.main.href}>
+    <span class="info-bar__full">Pohotovost poskytujeme po předchozí telefonické domluvě:</span>
+    <span class="info-bar__short">Pohotovost:</span>
+    <strong class="nowrap">{site.phones.main.label}</strong>
+  </a>
 </div>
 
 <style>
   .info-bar {
     display: block;
-    padding: 10px 16px;
+    padding: 8px 16px;
     background: var(--c-orange-bar);
     color: var(--c-white);
     font-family: var(--f-body);
-    font-size: 18px;
+    font-size: 15px;
     line-height: 1.4;
     text-align: center;
   }
@@ -30,16 +31,17 @@ import { site } from '../data/site';
     opacity: 1;
   }
 
+  .info-bar__tel {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 6px;
+  }
+
   .info-bar__tel strong {
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
-  }
-
-  @media (max-width: 980px) {
-    .info-bar {
-      font-size: 17px;
-    }
   }
 
   .info-bar__short {
@@ -52,7 +54,7 @@ import { site } from '../data/site';
 
   @media (max-width: 767px) {
     .info-bar {
-      font-size: 13px;
+      font-size: 14px;
       padding: 7px 10px;
     }
     .info-bar__full {

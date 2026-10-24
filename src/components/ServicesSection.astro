@@ -33,17 +33,14 @@ import vetIllustration from '../assets/uploads/2024/05/vet-06.png';
   <div class="row row--wide svc__body" id="sluzby-podrobne">
     <ul class="svc__grid" data-svc-track>
       {
-        services.map((s, i) => (
+        services.map((s) => (
           <li class="svc-card" id={s.id}>
             <div class="svc-card__head">
               <span class="svc-card__img">
                 <Image src={s.image} alt="" width={144} height={144} loading="lazy" />
               </span>
-              <span class="svc-card__num" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
-              </span>
+              <h3 class="svc-card__title">{s.title}</h3>
             </div>
-            <h3 class="svc-card__title">{s.title}</h3>
             <ul class="svc-card__list">
               {s.items.map((it) => (
                 <li>
@@ -52,6 +49,18 @@ import vetIllustration from '../assets/uploads/2024/05/vet-06.png';
                 </li>
               ))}
             </ul>
+            {s.articles && (
+              <div class="svc-card__read">
+                <p class="svc-card__read-label">Přečtěte si</p>
+                <ul>
+                  {s.articles.map((a) => (
+                    <li>
+                      <a href={`/${a.slug}/`}>{a.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </li>
         ))
       }
@@ -205,15 +214,16 @@ import vetIllustration from '../assets/uploads/2024/05/vet-06.png';
 
   .svc-card__head {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
     margin-bottom: 16px;
   }
 
   .svc-card__img {
     display: block;
-    width: 72px;
-    height: 72px;
+    flex: none;
+    width: 60px;
+    height: 60px;
     padding: 3px;
     border-radius: 50%;
     background: linear-gradient(135deg, #ffd9b0, #fff1e4);
@@ -228,16 +238,8 @@ import vetIllustration from '../assets/uploads/2024/05/vet-06.png';
     background: #fff;
   }
 
-  .svc-card__num {
-    color: #f3dcc6;
-    font-family: var(--f-head);
-    font-size: 30px;
-    font-weight: 800;
-    line-height: 1;
-  }
-
   .svc-card__title {
-    padding-bottom: 12px;
+    padding: 0;
     color: var(--c-heading);
     font-family: var(--f-head);
     font-size: 19px;
@@ -267,6 +269,49 @@ import vetIllustration from '../assets/uploads/2024/05/vet-06.png';
     flex: 0 0 auto;
     margin-top: 2px;
     color: var(--c-orange);
+  }
+
+  .svc-card__read {
+    margin-top: auto;
+    padding-top: 16px;
+  }
+
+  .svc-card__read-label {
+    padding: 14px 0 6px;
+    border-top: 1px solid #f2e6da;
+    color: #8a7a6c;
+    font-family: var(--f-head);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .svc-card__read ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .svc-card__read a {
+    display: inline-block;
+    padding: 4px 11px;
+    border-radius: 100px;
+    background: var(--c-cream);
+    color: var(--c-link);
+    font-family: var(--f-head);
+    font-size: 13px;
+    font-weight: 800;
+    transition: background 200ms ease, color 200ms ease;
+  }
+
+  .svc-card__read a:hover {
+    opacity: 1;
+    background: var(--c-orange);
+    color: var(--c-white);
   }
 
   .svc__swipe {

@@ -12,6 +12,8 @@ export type Service = {
   title: string;
   image: ImageMetadata;
   items: string[];
+  /** Související články (slug a krátký popisek odkazu) */
+  articles?: { slug: string; label: string }[];
 };
 
 export const services: Service[] = [
@@ -31,6 +33,10 @@ export const services: Service[] = [
     title: 'Interní medicína',
     image: interni,
     items: ['Kardiologie', 'Endokrinologie', 'Dermatologie', 'Gynekologie', 'Gastroenterologie', 'Urologie'],
+    articles: [
+      { slug: 'psincovy-kasel-u-psu-priznaky-lecba-a-prevence', label: 'Psincový kašel' },
+      { slug: 'koprologicke-vysetreni-trusu-vse-co-potrebujete-vedet', label: 'Vyšetření trusu' },
+    ],
   },
   {
     id: 'stomatologie',
@@ -42,12 +48,20 @@ export const services: Service[] = [
       'Dentoalveolární chirurgie',
       'Ortodoncie (rovnátka)',
     ],
+    articles: [
+      { slug: 'zubni-kamen-u-psu-a-kocek-vse-co-potrebujete-vedet', label: 'Zubní kámen' },
+    ],
   },
   {
     id: 'prevence',
     title: 'Prevence',
     image: prevence,
     items: ['Vakcinace psů a koček', 'Čipování', 'Vystavení evropského pasu', 'Preventivní diagnostika a geriatrická péče'],
+    articles: [
+      { slug: 'cipovani-zvirat-co-potrebujete-vedet', label: 'Čipování' },
+      { slug: 'centralni-evidence-psu-od-1-cervence-2026-co-potrebuji-vedet-majitele-psu', label: 'Centrální evidence psů' },
+      { slug: 'celorocni-ochrana-proti-parazitum-pro-psy-vyzkousejte-bravecto', label: 'Ochrana proti klíšťatům' },
+    ],
   },
   {
     id: 'ortopedie',
@@ -65,6 +79,12 @@ export const services: Service[] = [
     title: 'Chirurgie měkkých tkání',
     image: chirurgie,
     items: ['Kastrace feny, kočky, psa a kocoura', 'Chirurgie urogenitálního traktu', 'Excize tumorů', 'Korekce očních víček'],
+    articles: [
+      { slug: 'kastrace-psa-vse-co-potrebujete-vedet', label: 'Kastrace psa' },
+      { slug: 'kastrace-kocky-vse-co-potrebujete-vedet', label: 'Kastrace kočky' },
+      { slug: 'kastrace-kocoura-vse-co-potrebujete-vedet', label: 'Kastrace kocoura' },
+      { slug: 'pooperacni-pece-jak-se-starat-o-mazlicka-po-operaci', label: 'Pooperační péče' },
+    ],
   },
   {
     id: 'exoticka-zvirata',
@@ -76,6 +96,11 @@ export const services: Service[] = [
       'Zobrazovací diagnostika (RTG, USG)',
       'Laboratorní diagnostika',
       'Chirurgie včetně kastrace drobných savců',
+    ],
+    articles: [
+      { slug: 'chov-suchozemskych-zelv', label: 'Suchozemské želvy' },
+      { slug: 'chov-vodnich-zelv', label: 'Vodní želvy' },
+      { slug: 'gekoncik-nocni-kompletni-pruvodce-chovem-peci-a-terariem', label: 'Gekončík noční' },
     ],
   },
   {
