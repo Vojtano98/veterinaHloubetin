@@ -2,10 +2,13 @@
 import { site } from '../data/site';
 ---
 
-<a class="info-bar" href="/kontakty/">
-  <span class="info-bar__full">{site.hoursBar} <strong>Těšíme se na Vás.</strong></span>
-  <span class="info-bar__short">Po–Pá 8–19 · So 8–12 · Ne 16–18 · <strong class="nowrap">Pohotovost {site.phones.main.label}</strong></span>
-</a>
+<div class="info-bar">
+  <a class="info-bar__full" href="/kontakty/">{site.hoursBar} <strong>Těšíme se na Vás.</strong></a>
+  <span class="info-bar__short">
+    <a href="/kontakty/">Po–Pá 8–19 · So 8–12 · Ne 16–18</a> ·
+    <a class="nowrap info-bar__tel" href={site.phones.main.href}><strong>Pohotovost {site.phones.main.label}</strong></a>
+  </span>
+</div>
 
 <style>
   .info-bar {
@@ -19,8 +22,18 @@ import { site } from '../data/site';
     text-align: center;
   }
 
-  .info-bar:hover {
+  .info-bar a {
+    color: inherit;
+  }
+
+  .info-bar a:hover {
     opacity: 1;
+  }
+
+  .info-bar__tel strong {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
   }
 
   @media (max-width: 980px) {

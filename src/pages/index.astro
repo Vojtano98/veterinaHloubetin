@@ -269,12 +269,13 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
 
   @media (max-width: 767px) {
     .hero {
-      padding-top: 30px;
+      /* Pes jako fotka v horní části, text začíná pod jeho hlavou a přechází do hnědé */
+      padding-top: 200px;
       background-image:
-        linear-gradient(180deg, #b79371 0%, rgba(183, 147, 113, 0.94) 48%, rgba(183, 147, 113, 0.25) 72%, rgba(183, 147, 113, 0.6) 100%),
+        linear-gradient(180deg, rgba(183, 147, 113, 0) 0, rgba(183, 147, 113, 0) 150px, #b79371 330px),
         var(--hero-sm);
-      background-size: 230% auto;
-      background-position: 78% 62%;
+      background-size: 100% auto, 190% auto;
+      background-position: 0 0, 90% -100px;
     }
     .hero__text {
       margin: 10px 0 30px;
