@@ -32,9 +32,9 @@ export const site = {
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3250.1855752310225!2d14.537770081605533!3d50.106935262122015!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470bed2f46575e65%3A0x7edbbbd0fb9cb791!2sVeterinary%20Clinic%20HLOUB%C4%9AT%C3%8DN%20s.%20R.%20O.!5e0!3m2!1scs!2scz!4v1716880224646!5m2!1scs!2scz',
 
   hours: [
-    { days: 'Pondělí – Pátek', short: 'Po–Pá', time: '8:00 – 19:00', schema: ['Mo', 'Tu', 'We', 'Th', 'Fr'], opens: '08:00', closes: '19:00' },
-    { days: 'Sobota', short: 'So', time: '8:00 – 12:00', schema: ['Sa'], opens: '08:00', closes: '12:00' },
-    { days: 'Neděle', short: 'Ne', time: '16:00 – 18:00', schema: ['Su'], opens: '16:00', closes: '18:00' },
+    { days: 'Pondělí – Pátek', short: 'Po–Pá', time: '8:00–19:00', schema: ['Mo', 'Tu', 'We', 'Th', 'Fr'], opens: '08:00', closes: '19:00' },
+    { days: 'Sobota', short: 'So', time: '8:00–12:00', schema: ['Sa'], opens: '08:00', closes: '12:00' },
+    { days: 'Neděle', short: 'Ne', time: '16:00–18:00', schema: ['Su'], opens: '16:00', closes: '18:00' },
   ],
 
   social: {
@@ -66,6 +66,5 @@ export const footerNav = [
   { label: 'O nás', href: '/#onas' },
   { label: 'Články', href: '/clanky/' },
   { label: 'Rezervace služeb', href: '/rezervace-sluzeb/' },
-  { label: 'Ochrana osobních údajů', href: '/ochrana-osobnich-udaju/' },
   { label: 'Kontakty', href: '/kontakty/' },
 ];

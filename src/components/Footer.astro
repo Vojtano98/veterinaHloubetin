@@ -2,13 +2,16 @@
 import { Image } from 'astro:assets';
 import { footerNav, site } from '../data/site';
 import Icon from './Icon.astro';
+import OpenStatus from './OpenStatus.astro';
 import logo from '../assets/uploads/2024/05/Upload-Image-removebg-preview.png';
 
 const year = new Date().getFullYear();
+// CookieYes otevře nastavení souhlasu po kliknutí na prvek s třídou cky-banner-element (v náhledu CookieYes neběží)
+const hasCookieYes = import.meta.env.PUBLIC_PREVIEW !== '1';
 ---
 
 <footer class="site-footer">
-  <div class="row cols cols--3 footer-cols">
+  <div class="row footer-grid">
     <div class="footer-about">
       <a href="/" class="footer-logo" aria-label={`${site.name} – úvodní stránka`}>
         <Image src={logo} alt={site.name} width={400} />
@@ -17,10 +20,6 @@ const year = new Date().getFullYear();
         Veterinární klinika Hloubětín se zaměřuje na prevenci, diagnostiku a léčbu nemocí malých zvířat od roku 2008.
       </p>
       <p class="about-2">Veterinární klinika pro oblast Praha 9, Praha 14, Praha-Hloubětín a široké okolí.</p>
-      <ul class="footer-contact">
-        <li><a href={site.phones.main.href}><Icon name="phone" size={16} /> {site.phones.main.label}</a></li>
-        <li><a href={`mailto:${site.email}`}><Icon name="mail" size={16} /> {site.email}</a></li>
-      </ul>
       <div class="footer-social">
         <a href={site.social.facebook} target="_blank" rel="noopener" aria-label="Facebook"><Icon name="facebook" size={16} /></a>
         <a href={site.social.instagram} target="_blank" rel="noopener" aria-label="Instagram"><Icon name="instagram" size={16} /></a>
@@ -35,19 +34,55 @@ const year = new Date().getFullYear();
     </nav>
 
     <div>
-      <h2 class="footer-title">Adresa</h2>
-      <address class="footer-text">
-        <a href={site.mapsUrl} target="_blank" rel="noopener" class="u-underline">{site.address.full}</a><br />
-        ({site.address.note})
-      </address>
-      <h2 class="footer-title footer-title--spaced">Ordinační hodiny</h2>
-      <ul class="footer-hours">
-        {site.hours.map((h) => <li>{h.days}: {h.time}</li>)}
+      <h2 class="footer-title">Kontakt</h2>
+      <ul class="footer-contact">
+        <li>
+          <Icon name="pin" size={16} />
+          <a href={site.mapsUrl} target="_blank" rel="noopener">
+            {site.address.street}<br />
+            <span class="nowrap">{site.address.city}, {site.address.zip}</span><br />
+            <span class="footer-note">{site.address.note}</span>
+          </a>
+        </li>
+        <li>
+          <Icon name="phone" size={16} />
+          <a href={site.phones.main.href}><strong>{site.phones.main.label}</strong></a>
+        </li>
+        <li>
+          <Icon name="mail" size={16} />
+          <a href={`mailto:${site.email}`}>{site.email.split('@')[0]}@<wbr />{site.email.split('@')[1]}</a>
+        </li>
       </ul>
     </div>
+
+    <div>
+      <h2 class="footer-title">Ordinační hodiny</h2>
+      <dl class="footer-hours">
+        {
+          site.hours.map((h) => (
+            <div>
+              <dt>{h.days}</dt>
+              <dd>{h.time}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <OpenStatus compact class="footer-status" />
+    </div>
   </div>
+
   <div class="row footer-bottom">
-    <p>© {year} {site.company} · IČO {site.ico}</p>
+    <p>© {year} {site.company} · <span class="nowrap">IČO {site.ico}</span></p>
+    <ul class="footer-legal">
+      <li><a href="/ochrana-osobnich-udaju/">Ochrana osobních údajů</a></li>
+      {
+        hasCookieYes && (
+          <li>
+            <button type="button" class="cky-banner-element footer-cookies">Nastavení cookies</button>
+          </li>
+        )
+      }
+    </ul>
   </div>
 </footer>
 
@@ -55,32 +90,45 @@ const year = new Date().getFullYear();
   .site-footer {
     padding: 19px 0 0;
     background: var(--c-footer);
-    color: var(--c-black);
+    color: var(--c-ink);
+    font-family: var(--f-head);
   }
 
-  .footer-cols {
+  .footer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.8fr) minmax(0, 1.35fr) minmax(0, 1.1fr);
+    gap: 40px;
     padding-top: 44px;
+    padding-bottom: 36px;
   }
 
   .footer-logo {
     display: block;
-    max-width: 60%;
-    margin-bottom: 14px;
+    width: 150px;
+    margin-bottom: 16px;
   }
 
+  /* Obrázek loga je čtvercový s průhledným okrajem – ořízneme ho na samotné logo */
   .footer-logo :global(img) {
     display: block;
     width: 100%;
     height: auto;
+    aspect-ratio: 447 / 261;
+    object-fit: cover;
+    object-position: 50% 39%;
+  }
+
+  .nowrap {
+    white-space: nowrap;
   }
 
   .about-1,
   .about-2 {
-    max-width: 360px;
+    max-width: 340px;
     margin-bottom: 6px;
     padding-bottom: 1px;
-    font-family: var(--f-head);
     font-size: 15px;
+    font-weight: 500;
     line-height: 1.6;
     color: #4a4a4a;
   }
@@ -90,47 +138,17 @@ const year = new Date().getFullYear();
     color: var(--c-ink);
   }
 
-  .about-2 {
-    font-weight: 500;
-  }
-
-  .footer-contact {
-    margin: 14px 0 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .footer-contact a {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 3px 0;
-    color: var(--c-black);
-    font-family: var(--f-head);
-    font-size: 15px;
-    font-weight: 700;
-  }
-
-  .footer-contact a:hover {
-    opacity: 1;
-    color: var(--c-orange-deep);
-  }
-
-  .footer-contact :global(svg) {
-    color: var(--c-orange);
-  }
-
   .footer-social {
     display: flex;
     gap: 8px;
-    margin-top: 12px;
+    margin-top: 14px;
   }
 
   .footer-social a {
     display: grid;
     place-items: center;
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: var(--c-white);
     color: var(--c-ink);
@@ -156,97 +174,166 @@ const year = new Date().getFullYear();
     text-transform: uppercase;
   }
 
-  .footer-title--spaced {
-    padding-top: 28px;
-  }
-
   .footer-links,
-  .footer-hours {
+  .footer-contact,
+  .footer-legal {
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .footer-links li {
-    margin: 0;
-  }
-
   .footer-links a {
     display: inline-block;
     padding: 5px 0;
-  }
-
-  .footer-links a,
-  .footer-text,
-  .footer-hours li {
-    font-family: var(--f-head);
+    color: var(--c-ink);
     font-size: 16px;
     font-weight: 600;
-    font-style: normal;
-    line-height: 1.6em;
-    color: var(--c-ink);
   }
 
   .footer-links a:hover,
-  .footer-text a:hover {
-    color: var(--c-orange);
+  .footer-contact a:hover,
+  .footer-legal a:hover,
+  .footer-cookies:hover {
     opacity: 1;
+    color: var(--c-orange-deep);
   }
 
-  .footer-text {
-    padding-bottom: 7px;
+  .footer-contact {
+    display: grid;
+    gap: 12px;
   }
 
-  .footer-text a {
-    color: var(--c-black);
+  .footer-contact li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.45;
   }
 
-  .u-underline {
-    text-decoration: underline;
-    text-underline-offset: 2px;
+  .footer-contact :global(svg) {
+    flex: none;
+    margin-top: 3px;
+    color: var(--c-orange-deep);
   }
 
-  .footer-hours li {
+  .footer-contact a {
+    min-width: 0;
+    color: var(--c-ink);
+    overflow-wrap: break-word;
+  }
+
+  .footer-contact strong {
+    font-weight: 800;
+  }
+
+  .footer-note {
+    color: #6b6b6b;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .footer-hours {
+    margin: 0;
+  }
+
+  .footer-hours div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
     padding: 7px 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    font-size: 15px;
   }
 
-  .footer-hours li:last-child {
+  .footer-hours div:last-child {
     border-bottom: 0;
   }
 
+  .footer-hours dt {
+    color: #4a4a4a;
+    font-weight: 600;
+  }
+
+  .footer-hours dd {
+    margin: 0;
+    color: var(--c-ink);
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .footer-grid :global(.footer-status) {
+    margin-top: 10px;
+  }
+
   .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 24px;
     padding: 18px 0 22px;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
-  }
-
-  .footer-bottom p {
-    font-family: var(--f-head);
-    font-size: 13px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
     color: #555;
-    text-align: center;
+    font-size: 14px;
   }
 
-  @media (max-width: 980px) {
-    .footer-logo {
-      max-width: 32%;
-      margin: 0 auto 14px;
-    }
-    .footer-about {
-      text-align: center;
-    }
-    .footer-social {
-      justify-content: center;
+  .footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 20px;
+  }
+
+  .footer-legal li {
+    display: flex;
+  }
+
+  .footer-legal a,
+  .footer-cookies {
+    padding: 4px 0;
+    border: 0;
+    background: none;
+    color: #555;
+    font: inherit;
+    font-weight: 700;
+    line-height: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 1100px) {
+    .footer-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 32px 40px;
     }
   }
 
   @media (max-width: 767px) {
-    .footer-cols {
-      padding-top: 20px;
+    .footer-grid {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: 28px 18px;
+      padding-top: 24px;
     }
-
+    .footer-about {
+      grid-column: 1 / -1;
+    }
     .footer-logo {
-      max-width: 46%;
+      width: 130px;
+    }
+    .footer-grid > div:last-child {
+      grid-column: 1 / -1;
+    }
+    .footer-contact li {
+      font-size: 15px;
+    }
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      /* Místo pro tlačítko „nahoru“ nad spodní lištou */
+      padding-bottom: 64px;
     }
   }
 </style>

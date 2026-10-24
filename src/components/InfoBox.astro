@@ -48,7 +48,7 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
           site.hours.map((h) => (
             <div>
               <dt>{h.short}</dt>
-              <dd>{h.time.replace(/ – /g, '–')}</dd>
+              <dd>{h.time}</dd>
             </div>
           ))
         }
