@@ -93,6 +93,8 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
   import { current, laterToday, time, untilText, type Vyjimka } from '../lib/vyjimky';
 
   const dayNames = ['v neděli', 'v pondělí', 'v úterý', 've středu', 've čtvrtek', 'v pátek', 'v sobotu'];
+  // Krátká pilulka v hlavičce musí být úzká i na malých telefonech
+  const dayShort = ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'];
   const toMin = (t: string) => {
     const [h, m] = t.split(':').map(Number);
     return h * 60 + m;
@@ -145,7 +147,9 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
         const s = schedule[d];
         if (s) {
           const when = i === 1 ? 'zítra' : dayNames[d];
-          msg = compact ? `Zavřeno · ${when} ${fmt(s[0])}` : `Nyní zavřeno · otevíráme ${when} v ${fmt(s[0])}`;
+          msg = compact
+            ? `Zavřeno · ${i === 1 ? 'zítra' : dayShort[d]} ${fmt(s[0])}`
+            : `Nyní zavřeno · otevíráme ${when} v ${fmt(s[0])}`;
           break;
         }
       }

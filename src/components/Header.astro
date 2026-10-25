@@ -342,9 +342,25 @@ const isActive = (href: string) => {
   }
 
   @media (max-width: 380px) {
+    .header-row {
+      gap: 6px;
+    }
+    .logo,
+    .is-scrolled .logo {
+      width: 30%;
+    }
     .header-status :global(.open-status) {
-      padding: 6px 11px;
-      font-size: 13px;
+      gap: 5px;
+      padding: 6px 10px;
+      font-size: 12.5px;
+    }
+  }
+
+  /* Velmi úzké telefony (starší Androidy, zavřený Galaxy Fold): pilulka se vedle loga a menu nevejde,
+     stav provozu zůstává v boxu kontaktů a na stránce Kontakty */
+  @media (max-width: 340px) {
+    .header-status {
+      display: none;
     }
   }
 </style>

@@ -75,6 +75,20 @@ import Icon from './Icon.astro';
       padding-bottom: calc(66px + env(safe-area-inset-bottom));
     }
   }
+
+  @media (max-width: 340px) {
+    .mobile-bar {
+      gap: 6px;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+    .mobile-bar__btn {
+      gap: 6px;
+      padding: 12px 6px;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+  }
 </style>
 
 <script>

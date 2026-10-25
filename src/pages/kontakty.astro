@@ -173,7 +173,17 @@ const jsonLd = {
 
   .blurbs {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 12px;
+  }
+
+  .blurb > div {
+    min-width: 0;
+  }
+
+  /* Dlouhý e-mail se na úzkých telefonech smí zalomit */
+  .blurb .u {
+    overflow-wrap: anywhere;
   }
 
   .blurb {

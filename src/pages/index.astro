@@ -266,6 +266,27 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
       font-size: 11px;
       letter-spacing: 1px;
     }
+  }
+
+  /* Širší telefony a rozložené skládačky (např. Galaxy Z Fold): menší přiblížení fotky psa */
+  @media (min-width: 480px) and (max-width: 767px) {
+    .hero {
+      /* Výška fotky roste se šířkou displeje (poměr ~3 : 2), proto odsazení i přechod ve vw */
+      padding-top: calc(50vw - 20px);
+      background-image:
+        linear-gradient(180deg, rgba(183, 147, 113, 0) 0, rgba(183, 147, 113, 0) 33vw, #b79371 calc(66vw - 50px)),
+        var(--hero-sm);
+      background-size: 100% auto, 100% auto;
+      background-position: 0 0, 50% -40px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .hero__eyebrow {
+      padding: 5px 11px;
+      font-size: 10px;
+      letter-spacing: 0.4px;
+    }
     .hero__text h1 {
       font-size: 38px;
     }

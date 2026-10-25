@@ -336,4 +336,10 @@ const hasCookieYes = import.meta.env.PUBLIC_PREVIEW !== '1';
       padding-bottom: 64px;
     }
   }
+  /* Velmi úzké telefony: sloupce pod sebe */
+  @media (max-width: 340px) {
+    .footer-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
 </style>
