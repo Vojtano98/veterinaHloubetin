@@ -32,7 +32,8 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
         <p class="hero__lead">
           Prevence, diagnostika a léčba psů, koček, drobných savců, plazů i exotických ptáků – přímo u metra Hloubětín.
         </p>
-        <div class="hero__actions">
+        <!-- Dokud jsou tlačítka vidět, spodní mobilní lišta je schovaná (aby je nepřekrývala) -->
+        <div class="hero__actions" data-mobilebar-hide>
           <a class="hero__btn hero__btn--primary" href="/rezervace-sluzeb/">
             <Icon name="calendar" size={18} />
             Objednat se online

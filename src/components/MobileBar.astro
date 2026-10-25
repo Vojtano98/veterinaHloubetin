@@ -61,8 +61,26 @@ import Icon from './Icon.astro';
       box-shadow: var(--sh-btn);
     }
 
+    /* Schovaná, dokud jsou na obrazovce tlačítka z úvodního banneru */
+    .mobile-bar {
+      transition: transform 250ms ease, visibility 250ms;
+    }
+
+    .mobile-bar.is-hidden {
+      visibility: hidden;
+      transform: translateY(110%);
+    }
+
     :global(body) {
       padding-bottom: calc(66px + env(safe-area-inset-bottom));
     }
   }
 </style>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('.mobile-bar');
+  const hideWhile = document.querySelector('[data-mobilebar-hide]');
+  if (bar && hideWhile && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([entry]) => bar.classList.toggle('is-hidden', entry.isIntersecting)).observe(hideWhile);
+  }
+</script>
