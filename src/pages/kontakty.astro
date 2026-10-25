@@ -81,14 +81,25 @@ const jsonLd = {
         <p>Metro – trasa B – stanice Hloubětín</p>
         <h2 class="directions__label"><Icon name="arrow" size={18} /> Autem</h2>
         <p>Příjezd k ordinaci je možný pouze z ulice Kolbenova ve směru červených šipek. Podrobnější mapa níže.</p>
-        <a href={mapa.src} target="_blank" rel="noopener" class="directions__map">
+        <!-- Bez JavaScriptu se plánek otevře jako obrázek, jinak ve zvětšení přímo na stránce -->
+        <a href={mapa.src} class="directions__map" data-lightbox>
           <Image
             src={mapa}
             alt="Plánek příjezdu ke klinice: vjezd z ulice Kolbenova, klinika v ulici Mochovská u stanice metra Hloubětín"
             width={848}
           />
-          <span class="directions__zoom">Zvětšit plánek ↗</span>
+          <span class="directions__zoom">Zvětšit plánek</span>
         </a>
+        <dialog class="lightbox" data-lightbox-dialog aria-label="Plánek příjezdu ke klinice">
+          <button type="button" class="lightbox__close" data-lightbox-close aria-label="Zavřít">×</button>
+          <img
+            src={mapa.src}
+            width={mapa.width}
+            height={mapa.height}
+            alt="Plánek příjezdu ke klinice: vjezd z ulice Kolbenova, klinika v ulici Mochovská u stanice metra Hloubětín"
+            loading="lazy"
+          />
+        </dialog>
       </div>
     </div>
   </section>
@@ -142,6 +153,17 @@ const jsonLd = {
 </Base>
 
 <script>
+  // Zvětšení plánku: zavře se křížkem, klávesou Esc nebo kliknutím mimo obrázek
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox-dialog]');
+  document.querySelector('[data-lightbox]')?.addEventListener('click', (e) => {
+    if (!dialog?.showModal) return;
+    e.preventDefault();
+    dialog.showModal();
+  });
+  dialog?.addEventListener('click', (e) => {
+    if (e.target === dialog || (e.target as HTMLElement).closest('[data-lightbox-close]')) dialog.close();
+  });
+
   document.querySelectorAll<HTMLElement>('[data-map]').forEach((box) => {
     box.querySelector('[data-map-load]')?.addEventListener('click', () => {
       const frame = document.createElement('iframe');
@@ -299,6 +321,62 @@ const jsonLd = {
 
   .directions__map:hover {
     opacity: 1;
+    cursor: zoom-in;
+  }
+
+  .lightbox {
+    max-width: min(1100px, 94vw);
+    max-height: 92vh;
+    padding: 0;
+    border: 0;
+    border-radius: 16px;
+    background: var(--c-white);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+    overflow: visible;
+  }
+
+  .lightbox::backdrop {
+    background: rgba(30, 20, 12, 0.72);
+    backdrop-filter: blur(2px);
+  }
+
+  .lightbox img {
+    display: block;
+    width: auto;
+    max-width: min(1100px, 94vw);
+    height: auto;
+    max-height: 92vh;
+    border-radius: 16px;
+  }
+
+  .lightbox__close {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--c-orange);
+    color: var(--c-white);
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .lightbox__close:hover {
+    background: var(--c-orange-deep);
+  }
+
+  @media (max-width: 767px) {
+    .lightbox__close {
+      top: 8px;
+      right: 8px;
+    }
   }
 
   .directions__map:hover .directions__zoom {
