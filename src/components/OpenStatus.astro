@@ -74,8 +74,7 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
     color: #b45309;
   }
 
-  .open-status.is-open .open-status__dot,
-  .open-status.is-emergency .open-status__dot {
+  .open-status.is-open .open-status__dot {
     box-shadow: 0 0 0 0 rgba(31, 122, 51, 0.5);
     animation: pulse 2s infinite;
   }
@@ -153,13 +152,16 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
     }
     // Po zavírací době, ale ještě dnes začne mimořádná pohotovost
     const opensLaterToday = today && min < toMin(today[0]);
-    if (!open && exLater && !opensLaterToday) {
+    // Zobrazí se oranžově jako pohotovost, ne červeně jako „zavřeno“
+    const soon = !open && exLater && !opensLaterToday;
+    if (soon) {
       msg = compact
-        ? `Zavřeno · pohotovost ${time(exLater.from)}`
-        : `Nyní zavřeno · mimořádná pohotovost od ${time(exLater.from)}`;
+        ? `Pohotovost od ${time(exLater.from)}`
+        : `Dnes mimořádná pohotovost od ${time(exLater.from)}`;
     }
     text.textContent = msg;
     el.classList.toggle('is-open', open);
+    el.classList.toggle('is-emergency', Boolean(soon));
     el.hidden = false;
   }
 
