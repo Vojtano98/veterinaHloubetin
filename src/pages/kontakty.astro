@@ -1,14 +1,12 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
 import ContactCards from '../components/ContactCards.astro';
 import ContactForm from '../components/ContactForm.astro';
 import Icon from '../components/Icon.astro';
 import OpenStatus from '../components/OpenStatus.astro';
 import { site } from '../data/site';
-import heroImg from '../assets/uploads/2024/05/Untitled-design-1920x1280-1-1.jpg';
 import mapa from '../assets/uploads/2025/12/Mapa-Veterina-min.jpg';
 import budova1 from '../assets/uploads/2024/05/Web-Photos-DSC6556.webp';
 import budova2 from '../assets/uploads/2024/05/Photos-for-Web.webp';
@@ -27,16 +25,14 @@ const jsonLd = {
   description="Kontakt na Veterinární kliniku Hloubětín: Mochovská 535, Praha 9 (OD Havana u metra Hloubětín). Telefon +420 773 665 751, e-mail ordinace@veterinahloubetin.cz, ordinační hodiny."
   jsonLd={jsonLd}
 >
-  <PageHero title="Kontakty" image={heroImg} position="56% 43%" as="p" />
+  <PageHero
+    title="Kontaktujte nás"
+    subtitle="Jsme tu vždy pro Vás a Vaše mazlíčky."
+    lead="Poskytujeme tu nejlepší péči a vytvořili jsme prostředí, kam se i váš kamarád bude rád vracet."
+    crumbs={[{ label: 'Kontakty' }]}
+  />
 
   <section class="section intro">
-    <div class="row">
-      <Breadcrumbs items={[{ label: 'Kontakty' }]} class="page-crumbs" />
-      <h1 class="intro__title">Kontaktujte nás</h1>
-      <p class="intro__sub">Jsme tu vždy pro Vás a Vaše mazlíčky.</p>
-      <p class="intro__text">Poskytujeme tu nejlepší péči a vytvořili jsme prostředí, kam se i váš kamarád bude rád vracet.</p>
-    </div>
-
     <div class="row cols cols--2 details">
       <div class="blurbs">
         <a class="blurb" href={site.mapsUrl} target="_blank" rel="noopener">
@@ -124,13 +120,20 @@ const jsonLd = {
 
   <section class="section map-section" aria-label="Mapa">
     <div class="row">
-      <div class="map card">
-        <iframe
-          src={site.mapsEmbed}
-          title="Mapa – Veterinární klinika Hloubětín"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          allowfullscreen></iframe>
+      <!-- Mapa Google se načte až po kliknutí (rychlejší stránka, žádná data Googlu bez souhlasu) -->
+      <div class="map card" data-map data-src={site.mapsEmbed}>
+        <div class="map__cover">
+          <span class="map__pin"><Icon name="pin" size={28} /></span>
+          <p class="map__address">
+            <strong>{site.address.street}, {site.address.city} {site.address.zip}</strong><br />
+            {site.address.note} · u metra Hloubětín
+          </p>
+          <div class="map__actions">
+            <button type="button" class="btn" data-map-load>Zobrazit mapu</button>
+            <a class="map__ext" href={site.mapsUrl} target="_blank" rel="noopener">Otevřít v Google Mapách ↗</a>
+          </div>
+          <p class="map__note">Po zobrazení se mapa načte ze serverů Google.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -138,40 +141,22 @@ const jsonLd = {
   <ContactCards />
 </Base>
 
-<style>
-  :global(.page-crumbs) {
-    margin: 4px 0 28px;
-  }
+<script>
+  document.querySelectorAll<HTMLElement>('[data-map]').forEach((box) => {
+    box.querySelector('[data-map-load]')?.addEventListener('click', () => {
+      const frame = document.createElement('iframe');
+      frame.src = box.dataset.src ?? '';
+      frame.title = 'Mapa – Veterinární klinika Hloubětín';
+      frame.referrerPolicy = 'no-referrer-when-downgrade';
+      frame.allowFullscreen = true;
+      box.replaceChildren(frame);
+    });
+  });
+</script>
 
+<style>
   .intro {
     padding: 4px 0 3px;
-  }
-
-  .intro__title {
-    padding-bottom: 8px;
-    color: var(--c-ink);
-    font-family: var(--f-head);
-    font-size: 42px;
-    font-weight: 800;
-    line-height: 1.15;
-    text-align: center;
-  }
-
-  .intro__sub {
-    padding-bottom: 6px;
-    color: var(--c-orange-deep);
-    font-family: var(--f-head);
-    font-size: 20px;
-    font-weight: 800;
-    text-align: center;
-  }
-
-  .intro__text {
-    color: var(--c-text);
-    font-family: var(--f-head);
-    font-size: 17px;
-    font-weight: 500;
-    text-align: center;
   }
 
   .details {
@@ -380,11 +365,83 @@ const jsonLd = {
     box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.4);
   }
 
-  .map iframe {
+  .map :global(iframe),
+  .map__cover {
     display: block;
     width: 100%;
     height: 450px;
     border: 0;
+  }
+
+  .map__cover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 24px;
+    background-color: #f4efe9;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.55) 1px, transparent 1px);
+    background-size: 36px 36px;
+    color: var(--c-text);
+    font-family: var(--f-head);
+    text-align: center;
+  }
+
+  .map__pin {
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--c-white);
+    color: var(--c-orange-deep);
+    box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.4);
+  }
+
+  .map__address {
+    padding: 0;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .map__address strong {
+    color: var(--c-ink);
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .map__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px 20px;
+  }
+
+  .map__actions .btn {
+    border: 0;
+    cursor: pointer;
+  }
+
+  .map__ext {
+    color: var(--c-ink);
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .map__ext:hover {
+    opacity: 1;
+    color: var(--c-orange-deep);
+  }
+
+  .map__note {
+    padding: 0;
+    color: #8a7a6c;
+    font-size: 13px;
   }
 
   @media (max-width: 980px) {
@@ -396,12 +453,6 @@ const jsonLd = {
   }
 
   @media (max-width: 767px) {
-    .intro__title {
-      font-size: 30px;
-    }
-    .intro__sub {
-      font-size: 18px;
-    }
     .details {
       padding-top: 16px;
     }
@@ -422,7 +473,8 @@ const jsonLd = {
     .form-card__title {
       font-size: 26px;
     }
-    .map iframe {
+    .map :global(iframe),
+    .map__cover {
       height: 340px;
     }
   }

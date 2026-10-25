@@ -39,11 +39,6 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
           </a>
           <a class="hero__btn hero__btn--ghost" href="#sluzby">Naše služby</a>
         </div>
-        <ul class="hero__facts">
-          <li><Icon name="check" size={16} /> Psi, kočky i exotická zvířata</li>
-          <li><Icon name="check" size={16} /> Pohotovost po telefonické domluvě</li>
-          <li><Icon name="check" size={16} /> TOP firma 2025 na Firmy.cz</li>
-        </ul>
       </div>
     </div>
     <div class="row row--wide hero__box">
@@ -136,7 +131,6 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
     display: flex;
     flex-wrap: wrap;
     gap: 12px 14px;
-    margin-bottom: 26px;
   }
 
   .hero__btn {
@@ -177,30 +171,6 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
   .hero__btn--ghost:hover {
     background: var(--c-white);
     color: var(--c-ink);
-  }
-
-  .hero__facts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 22px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    font-size: 15px;
-    font-weight: 700;
-  }
-
-  .hero__facts li {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .hero__facts :global(svg) {
-    flex: 0 0 auto;
-    padding: 2px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.25);
   }
 
   .hero__box {
@@ -307,9 +277,6 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
     }
     .hero__btn {
       justify-content: center;
-    }
-    .hero__facts {
-      display: none;
     }
     .hero__box {
       padding-bottom: 20px;

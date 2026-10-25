@@ -25,8 +25,11 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     <span class="tile__icon"><Icon name="pin" size={20} /></span>
     <span class="tile__body">
       <span class="tile__label">Kde nás najdete</span>
-      <span class="tile__value">{site.address.short}</span>
-      <span class="tile__hint">U metra Hloubětín · navigovat</span>
+      <span class="tile__value">
+        {site.address.street}<br /><span class="nowrap">{site.address.city} {site.address.zip}</span>
+      </span>
+      <span class="tile__hint">U metra Hloubětín</span>
+      <span class="tile__action"><Icon name="pin" size={14} /> Navigovat</span>
     </span>
   </a>
 
@@ -34,8 +37,8 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     <span class="tile__icon"><Icon name="phone" size={20} /></span>
     <span class="tile__body">
       <span class="tile__label">Ordinace a pohotovost</span>
-      <span class="tile__value">{site.phones.main.label}</span>
-      <span class="tile__hint">Zavolat</span>
+      <span class="tile__value nowrap">{site.phones.main.label}</span>
+      <span class="tile__action"><Icon name="phone" size={14} /> Zavolat</span>
     </span>
   </a>
 
@@ -154,6 +157,30 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     font-weight: 600;
   }
 
+  .nowrap {
+    white-space: nowrap;
+  }
+
+  /* Viditelné tlačítko akce v dlaždici (celá dlaždice je odkaz) */
+  .tile__action {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 5px 12px;
+    border-radius: 100px;
+    background: var(--c-orange);
+    color: var(--c-white);
+    font-size: 13px;
+    font-weight: 800;
+    transition: background 200ms ease;
+  }
+
+  a.tile:hover .tile__action {
+    background: var(--c-orange-deep);
+  }
+
   .hours {
     display: grid;
     gap: 1px;
@@ -242,7 +269,7 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
       font-size: 14px;
     }
     .tile {
-      align-items: center;
+      align-items: flex-start;
       padding: 12px;
     }
     .tile--hours {

@@ -1,22 +1,19 @@
 ---
 import Base from '../layouts/Base.astro';
-import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
 import ContactCards from '../components/ContactCards.astro';
 import Icon from '../components/Icon.astro';
 import { site } from '../data/site';
-import heroImg from '../assets/uploads/2024/05/Untitled-design-1920x1280-2.jpg';
 ---
 
 <Base
   title="Rezervace služeb"
   description="Vyberte si čas dle vaší potřeby a zarezervujte si návštěvu na naší klinice ještě dnes. Veterinární klinika Hloubětín – online objednání na vakcinaci, čipování i vyšetření."
 >
-  <PageHero title="Rezervace služeb" image={heroImg} position="center 10%" />
+  <PageHero title="Rezervace služeb" crumbs={[{ label: 'Rezervace služeb' }]} />
 
   <section class="section rez">
     <div class="row">
-      <Breadcrumbs items={[{ label: 'Rezervace služeb' }]} class="page-crumbs" />
       <p class="rez__lead"><strong>Pro objednání na základní úkony vašeho mazlíka můžete využít tento objednávací formulář.</strong></p>
       <p class="rez__note"><em>Je potřeba Vás objednat ke konkrétnímu doktorovi.</em> Nenajdete svůj požadavek ve formuláři? <a href="#jine-objednani">Objednejte se telefonicky</a>.</p>
 
@@ -79,10 +76,6 @@ import heroImg from '../assets/uploads/2024/05/Untitled-design-1920x1280-2.jpg';
 </script>
 
 <style>
-  :global(.page-crumbs) {
-    margin: 4px 0 28px;
-  }
-
   .rez {
     padding: 8px 0 117px;
   }

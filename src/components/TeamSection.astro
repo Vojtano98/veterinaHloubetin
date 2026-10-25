@@ -5,13 +5,6 @@ import { team } from '../data/team';
 
 const doctors = team.filter((m) => m.doctor);
 const nurses = team.filter((m) => !m.doctor);
-const initials = (name: string) =>
-  name
-    .replace(/^(\S+\.\s*)+/, '')
-    .split(/\s+/)
-    .map((p) => p[0])
-    .join('')
-    .slice(0, 2);
 ---
 
 <section class="crew" id="onas" aria-labelledby="tym-title">
@@ -65,7 +58,11 @@ const initials = (name: string) =>
                 <Image src={m.photo} alt={m.name} width={400} height={480} widths={[300, 400, 600]} sizes="(max-width: 767px) 90vw, 300px" loading="lazy" />
               ) : (
                 <span class="nurse__placeholder" aria-hidden="true">
-                  {initials(m.name)}
+                  {/* Neutrální silueta, dokud nedorazí fotka */}
+                  <svg viewBox="0 0 200 240" preserveAspectRatio="xMidYMax meet">
+                    <circle cx="100" cy="96" r="44" />
+                    <path d="M18 240c0-62 36-94 82-94s82 32 82 94z" />
+                  </svg>
                 </span>
               )}
             </div>
@@ -290,14 +287,16 @@ const initials = (name: string) =>
   .nurse__placeholder {
     position: absolute;
     inset: 0;
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
     background: linear-gradient(160deg, #fde3c8 0%, #f8efe7 100%);
-    color: #e9a467;
-    font-family: var(--f-head);
-    font-size: 64px;
-    font-weight: 800;
-    letter-spacing: 2px;
+  }
+
+  .nurse__placeholder svg {
+    width: 72%;
+    height: auto;
+    fill: #f2c9a3;
   }
 
   .nurse__body {
@@ -353,9 +352,6 @@ const initials = (name: string) =>
     .nurse__name {
       font-size: 16px;
       line-height: 1.25;
-    }
-    .nurse__placeholder {
-      font-size: 42px;
     }
   }
 

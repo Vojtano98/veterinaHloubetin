@@ -6,10 +6,8 @@ import Reviews from '../components/Reviews.astro';
 import InfoBox from '../components/InfoBox.astro';
 import ContactCards from '../components/ContactCards.astro';
 import Wave from '../components/Wave.astro';
-import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { animals, getArticles } from '../lib/articles';
 import { site } from '../data/site';
-import heroImg from '../assets/uploads/2024/05/Untitled-design-1-scaled.jpg';
 
 const articles = await getArticles();
 // Filtr nabízí jen zvířata, ke kterým existuje aspoň jeden článek
@@ -50,12 +48,11 @@ const jsonLd = [
   jsonLd={jsonLd}
   section="clanky"
 >
-  <PageHero title="Články" subtitle="a další zajímavá témata" image={heroImg} position="center 27%" />
+  <PageHero title="Články" subtitle="a další zajímavá témata" crumbs={[{ label: 'Články' }]} />
 
   <section class="listing" aria-label="Seznam článků">
     <Wave variant="arch" position="top" color="#FFFFFF" height="54vw" class="listing__wave" />
     <div class="row">
-      <Breadcrumbs items={[{ label: 'Články' }]} class="listing__crumbs" />
       <div class="filter" role="group" aria-label="Filtrovat články podle zvířete" data-filter hidden>
         <button type="button" class="filter__btn" aria-pressed="true" data-value="">Vše <span>{articles.length}</span></button>
         {
@@ -163,7 +160,7 @@ const jsonLd = [
 
   .listing {
     position: relative;
-    padding: 54px 0 35px;
+    padding: 10px 0 35px;
     background-color: var(--c-cream);
     background-image: linear-gradient(180deg, #fff6ef 0%, #ffffff 100%);
   }
@@ -174,10 +171,6 @@ const jsonLd = [
 
   .listing .row {
     z-index: 2;
-  }
-
-  .listing :global(.listing__crumbs) {
-    margin-bottom: 26px;
   }
 
   .listing__grid {

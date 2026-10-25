@@ -1,11 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
-import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
 import ContactCards from '../components/ContactCards.astro';
 import { cenik } from '../data/cenik';
 import { site } from '../data/site';
-import heroImg from '../assets/uploads/2024/05/Untitled-design-1920x1280-1.jpg';
 
 // Nezlomitelné mezery v cenách a mezi číslem a „Kč“
 const nb = (s: string) => s.replace(/(\d) (\d)/g, '$1 $2').replace(/ Kč/g, ' Kč');
@@ -22,11 +20,10 @@ const slug = (s: string) =>
   title="Ceník zákroků a vyšetření"
   description="Ceník Veterinární kliniky Hloubětín – vakcinace psů, koček a králíků, kastrace, klinická a ortopedická vyšetření, sonografie, RTG, čištění zubů a další úkony."
 >
-  <PageHero title="Ceník služeb" image={heroImg} position="center 47%" />
+  <PageHero title="Ceník zákroků a vyšetření" crumbs={[{ label: 'Ceník zákroků a vyšetření' }]} />
 
   <section class="section cenik-section">
     <div class="row">
-      <Breadcrumbs items={[{ label: 'Ceník zákroků a vyšetření' }]} class="page-crumbs" />
       <nav class="cenik-toc" aria-label="Části ceníku">
         {cenik.map((s) => <a href={`#${slug(s.title)}`}>{s.title}</a>)}
       </nav>
@@ -78,21 +75,24 @@ const slug = (s: string) =>
 </Base>
 
 <style>
-  :global(.page-crumbs) {
-    margin: 4px 0 28px;
-  }
-
   .cenik-section {
-    padding-top: 30px;
+    padding-top: 8px;
   }
 
+  /* Lišta sekcí zůstává při posouvání přichycená pod hlavičkou */
   .cenik-toc {
+    position: sticky;
+    top: 86px;
+    z-index: 20;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
-    max-width: 1080px;
+    max-width: 800px;
     margin: 0 auto 30px;
+    padding: 10px 0;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(6px);
   }
 
   .cenik-toc a {
@@ -115,16 +115,17 @@ const slug = (s: string) =>
   }
 
   .vh-cenik {
-    max-width: 1080px;
+    max-width: 800px;
     margin: 0 auto;
-    padding: 20px 0 10px;
+    padding: 10px 0 10px;
     color: #010;
     font-family: var(--f-head);
   }
 
   .vh-sekce {
     margin: 0 0 56px;
-    scroll-margin-top: 24px;
+    /* Místo pro přichycenou lištu sekcí */
+    scroll-margin-top: 70px;
   }
 
   .vh-nadpis {
@@ -165,8 +166,7 @@ const slug = (s: string) =>
 
   .vh-nazev,
   .vh-cena {
-    width: 50%;
-    padding: 14px 16px 14px 33px;
+    padding: 14px 16px;
     font-size: 18px;
     font-weight: 500;
     line-height: 1.5;
@@ -175,14 +175,15 @@ const slug = (s: string) =>
   }
 
   .vh-cena {
-    padding-left: 16px;
-    text-align: center;
+    width: 1%;
+    font-weight: 800;
+    text-align: right;
     white-space: nowrap;
   }
 
   .vh-poznamka {
     margin: 16px 0 0;
-    padding-left: 33px;
+    padding-left: 16px;
     font-size: 16px;
     line-height: 1.5;
     color: #010;
@@ -194,7 +195,7 @@ const slug = (s: string) =>
     align-items: center;
     justify-content: space-between;
     gap: 16px 30px;
-    max-width: 1080px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 26px 30px;
     font-family: var(--f-head);
@@ -221,27 +222,31 @@ const slug = (s: string) =>
     .vh-nadpis {
       font-size: 24px;
     }
-    .vh-tabulka tr {
-      display: flex;
-      flex-direction: column;
-      padding: 12px 0;
-      text-align: center;
+    .cenik-toc {
+      top: 97px;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      gap: 8px;
+      margin: 0 -16px 20px;
+      padding: 8px 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .cenik-toc::-webkit-scrollbar {
+      display: none;
+    }
+    .cenik-toc a {
+      flex: none;
+      padding: 7px 14px;
+      font-size: 14px;
     }
     .vh-nazev,
     .vh-cena {
-      width: 100%;
-      padding: 0;
-      font-size: 17px;
-      text-align: center;
-      white-space: normal;
-    }
-    .vh-cena {
-      margin-top: 2px;
-      font-weight: 700;
+      padding: 12px 4px;
+      font-size: 16px;
     }
     .vh-poznamka {
-      padding-left: 0;
-      text-align: center;
+      padding-left: 4px;
     }
     .cenik-cta {
       padding: 22px 18px;

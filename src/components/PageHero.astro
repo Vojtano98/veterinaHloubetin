@@ -1,90 +1,94 @@
 ---
-import { getImage } from 'astro:assets';
+import Breadcrumbs from './Breadcrumbs.astro';
 
-// Záhlaví podstránek – tmavá fotka psa s nadpisem
+// Světlé záhlaví podstránek (stejný styl jako u článků): drobečková navigace, nadpis, podnadpis
 interface Props {
   title: string;
   subtitle?: string;
-  image: ImageMetadata;
-  position?: string;
-  /** Nadpis stránky je H1 jen tam, kde stránka nemá vlastní H1 v obsahu */
-  as?: 'h1' | 'p';
+  lead?: string;
+  /** Položky drobečkové navigace za „Úvod“ */
+  crumbs: { label: string; href?: string }[];
 }
 
-const { title, subtitle, image, position = 'center', as: Tag = 'h1' } = Astro.props;
-const bg = await getImage({ src: image, width: 1920, format: 'webp', quality: 70 });
-const bgSmall = await getImage({ src: image, width: 960, format: 'webp', quality: 70 });
+const { title, subtitle, lead, crumbs } = Astro.props;
 ---
 
-<section
-  class="page-hero"
-  style={`--hero-bg:url(${bg.src});--hero-bg-sm:url(${bgSmall.src});--hero-pos:${position}`}
->
-  <div class="row">
-    <Tag class="page-hero__title">{title}</Tag>
-    {subtitle && <p class="page-hero__subtitle">{subtitle}</p>}
+<section class="page-hero">
+  <div class="row page-hero__row">
+    <div class="page-hero__text">
+      <Breadcrumbs items={crumbs} class="page-hero__crumbs" />
+      <h1 class="page-hero__title">{title}</h1>
+      {subtitle && <p class="page-hero__subtitle">{subtitle}</p>}
+      {lead && <p class="page-hero__lead">{lead}</p>}
+    </div>
   </div>
 </section>
 
 <style>
   .page-hero {
-    position: relative;
-    padding: 24px 0 51px;
-    background-color: #5c5148;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)), var(--hero-bg);
-    background-position: var(--hero-pos);
-    background-size: cover;
-    color: var(--c-white);
-    text-align: center;
+    background: linear-gradient(180deg, var(--c-cream) 0%, #fff 100%);
   }
 
-  .page-hero .row {
-    padding: 27px 0;
+  .page-hero__row {
+    padding: 26px 0 22px;
+  }
+
+  .page-hero__text {
+    min-width: 0;
+  }
+
+  .page-hero :global(.page-hero__crumbs) {
+    margin-bottom: 18px;
+  }
+
+  .page-hero :global(.page-hero__crumbs a:not(:hover)) {
+    background: var(--c-white);
   }
 
   .page-hero__title {
-    margin: 35px 0 0;
     padding: 0;
-    color: var(--c-white);
+    color: var(--c-heading);
     font-family: var(--f-head);
-    font-size: 38px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    line-height: 1.2em;
-    text-shadow: 0 0 1em rgba(0, 0, 0, 0.25);
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1.15;
   }
 
   .page-hero__subtitle {
     margin-top: 6px;
     padding: 0;
-    color: var(--c-white);
+    color: var(--c-orange-deep);
     font-family: var(--f-head);
-    font-size: 21px;
-    font-weight: 500;
-    letter-spacing: 2px;
+    font-size: 19px;
+    font-weight: 800;
   }
 
-  @media (max-width: 980px) {
-    .page-hero {
-      padding: 22px 0 40px;
-    }
-    .page-hero__title {
-      margin-top: 0;
-    }
+  .page-hero__lead {
+    max-width: 620px;
+    margin-top: 8px;
+    padding: 0;
+    color: var(--c-text);
+    font-family: var(--f-head);
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.6;
   }
 
   @media (max-width: 767px) {
-    .page-hero {
-      padding: 7px 0 5px;
-      background-image: linear-gradient(rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.22)), var(--hero-bg-sm);
+    .page-hero__row {
+      padding: 18px 0 10px;
+    }
+    .page-hero :global(.page-hero__crumbs) {
+      margin-bottom: 12px;
     }
     .page-hero__title {
-      margin: 10px 0 8px;
-      font-size: 34px;
+      font-size: 30px;
     }
     .page-hero__subtitle {
-      margin-bottom: 16px;
-      font-size: 18px;
+      font-size: 17px;
+    }
+    .page-hero__lead {
+      font-size: 15px;
     }
   }
 </style>
