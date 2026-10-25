@@ -58,7 +58,8 @@ export function laterToday(list: Vyjimka[], now = new Date()) {
 export function barText(list: Vyjimka[], now = new Date()) {
   const v = parse(list).find((x) => now >= x.announceFrom && now < x.to);
   if (!v) return null;
-  if (now >= v.from) return `Mimořádná pohotovost do ${until(v.to, now)}${time(v.to)}:`;
+  // Text vždy končí slovem „pohotovost:“, aby na mobilu mohlo zůstat na řádku s telefonem
+  if (now >= v.from) return `Do ${until(v.to, now)}${time(v.to)} mimořádná pohotovost:`;
   const start = when(v.from, now);
   const startCap = start.charAt(0).toUpperCase() + start.slice(1);
   return `${startCap} od ${time(v.from)} do ${until(v.to, now)}${time(v.to)} mimořádná pohotovost:`;

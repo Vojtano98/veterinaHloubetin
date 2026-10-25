@@ -7,7 +7,7 @@ import { site } from '../data/site';
   <!-- Oznámení mimořádné pohotovosti – zobrazí ho skript jen v daném okně -->
   <a class="info-bar__tel info-bar__special" href={site.phones.main.href} hidden data-special>
     <span data-special-text></span>
-    <strong class="nowrap">{site.phones.main.label}</strong>
+    <span class="nowrap"><span data-special-last></span> <strong>{site.phones.main.label}</strong></span>
   </a>
   <a class="info-bar__tel" href={site.phones.main.href} data-regular>
     <span class="info-bar__full">Pohotovost poskytujeme po předchozí telefonické domluvě:</span>
@@ -25,7 +25,10 @@ import { site } from '../data/site';
     const regular = bar.querySelector<HTMLElement>('[data-regular]')!;
     const update = () => {
       const text = barText(list);
-      special.querySelector('[data-special-text]')!.textContent = text ?? '';
+      // Poslední slovo („pohotovost:“) drží pohromadě s telefonem
+      const cut = (text ?? '').lastIndexOf(' ');
+      special.querySelector('[data-special-text]')!.textContent = text ? text.slice(0, cut) : '';
+      special.querySelector('[data-special-last]')!.textContent = text ? text.slice(cut + 1) : '';
       special.hidden = !text;
       regular.hidden = Boolean(text);
       bar.classList.toggle('is-special', Boolean(text));
@@ -62,7 +65,8 @@ import { site } from '../data/site';
     gap: 0 6px;
   }
 
-  .info-bar__tel strong {
+  .info-bar__tel .nowrap strong,
+  .info-bar__tel > strong {
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
