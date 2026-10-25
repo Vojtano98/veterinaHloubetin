@@ -16,6 +16,7 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
   data-open-status
   data-compact={compact ? '1' : undefined}
   data-schedule={JSON.stringify(schedule)}
+  data-vyjimky={JSON.stringify(site.vyjimky)}
   hidden
 >
   <span class="open-status__dot" aria-hidden="true"></span>
@@ -67,7 +68,14 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
     background: currentColor;
   }
 
-  .open-status.is-open .open-status__dot {
+  /* Mimořádná pohotovost */
+  .open-status.is-emergency {
+    background: #fff1e2;
+    color: #b45309;
+  }
+
+  .open-status.is-open .open-status__dot,
+  .open-status.is-emergency .open-status__dot {
     box-shadow: 0 0 0 0 rgba(31, 122, 51, 0.5);
     animation: pulse 2s infinite;
   }
@@ -83,6 +91,8 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
 </style>
 
 <script>
+  import { current, laterToday, time, untilText, type Vyjimka } from '../lib/vyjimky';
+
   const dayNames = ['v neděli', 'v pondělí', 'v úterý', 've středu', 've čtvrtek', 'v pátek', 'v sobotu'];
   const toMin = (t: string) => {
     const [h, m] = t.split(':').map(Number);
@@ -109,8 +119,22 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
     const today = schedule[day];
     const text = el.querySelector<HTMLElement>('[data-open-text]')!;
     const compact = el.dataset.compact === '1';
+    const vyjimky: Vyjimka[] = JSON.parse(el.dataset.vyjimky || '[]');
+    const now = new Date();
     let open = false;
     let msg = '';
+    const ex = current(vyjimky, now);
+    const exLater = laterToday(vyjimky, now);
+    if (ex) {
+      text.textContent = compact
+        ? `Pohotovost do ${time(ex.to)}`
+        : `Mimořádná pohotovost · do ${untilText(ex.to, now)}`;
+      el.classList.remove('is-open');
+      el.classList.add('is-emergency');
+      el.hidden = false;
+      return;
+    }
+    el.classList.remove('is-emergency');
     if (today && min >= toMin(today[0]) && min < toMin(today[1])) {
       open = true;
       msg = compact ? `Otevřeno do ${fmt(today[1])}` : `Nyní otevřeno · zavíráme v ${fmt(today[1])}`;
@@ -126,6 +150,13 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
           break;
         }
       }
+    }
+    // Po zavírací době, ale ještě dnes začne mimořádná pohotovost
+    const opensLaterToday = today && min < toMin(today[0]);
+    if (!open && exLater && !opensLaterToday) {
+      msg = compact
+        ? `Zavřeno · pohotovost ${time(exLater.from)}`
+        : `Nyní zavřeno · mimořádná pohotovost od ${time(exLater.from)}`;
     }
     text.textContent = msg;
     el.classList.toggle('is-open', open);

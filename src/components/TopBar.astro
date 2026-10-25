@@ -3,13 +3,37 @@ import { site } from '../data/site';
 ---
 
 <!-- Hodiny jsou v hlavičce (stav Otevřeno) a v boxu pod bannerem, lišta proto nese jen pohotovost -->
-<div class="info-bar">
-  <a class="info-bar__tel" href={site.phones.main.href}>
+<div class="info-bar" data-info-bar data-vyjimky={JSON.stringify(site.vyjimky)}>
+  <!-- Oznámení mimořádné pohotovosti – zobrazí ho skript jen v daném okně -->
+  <a class="info-bar__tel info-bar__special" href={site.phones.main.href} hidden data-special>
+    <span data-special-text></span>
+    <strong class="nowrap">{site.phones.main.label}</strong>
+  </a>
+  <a class="info-bar__tel" href={site.phones.main.href} data-regular>
     <span class="info-bar__full">Pohotovost poskytujeme po předchozí telefonické domluvě:</span>
     <span class="info-bar__short">Pohotovost:</span>
     <strong class="nowrap">{site.phones.main.label}</strong>
   </a>
 </div>
+
+<script>
+  import { barText, type Vyjimka } from '../lib/vyjimky';
+
+  document.querySelectorAll<HTMLElement>('[data-info-bar]').forEach((bar) => {
+    const list: Vyjimka[] = JSON.parse(bar.dataset.vyjimky || '[]');
+    const special = bar.querySelector<HTMLElement>('[data-special]')!;
+    const regular = bar.querySelector<HTMLElement>('[data-regular]')!;
+    const update = () => {
+      const text = barText(list);
+      special.querySelector('[data-special-text]')!.textContent = text ?? '';
+      special.hidden = !text;
+      regular.hidden = Boolean(text);
+      bar.classList.toggle('is-special', Boolean(text));
+    };
+    update();
+    setInterval(update, 60_000);
+  });
+</script>
 
 <style>
   .info-bar {
@@ -46,6 +70,16 @@ import { site } from '../data/site';
 
   .info-bar__short {
     display: none;
+  }
+
+  .info-bar [hidden] {
+    display: none;
+  }
+
+  /* Mimořádné oznámení – tmavší, aby bylo vidět */
+  .info-bar.is-special {
+    background: #b45309;
+    font-weight: 700;
   }
 
   .nowrap {
