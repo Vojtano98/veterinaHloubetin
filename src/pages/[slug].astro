@@ -26,6 +26,10 @@ const reviewer = memberById(d.reviewedBy);
 const related = relatedArticles(article, all);
 const minutes = readingTime(article.body);
 const mainImage = d.heroImage ?? d.cover;
+// Obrázek pro sdílení odkazu: větší z fotek článku, alespoň 600 px na šířku (jinak obrázek kliniky)
+const shareImage = [d.heroImage, d.cover]
+  .filter((img): img is NonNullable<typeof img> => Boolean(img) && img!.width >= 600)
+  .sort((a, b) => b.width - a.width)[0];
 const ogImg = await getImage({ src: mainImage, width: 1200, format: 'jpg' });
 const showUpdated = d.updatedDate && d.updatedDate.toDateString() !== d.pubDate.toDateString();
 // Shrnutí a FAQ: na produkci jen po schválení veterinářem, ve vývoji jako označený návrh
@@ -79,7 +83,7 @@ const jsonLd = [
 <Base
   title={d.seoTitle ?? d.title}
   description={d.description || d.excerpt || site.description}
-  image={mainImage}
+  image={shareImage}
   type="article"
   publishedTime={d.pubDate}
   modifiedTime={d.updatedDate}

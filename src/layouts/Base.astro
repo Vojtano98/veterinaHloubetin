@@ -6,7 +6,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
 import favicon from '../assets/uploads/2024/06/Navrh-bez-nazvu-6.png';
-import ogDefault from '../assets/uploads/2025/05/HP-pes.webp';
+import ogDefault from '../assets/og/sdileni-veterina.jpg';
 import { getImage } from 'astro:assets';
 
 interface Props {
@@ -42,8 +42,17 @@ const fullTitle = rawTitle ? title : `${title} - ${site.name}`;
 const isPreview = import.meta.env.PUBLIC_PREVIEW === '1';
 const robots = noindex || isPreview ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 const canonical = new URL(Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/', site.url).href;
-const og = await getImage({ src: image ?? ogDefault, width: 1200, format: 'jpg' });
-const ogUrl = new URL(og.src, site.url).href;
+// Náhled při sdílení odkazu (WhatsApp, Messenger, Facebook…): 1200 × 630, u článků jejich fotka ořezaná
+// s ohledem na nejzajímavější část. Na náhledu (GitHub Pages) musí adresy mířit na náhled, jinak se obrázek nenačte.
+const ogOrigin = import.meta.env.PUBLIC_SITE_ORIGIN || site.url;
+const ogSrc = image ?? ogDefault;
+// Bez zvětšování: menší fotka dá menší obrázek, ale vždy v poměru 1200 : 630
+const ogW = Math.min(1200, ogSrc.width);
+const ogH = Math.round((ogW * 630) / 1200);
+const og = await getImage({ src: ogSrc, width: ogW, height: ogH, fit: 'cover', position: 'attention', format: 'jpg', quality: 82 });
+const ogUrl = new URL(og.src, ogOrigin).href;
+const ogPageUrl = isPreview ? new URL(Astro.url.pathname, ogOrigin).href : canonical;
+const ogAlt = image ? title : `${site.name} – logo a pes na úvodní fotografii`;
 const icon32 = await getImage({ src: favicon, width: 32, height: 32, format: 'png' });
 const icon192 = await getImage({ src: favicon, width: 192, height: 192, format: 'png' });
 const icon180 = await getImage({ src: favicon, width: 180, height: 180, format: 'png' });
@@ -110,14 +119,20 @@ const ld = [org, website, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd
     <meta property="og:type" content={type} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    <meta property="og:url" content={ogPageUrl} />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:image" content={ogUrl} />
-    <meta property="og:image:width" content={String(og.attributes.width ?? 1200)} />
-    <meta property="og:image:height" content={String(og.attributes.height ?? '')} />
+    <meta property="og:image:secure_url" content={ogUrl} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content={String(ogW)} />
+    <meta property="og:image:height" content={String(ogH)} />
+    <meta property="og:image:alt" content={ogAlt} />
     {publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
     {modifiedTime && <meta property="article:modified_time" content={modifiedTime.toISOString()} />}
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
 
     <link rel="icon" href={icon32.src} sizes="32x32" />
     <link rel="icon" href={icon192.src} sizes="192x192" />

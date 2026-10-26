@@ -31,6 +31,8 @@ jobs:
         env:
           BASE_PATH: /${{ github.event.repository.name }}
           PUBLIC_PREVIEW: '1'
+          # Absolutní adresy pro náhled při sdílení odkazu (og:image, og:url)
+          PUBLIC_SITE_ORIGIN: https://${{ github.repository_owner }}.github.io
       - name: Úprava odkazů pro podsložku
         run: node scripts/rebase-links.mjs
         env:
