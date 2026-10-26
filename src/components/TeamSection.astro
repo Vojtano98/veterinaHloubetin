@@ -4,7 +4,8 @@ import Icon from './Icon.astro';
 import { team } from '../data/team';
 
 const doctors = team.filter((m) => m.doctor);
-const nurses = team.filter((m) => !m.doctor);
+// Sestry bez fotky se dočasně nezobrazují – jakmile v src/data/team.ts dostanou `photo`, objeví se samy
+const nurses = team.filter((m) => !m.doctor && m.photo);
 ---
 
 <section class="crew" id="onas" aria-labelledby="tym-title">
@@ -49,7 +50,7 @@ const nurses = team.filter((m) => !m.doctor);
       }
     </ul>
 
-    <ul class="crew__nurses">
+    <ul class:list={['crew__nurses', { 'crew__nurses--few': nurses.length < 3 }]} style={`--nurses:${nurses.length}`}>
       {
         nurses.map((m) => (
           <li class="nurse">
@@ -119,8 +120,11 @@ const nurses = team.filter((m) => !m.doctor);
     margin-bottom: 22px;
   }
 
+  /* Počet sloupců podle počtu sester; karta má nejvýš ~340 px, menší počet se vycentruje */
   .crew__nurses {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(var(--nurses, 3), minmax(0, 1fr));
+    max-width: calc(var(--nurses, 3) * 340px + (var(--nurses, 3) - 1) * 22px);
+    margin-inline: auto;
   }
 
   /* ---------- Lékař ---------- */
@@ -342,29 +346,43 @@ const nurses = team.filter((m) => !m.doctor);
     .doc__body {
       padding: 20px;
     }
-    /* Tři sestry vedle sebe i na telefonu */
+    /* Všechny sestry vedle sebe i na telefonu */
     .crew__nurses {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
+      gap: 10px;
     }
     .nurse {
       border-radius: 14px;
     }
     .nurse__body {
-      padding: 9px 8px 11px;
+      padding: 11px 12px 13px;
     }
     .nurse__name {
       padding-bottom: 4px;
-      font-size: 14px;
+      font-size: 16px;
       line-height: 1.2;
-      overflow-wrap: anywhere;
     }
     .nurse__role {
+      font-size: 11px;
+      letter-spacing: 0.4px;
+    }
+
+    /* Tři a více sester: menší karty */
+    .crew__nurses:not(.crew__nurses--few) {
+      gap: 8px;
+    }
+    .crew__nurses:not(.crew__nurses--few) .nurse__body {
+      padding: 9px 8px 11px;
+    }
+    .crew__nurses:not(.crew__nurses--few) .nurse__name {
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+    .crew__nurses:not(.crew__nurses--few) .nurse__role {
       padding-left: 0;
       font-size: 9.5px;
       letter-spacing: 0.3px;
     }
-    .nurse__role::before {
+    .crew__nurses:not(.crew__nurses--few) .nurse__role::before {
       display: none;
     }
   }
@@ -374,14 +392,23 @@ const nurses = team.filter((m) => !m.doctor);
       gap: 6px;
     }
     .nurse__body {
-      padding: 8px 6px 10px;
+      padding: 8px 8px 10px;
     }
     .nurse__name {
-      font-size: 11.5px;
+      font-size: 14px;
     }
     .nurse__role {
-      font-size: 8.5px;
+      font-size: 10px;
       letter-spacing: 0;
+    }
+    .crew__nurses:not(.crew__nurses--few) .nurse__body {
+      padding: 8px 6px 10px;
+    }
+    .crew__nurses:not(.crew__nurses--few) .nurse__name {
+      font-size: 11.5px;
+    }
+    .crew__nurses:not(.crew__nurses--few) .nurse__role {
+      font-size: 8.5px;
     }
   }
 </style>
