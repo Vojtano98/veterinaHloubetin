@@ -1,18 +1,39 @@
 ---
 import { site } from '../data/site';
+
+// Ordinační hodiny do lišty – plný text na desktopu, zkrácený na mobilu; dnešní den zvýrazní skript
+const fullName: Record<string, string> = { So: 'sobota', Ne: 'neděle' };
+const hours = site.hours.map((h) => ({
+  days: h.schema.join(' '),
+  full: `${fullName[h.short] ?? h.short} ${h.time}`,
+  short: `${h.short} ${h.time.replace(/:00/g, '')}`,
+}));
 ---
 
-<!-- Hodiny jsou v hlavičce (stav Otevřeno) a v boxu pod bannerem, lišta proto nese jen pohotovost -->
+<!-- Běžně ordinační hodiny; pohotovost jen jako mimořádné oznámení (site.vyjimky) -->
 <div class="info-bar" data-info-bar data-vyjimky={JSON.stringify(site.vyjimky)}>
   <!-- Oznámení mimořádné pohotovosti – zobrazí ho skript jen v daném okně -->
   <a class="info-bar__tel info-bar__special" href={site.phones.main.href} hidden data-special>
     <span data-special-text></span>
     <span class="nowrap"><span data-special-last></span> <strong>{site.phones.main.label}</strong></span>
   </a>
-  <a class="info-bar__tel" href={site.phones.main.href} data-regular>
-    <span class="info-bar__full">Pohotovost poskytujeme po předchozí telefonické domluvě:</span>
-    <span class="info-bar__short">Pohotovost:</span>
-    <strong class="nowrap">{site.phones.main.label}</strong>
+  <a class="info-bar__hours" href="/kontakty/" data-regular>
+    <span class="info-bar__full">
+      Standardní provoz:
+      {hours.map((h, i) => (
+        <>
+          <span class="nowrap" data-days={h.days}>{h.full}</span>{i < hours.length - 1 ? ', ' : '.'}
+        </>
+      ))}
+      <strong>Těšíme se na Vás.</strong>
+    </span>
+    <span class="info-bar__short">
+      {hours.map((h, i) => (
+        <>
+          <span class="nowrap" data-days={h.days}>{h.short}</span>{i < hours.length - 1 ? ' · ' : ''}
+        </>
+      ))}
+    </span>
   </a>
 </div>
 
@@ -35,6 +56,12 @@ import { site } from '../data/site';
     };
     update();
     setInterval(update, 60_000);
+
+    // Zvýraznění dnešního dne (podle času v Praze)
+    const today = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Prague', weekday: 'short' }).format(new Date()).slice(0, 2);
+    bar.querySelectorAll<HTMLElement>('[data-days]').forEach((el) => {
+      el.classList.toggle('is-today', (el.dataset.days ?? '').split(' ').includes(today));
+    });
   });
 </script>
 
@@ -74,6 +101,13 @@ import { site } from '../data/site';
 
   .info-bar__short {
     display: none;
+  }
+
+  .info-bar .is-today {
+    font-weight: 800;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
   }
 
   .info-bar [hidden] {

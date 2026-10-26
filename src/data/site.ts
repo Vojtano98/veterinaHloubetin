@@ -39,13 +39,8 @@ export const site = {
 
   // Mimořádné časy (pohotovost, svátky…). Zobrazí se jen v daném okně a pak samy zmizí.
   // Pozor na letní (+02:00) a zimní (+01:00) čas.
-  vyjimky: [
-    {
-      from: '2026-10-25T20:30:00+01:00',
-      to: '2026-10-26T08:00:00+01:00',
-      announceFrom: '2026-10-25T00:00:00+02:00',
-    },
-  ],
+  // Vzor: { from: '2026-10-25T20:30:00+01:00', to: '2026-10-26T08:00:00+01:00', announceFrom: '2026-10-25T00:00:00+01:00' }
+  vyjimky: [] as { from: string; to: string; announceFrom?: string }[],
 
   social: {
     facebook: 'https://www.facebook.com/veterinahloubetin',
