@@ -38,8 +38,20 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
             <Icon name="calendar" size={18} />
             Objednat se online
           </a>
-          <a class="hero__btn hero__btn--ghost" href="#sluzby">Naše služby</a>
+          <!-- Na mobilu rovnou vytočí číslo, na počítači vede na Kontakty -->
+          <a class="hero__btn hero__btn--ghost hero__desktop" href="/kontakty/">
+            <Icon name="phone" size={18} />
+            Kontaktujte nás
+          </a>
+          <a class="hero__btn hero__btn--ghost hero__mobile" href={site.phones.main.href}>
+            <Icon name="phone" size={18} />
+            Zavolat
+          </a>
         </div>
+        <a class="hero__more" href="#sluzby">
+          Naše služby
+          <Icon name="arrow" size={18} class="hero__more-icon" />
+        </a>
       </div>
     </div>
     <div class="row row--wide hero__box">
@@ -174,6 +186,40 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
     color: var(--c-ink);
   }
 
+  .hero__mobile {
+    display: none;
+  }
+
+  /* Textový odkaz na sekci služeb pod tlačítky */
+  .hero__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 22px;
+    color: var(--c-white);
+    font-family: var(--f-head);
+    font-size: 16px;
+    font-weight: 800;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+    text-shadow: none;
+  }
+
+  .hero__more:hover {
+    opacity: 1;
+    text-decoration-color: var(--c-orange);
+  }
+
+  .hero__more :global(.hero__more-icon) {
+    transform: rotate(90deg);
+    transition: transform 200ms ease;
+  }
+
+  .hero__more:hover :global(.hero__more-icon) {
+    transform: rotate(90deg) translateX(3px);
+  }
+
   .hero__box {
     z-index: 10;
     margin-top: 6vw;
@@ -266,6 +312,48 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
       font-size: 11px;
       letter-spacing: 1px;
     }
+    .hero__text h1 {
+      font-size: 38px;
+    }
+    .hero__lead {
+      font-size: 17px;
+      padding-bottom: 22px;
+    }
+    .hero__actions {
+      flex-direction: column;
+    }
+    .hero__btn {
+      justify-content: center;
+    }
+    .hero__desktop {
+      display: none;
+    }
+    .hero__mobile {
+      display: inline-flex;
+    }
+    .hero__more {
+      margin-top: 16px;
+      font-size: 15px;
+    }
+    .hero__box {
+      padding-bottom: 20px;
+    }
+    .reviews-section {
+      padding-top: 40px;
+    }
+    .reviews-title {
+      font-size: 22px;
+      padding-right: 0;
+    }
+    .award {
+      gap: 10px;
+      padding-right: 14px;
+      border-radius: 16px;
+      font-size: 13px;
+    }
+    .award img {
+      width: 46px;
+    }
   }
 
   /* Širší telefony a rozložené skládačky (např. Galaxy Z Fold): menší přiblížení fotky psa */
@@ -286,38 +374,6 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
       padding: 5px 11px;
       font-size: 10px;
       letter-spacing: 0.4px;
-    }
-    .hero__text h1 {
-      font-size: 38px;
-    }
-    .hero__lead {
-      font-size: 17px;
-      padding-bottom: 22px;
-    }
-    .hero__actions {
-      flex-direction: column;
-    }
-    .hero__btn {
-      justify-content: center;
-    }
-    .hero__box {
-      padding-bottom: 20px;
-    }
-    .reviews-section {
-      padding-top: 40px;
-    }
-    .reviews-title {
-      font-size: 22px;
-      padding-right: 0;
-    }
-    .award {
-      gap: 10px;
-      padding-right: 14px;
-      border-radius: 16px;
-      font-size: 13px;
-    }
-    .award img {
-      width: 46px;
     }
   }
 </style>
