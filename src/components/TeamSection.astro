@@ -342,23 +342,46 @@ const nurses = team.filter((m) => !m.doctor);
     .doc__body {
       padding: 20px;
     }
+    /* Tři sestry vedle sebe i na telefonu */
     .crew__nurses {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .nurse {
+      border-radius: 14px;
     }
     .nurse__body {
-      padding: 12px 14px 16px;
+      padding: 9px 8px 11px;
     }
     .nurse__name {
-      font-size: 16px;
-      line-height: 1.25;
+      padding-bottom: 4px;
+      font-size: 14px;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+    .nurse__role {
+      padding-left: 0;
+      font-size: 9.5px;
+      letter-spacing: 0.3px;
+    }
+    .nurse__role::before {
+      display: none;
     }
   }
 
-  @media (max-width: 420px) {
+  @media (max-width: 360px) {
+    .crew__nurses {
+      gap: 6px;
+    }
+    .nurse__body {
+      padding: 8px 6px 10px;
+    }
+    .nurse__name {
+      font-size: 11.5px;
+    }
     .nurse__role {
-      font-size: 11px;
-      letter-spacing: 0.5px;
+      font-size: 8.5px;
+      letter-spacing: 0;
     }
   }
 </style>
