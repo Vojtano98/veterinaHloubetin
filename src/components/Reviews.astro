@@ -48,7 +48,7 @@ const palette = ['#f99420', '#316eff', '#2bb3a3', '#a35ad6', '#e0574f', '#4c9a2a
                 <span class="review__date">{r.date}</span>
               </span>
 {r.source === 'firmy' ? (
-                <span class="review__src review__src--firmy" title="Recenze z Firmy.cz">Firmy.cz</span>
+                <img class="review__src" src="/img/firmy-cz.svg" width="66" height="14" alt="Firmy.cz" title="Recenze z Firmy.cz" />
               ) : (
                               <svg class="review__g" viewBox="0 0 48 48" width="20" height="20" aria-label="Google">
                   <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z" />
@@ -162,16 +162,8 @@ const palette = ['#f99420', '#316eff', '#2bb3a3', '#a35ad6', '#e0574f', '#4c9a2a
   .review__src {
     margin-left: auto;
     flex: 0 0 auto;
-    padding: 2px 7px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.2px;
-  }
-
-  .review__src--firmy {
-    background: #fdecec;
-    color: #c4161c;
+    width: 66px;
+    height: auto;
   }
 
   .review__g {
