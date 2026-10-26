@@ -13,6 +13,10 @@ const hours = site.hours.map((h) => ({
 <!-- Běžně ordinační hodiny; pohotovost jen jako mimořádné oznámení (site.vyjimky) -->
 <div class="info-bar" data-info-bar data-vyjimky={JSON.stringify(site.vyjimky)}>
   <!-- Oznámení mimořádné pohotovosti – zobrazí ho skript jen v daném okně -->
+  <a class="info-bar__hours" href="/kontakty/" hidden data-special-hours>
+    <span data-hours-text></span>
+    <span class="info-bar__full">Ostatní dny dle ordinačních hodin.</span>
+  </a>
   <a class="info-bar__tel info-bar__special" href={site.phones.main.href} hidden data-special>
     <span data-special-text></span>
     <span class="nowrap"><span data-special-last></span> <strong>{site.phones.main.label}</strong></span>
@@ -38,21 +42,25 @@ const hours = site.hours.map((h) => ({
 </div>
 
 <script>
-  import { barText, type Vyjimka } from '../lib/vyjimky';
+  import { barInfo, type Vyjimka } from '../lib/vyjimky';
 
   document.querySelectorAll<HTMLElement>('[data-info-bar]').forEach((bar) => {
     const list: Vyjimka[] = JSON.parse(bar.dataset.vyjimky || '[]');
     const special = bar.querySelector<HTMLElement>('[data-special]')!;
+    const specialHours = bar.querySelector<HTMLElement>('[data-special-hours]')!;
     const regular = bar.querySelector<HTMLElement>('[data-regular]')!;
     const update = () => {
-      const text = barText(list);
+      const info = barInfo(list);
+      const emergency = info?.kind === 'pohotovost' ? info.text : '';
       // Poslední slovo („pohotovost:“) drží pohromadě s telefonem
-      const cut = (text ?? '').lastIndexOf(' ');
-      special.querySelector('[data-special-text]')!.textContent = text ? text.slice(0, cut) : '';
-      special.querySelector('[data-special-last]')!.textContent = text ? text.slice(cut + 1) : '';
-      special.hidden = !text;
-      regular.hidden = Boolean(text);
-      bar.classList.toggle('is-special', Boolean(text));
+      const cut = emergency.lastIndexOf(' ');
+      special.querySelector('[data-special-text]')!.textContent = emergency ? emergency.slice(0, cut) : '';
+      special.querySelector('[data-special-last]')!.textContent = emergency ? emergency.slice(cut + 1) : '';
+      specialHours.querySelector('[data-hours-text]')!.textContent = info?.kind === 'hodiny' ? info.text : '';
+      special.hidden = info?.kind !== 'pohotovost';
+      specialHours.hidden = info?.kind !== 'hodiny';
+      regular.hidden = Boolean(info);
+      bar.classList.toggle('is-special', Boolean(info));
     };
     update();
     setInterval(update, 60_000);

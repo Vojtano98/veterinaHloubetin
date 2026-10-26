@@ -90,7 +90,7 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
 </style>
 
 <script>
-  import { current, laterToday, time, untilText, type Vyjimka } from '../lib/vyjimky';
+  import { current, hoursOn, laterToday, time, untilText, type Vyjimka } from '../lib/vyjimky';
 
   const dayNames = ['v neděli', 'v pondělí', 'v úterý', 've středu', 've čtvrtek', 'v pátek', 'v sobotu'];
   // Krátká pilulka v hlavičce musí být úzká i na malých telefonech
@@ -117,11 +117,16 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
   function update(el: HTMLElement) {
     const schedule: ([string, string] | null)[] = JSON.parse(el.dataset.schedule || '[]');
     const { day, min } = nowInPrague();
-    const today = schedule[day];
     const text = el.querySelector<HTMLElement>('[data-open-text]')!;
     const compact = el.dataset.compact === '1';
     const vyjimky: Vyjimka[] = JSON.parse(el.dataset.vyjimky || '[]');
     const now = new Date();
+    // Otevírací doba za `i` dní: výjimka pro ten den (např. 9:00–19:00 nebo zavřeno), jinak běžný rozvrh
+    const hoursIn = (i: number) => {
+      const ex = hoursOn(vyjimky, new Date(now.getTime() + i * 86_400_000));
+      return ex === undefined ? schedule[(day + i) % 7] : ex;
+    };
+    const today = hoursIn(0);
     let open = false;
     let msg = '';
     const ex = current(vyjimky, now);
@@ -144,7 +149,7 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
     } else {
       for (let i = 1; i <= 7; i++) {
         const d = (day + i) % 7;
-        const s = schedule[d];
+        const s = hoursIn(i);
         if (s) {
           const when = i === 1 ? 'zítra' : dayNames[d];
           msg = compact
