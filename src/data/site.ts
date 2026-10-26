@@ -44,9 +44,17 @@ export const site = {
   // Vzory:
   //   pohotovost: { from: '2026-10-25T20:30:00+01:00', to: '2026-10-26T08:00:00+01:00', announceFrom: '2026-10-25T00:00:00+01:00' }
   //   jiné hodiny: { kind: 'hodiny', date: '2026-10-29', opens: '09:00', closes: '19:00' }  (bez opens/closes = zavřeno)
-  //   Změna hodin se v liště oznamuje 7 dní předem (nebo od announceFrom) a po skončení dne sama zmizí.
+  //   Změna hodin se v liště oznamuje 7 dní předem do konce dne, nebo v okně announceFrom–announceTo.
   vyjimky: [
-    { kind: 'hodiny', date: '2026-10-29', opens: '09:00', closes: '19:00' },
+    {
+      kind: 'hodiny',
+      date: '2026-10-29',
+      opens: '09:00',
+      closes: '19:00',
+      // V liště jen ve čtvrtek 0:01–19:00, jinak běžná lišta s hodinami
+      announceFrom: '2026-10-29T00:01:00+01:00',
+      announceTo: '2026-10-29T19:00:00+01:00',
+    },
   ] as Vyjimka[],
 
   social: {

@@ -23,6 +23,8 @@ export type Hodiny = {
   closes?: string;
   /** Od kdy se má v horní liště předem oznamovat (ISO s časovou zónou; výchozí: 7 dní předem) */
   announceFrom?: string;
+  /** Do kdy se má v liště oznamovat (ISO s časovou zónou; výchozí: do konce dne) */
+  announceTo?: string;
 };
 
 export type Vyjimka = Pohotovost | Hodiny;
@@ -104,6 +106,7 @@ export function barInfo(list: Vyjimka[], now = new Date()): { kind: 'pohotovost'
     .filter(isHodiny)
     .filter((x) => keyNum(x.date) >= today)
     .filter((x) => now >= (x.announceFrom ? new Date(x.announceFrom) : new Date((keyNum(x.date) - 7) * DAY)))
+    .filter((x) => !x.announceTo || now < new Date(x.announceTo))
     .sort((a, b) => keyNum(a.date) - keyNum(b.date))[0];
   if (!h) return null;
 
