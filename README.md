@@ -16,11 +16,11 @@ npm run preview   # náhled sestaveného webu
 
 | Co | Soubor |
 | --- | --- |
-| Telefony, e-mail, adresa, otevírací doba, sociální sítě, GTM, CookieYes, Reservanto | `src/data/site.ts` |
+| Telefony, e-mail, adresa, otevírací doba, mimořádné časy (`vyjimky`), sociální sítě, GTM, CookieYes, Reservanto | `src/data/site.ts` |
 | Ceník | `src/data/cenik.ts` |
 | Služby na úvodní stránce | `src/data/services.ts` |
 | Tým (lékaři, sestry, fotky) | `src/data/team.ts` |
-| Recenze z Google | `src/data/reviews.json` |
+| Recenze z Google (aktualizují se samy, viz níže) | `src/data/reviews.json` |
 | Články | `src/content/clanky/*.md` (jeden soubor = jeden článek, název souboru = URL) |
 | Ochrana osobních údajů | `src/content/stranky/ochrana-osobnich-udaju.md` |
 | Barvy, fonty, základní styly | `src/styles/global.css` |
@@ -49,6 +49,25 @@ Text článku v Markdownu…
 
 Obrázky se při sestavení automaticky zmenší a převedou do WebP. Markdown je jen zdrojový formát –
 na web se publikuje výhradně vygenerované HTML.
+
+## Recenze z Google (automaticky jednou týdně)
+
+Každé pondělí ráno spustí GitHub Actions (`.github/workflows/reviews.yml`) skript
+`scripts/update-google-reviews.mjs`. Ten přes Google Places API (New) stáhne aktuální recenze,
+ponechá jen 4 a 5 hvězdiček a přepíše `src/data/reviews.json`. Když se recenze změní, uloží je
+do repozitáře a spustí nové sestavení webu.
+
+- Google vrací nejvýš 5 recenzí (vybírá je sám) a podle jeho pravidel se nesmí ukládat natrvalo,
+  proto se soubor pokaždé přepíše aktuální várkou.
+- Když API nevrátí žádnou vhodnou recenzi nebo nastane chyba, soubor zůstane beze změny.
+
+Nastavení (jednorázově, v repozitáři na GitHubu → Settings → Secrets and variables → Actions):
+
+1. **Secret** `GOOGLE_PLACES_API_KEY` – API klíč s povoleným „Places API (New)“.
+2. **Variable** `GOOGLE_PLACE_ID` – volitelné; když chybí, skript provozovnu najde sám a ID vypíše do logu.
+
+Ruční spuštění: na GitHubu Actions → „Aktualizace Google recenzí“ → Run workflow,
+nebo lokálně `GOOGLE_PLACES_API_KEY=… npm run reviews`.
 
 ## Nasazení na WEDOS
 

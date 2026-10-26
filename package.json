@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "reviews": "node scripts/update-google-reviews.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.6.0",

@@ -1,0 +1,47 @@
+# Jednou týdně stáhne aktuální recenze z Google (scripts/update-google-reviews.mjs).
+# Když se změní, uloží je do repozitáře a spustí nové sestavení webu.
+# Potřebuje secret GOOGLE_PLACES_API_KEY (Settings → Secrets and variables → Actions),
+# volitelně proměnnou GOOGLE_PLACE_ID. Bez klíče úloha jen ohlásí, že nic nedělá.
+name: Aktualizace Google recenzí
+
+on:
+  schedule:
+    - cron: '0 5 * * 1' # každé pondělí v 5:00 UTC (6:00 / 7:00 v Praze)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: reviews
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Stažení recenzí
+        run: node scripts/update-google-reviews.mjs
+        env:
+          GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
+          GOOGLE_PLACE_ID: ${{ vars.GOOGLE_PLACE_ID }}
+      - name: Uložení změn a nové sestavení webu
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- src/data/reviews.json; then
+            echo "Recenze beze změny – web se nesestavuje."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git add src/data/reviews.json
+          git commit -m "Aktualizace Google recenzí"
+          git push
+          # Push z GITHUB_TOKEN sám další workflow nespustí, proto ho spustíme ručně
+          gh workflow run pages.yml --ref "${GITHUB_REF_NAME}"

@@ -12,7 +12,8 @@ const reviews = allReviews
   .filter((r) => r.rating >= 4)
   .sort((a, b) => b.rating - a.rating || detailed(b.text) - detailed(a.text) || toTime(b.date) - toTime(a.date));
 
-// Recenze z Google (statický snímek). Pro aktualizaci stačí upravit src/data/reviews.json.
+// Recenze z Google. Soubor src/data/reviews.json jednou týdně přepíše scripts/update-google-reviews.mjs
+// (GitHub Actions), ručně ho lze upravit také.
 const initials = (name: string) =>
   name
     .split(/\s+/)
@@ -37,7 +38,13 @@ const palette = ['#f99420', '#316eff', '#2bb3a3', '#a35ad6', '#e0574f', '#4c9a2a
                 {initials(r.name)}
               </span>
               <span class="review__who">
-                <span class="review__name">{r.name}</span>
+                {'url' in r && r.url ? (
+                  <a class="review__name" href={r.url} target="_blank" rel="noopener nofollow">
+                    {r.name}
+                  </a>
+                ) : (
+                  <span class="review__name">{r.name}</span>
+                )}
                 <span class="review__date">{r.date}</span>
               </span>
               <svg class="review__g" viewBox="0 0 48 48" width="20" height="20" aria-label="Google">
@@ -136,6 +143,11 @@ const palette = ['#f99420', '#316eff', '#2bb3a3', '#a35ad6', '#e0574f', '#4c9a2a
     font-weight: 700;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  a.review__name:hover {
+    opacity: 1;
+    color: var(--c-orange-deep);
   }
 
   .review__date {
