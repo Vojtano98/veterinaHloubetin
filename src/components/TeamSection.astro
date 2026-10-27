@@ -205,8 +205,8 @@ const nurses = team.filter((m) => !m.doctor && m.photo);
     margin-top: auto;
     padding: 10px 18px;
     border-radius: 100px;
-    background: var(--c-orange);
-    color: var(--c-white);
+    background: var(--c-cta);
+    color: var(--c-on-cta);
     font-size: 15px;
     font-weight: 800;
     box-shadow: var(--sh-btn);
@@ -215,7 +215,7 @@ const nurses = team.filter((m) => !m.doctor && m.photo);
 
   .doc__call:hover {
     opacity: 1;
-    background: #ff8a00;
+    background: var(--c-cta-hover);
   }
 
   .badge {
@@ -227,7 +227,7 @@ const nurses = team.filter((m) => !m.doctor && m.photo);
     padding: 4px 10px;
     border-radius: 100px;
     background: var(--c-cream);
-    color: var(--c-orange-deep);
+    color: var(--c-accent-text);
     font-family: var(--f-head);
     font-size: 12px;
     font-weight: 800;
@@ -238,7 +238,7 @@ const nurses = team.filter((m) => !m.doctor && m.photo);
   .nurse__role {
     position: relative;
     padding: 0 0 0 14px;
-    color: var(--c-orange-deep);
+    color: var(--c-accent-text);
     font-family: var(--f-head);
     font-size: 12px;
     font-weight: 800;

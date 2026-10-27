@@ -31,6 +31,26 @@
   --c-line: #ddd;
   --c-white: #fff;
 
+  /* Barvy podle účelu (kontrast textu). Ikony a dekorace zůstávají v --c-orange / --c-orange-deep. */
+  --c-cta: var(--c-orange); /* pozadí hlavních tlačítek */
+  --c-cta-hover: #ff8a00;
+  --c-on-cta: var(--c-white); /* text a ikona na tlačítku */
+  --c-accent-text: var(--c-orange-deep); /* malý oranžový text: nadtitulky, štítky, odkazy */
+  --c-accent-bright: var(--c-orange); /* světlejší oranžový text: aktivní položka menu, 404, číslování obsahu */
+  --c-label: #8a7a6c; /* šedohnědé popisky */
+  --c-muted: #888; /* datum, poznámky */
+  --c-hint: #a08a76; /* drobná nápověda (posuňte do strany) */
+  --c-bar: var(--c-orange-bar); /* horní lišta */
+  --c-on-bar: var(--c-white);
+  --c-bar-special: #b45309; /* mimořádné oznámení v liště */
+  --c-on-bar-special: var(--c-white);
+  --c-alert-from: #f99420; /* karta Pohotovost */
+  --c-alert-to: #ff7a1a;
+  --c-on-alert: #fff5ea;
+  --c-on-alert-strong: var(--c-white);
+  --c-burger: var(--c-orange-soft); /* tlačítko menu na mobilu */
+  --c-focus: var(--c-orange); /* rámeček fokusu při ovládání klávesnicí */
+
   /* Typografie */
   --f-head: 'Nunito Variable', 'Nunito', Helvetica, Arial, Lucida, sans-serif;
   --f-body: 'Open Sans Variable', 'Open Sans', Arial, sans-serif;
@@ -51,6 +71,40 @@
   --section-pad: 4%;
   --row-pad: 2%;
   --gutter: 5.5%;
+}
+
+/* DOČASNĚ – varianty kontrastu k porovnání na náhledu (přepínač v BarvyPrepinac.astro, jen PUBLIC_PREVIEW=1).
+   Po výběru varianty se vybrané hodnoty přesunou do :root a tento blok i přepínač se odstraní. */
+:root[data-barvy='a'],
+:root[data-barvy='b'] {
+  --c-accent-text: #b45309; /* 5,0 : 1 na bílé, 4,7 : 1 na krémové */
+  --c-accent-bright: #b45309;
+  --c-label: #766658; /* 5,5 : 1 na bílé, 4,8 : 1 na patičce */
+  --c-muted: #6b6b6b; /* 5,3 : 1 na bílé, 4,9 : 1 na krémové */
+  --c-hint: #766658;
+  --c-burger: #b45309;
+  --c-focus: #b45309;
+  --c-bar-special: #b45309;
+  --c-on-bar-special: var(--c-white);
+}
+
+/* A: značková oranžová zůstává, text na ní tmavý (6,3 : 1) */
+:root[data-barvy='a'] {
+  --c-on-cta: var(--c-ink);
+  --c-on-bar: var(--c-ink);
+  --c-on-alert: var(--c-ink);
+  --c-on-alert-strong: var(--c-ink);
+}
+
+/* B: tmavší oranžová s bílým textem (5,0 : 1); mimořádné oznámení v liště ještě tmavší */
+:root[data-barvy='b'] {
+  --c-cta: #b45309;
+  --c-cta-hover: #92400e;
+  --c-bar: #b45309;
+  --c-bar-special: #7c2d12;
+  --c-alert-from: #b45309;
+  --c-alert-to: #92400e;
+  --c-on-alert: var(--c-white);
 }
 
 @media (min-width: 1350px) {
@@ -175,7 +229,7 @@ b {
 }
 
 :focus-visible {
-  outline: 2px solid var(--c-orange);
+  outline: 2px solid var(--c-focus);
   outline-offset: 3px;
 }
 
@@ -293,7 +347,7 @@ b {
   line-height: 1.4em;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--c-orange-deep);
+  color: var(--c-accent-text);
 }
 
 .title-xl {
@@ -318,8 +372,8 @@ b {
   display: inline-block;
   padding: 13px 30px;
   border-radius: 100px;
-  background: var(--c-orange);
-  color: var(--c-white);
+  background: var(--c-cta);
+  color: var(--c-on-cta);
   font-family: var(--f-head);
   font-size: 14px;
   font-weight: 800;
@@ -332,7 +386,7 @@ b {
 
 .btn:hover {
   opacity: 1;
-  background: #ff8a00;
+  background: var(--c-cta-hover);
   box-shadow: 0 14px 22px -6px rgba(255, 112, 0, 0.45);
   transform: translateY(-1px);
 }

@@ -134,7 +134,7 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
   }
 
   .tile__label {
-    color: var(--c-orange-deep);
+    color: var(--c-accent-text);
     font-size: 11px;
     font-weight: 800;
     letter-spacing: 1.2px;
@@ -152,7 +152,7 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
 
   .tile__hint {
     margin-top: 2px;
-    color: #8a7a6c;
+    color: var(--c-label);
     font-size: 13px;
     font-weight: 600;
   }
@@ -170,15 +170,15 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     margin-top: 10px;
     padding: 5px 12px;
     border-radius: 100px;
-    background: var(--c-orange);
-    color: var(--c-white);
+    background: var(--c-cta);
+    color: var(--c-on-cta);
     font-size: 13px;
     font-weight: 800;
     transition: background 200ms ease;
   }
 
   a.tile:hover .tile__action {
-    background: var(--c-orange-deep);
+    background: var(--c-cta-hover);
   }
 
   .hours {
@@ -195,7 +195,7 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
   }
 
   .hours dt {
-    color: #8a7a6c;
+    color: var(--c-label);
     font-weight: 700;
   }
 

@@ -220,7 +220,7 @@ const jsonLd = {
 
   .blurb__title {
     padding-bottom: 2px;
-    color: #8a7a6c;
+    color: var(--c-label);
     font-family: var(--f-head);
     font-size: 13px;
     font-weight: 800;
@@ -245,7 +245,7 @@ const jsonLd = {
 
   .blurb__phone:hover {
     opacity: 1;
-    color: var(--c-orange-deep);
+    color: var(--c-accent-text);
   }
 
   .u {
@@ -275,7 +275,7 @@ const jsonLd = {
     align-items: center;
     gap: 6px;
     padding: 8px 0 2px;
-    color: #8a7a6c;
+    color: var(--c-label);
     font-family: var(--f-head);
     font-size: 13px;
     font-weight: 800;
@@ -354,8 +354,8 @@ const jsonLd = {
     padding: 0;
     border: 0;
     border-radius: 50%;
-    background: var(--c-orange);
-    color: var(--c-white);
+    background: var(--c-cta);
+    color: var(--c-on-cta);
     font-size: 26px;
     line-height: 1;
     cursor: pointer;
@@ -363,7 +363,7 @@ const jsonLd = {
   }
 
   .lightbox__close:hover {
-    background: var(--c-orange-deep);
+    background: var(--c-cta-hover);
   }
 
   @media (max-width: 767px) {
@@ -374,8 +374,8 @@ const jsonLd = {
   }
 
   .directions__map:hover .directions__zoom {
-    background: var(--c-orange);
-    color: var(--c-white);
+    background: var(--c-cta);
+    color: var(--c-on-cta);
   }
 
   .form-section {

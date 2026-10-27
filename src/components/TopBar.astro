@@ -82,8 +82,8 @@ const hours = site.hours.map((h) => ({
   .info-bar {
     display: block;
     padding: 8px 16px;
-    background: var(--c-orange-bar);
-    color: var(--c-white);
+    background: var(--c-bar);
+    color: var(--c-on-bar);
     font-family: var(--f-body);
     font-size: 15px;
     line-height: 1.4;
@@ -129,7 +129,8 @@ const hours = site.hours.map((h) => ({
 
   /* Mimořádné oznámení – tmavší, aby bylo vidět */
   .info-bar.is-special {
-    background: #b45309;
+    background: var(--c-bar-special);
+    color: var(--c-on-bar-special);
     font-weight: 700;
   }
 

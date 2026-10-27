@@ -136,7 +136,7 @@ const jsonLd = [
   }
 
   .filter__btn span {
-    color: #8a7a6c;
+    color: var(--c-label);
     font-size: 13px;
   }
 
@@ -145,13 +145,14 @@ const jsonLd = [
   }
 
   .filter__btn[aria-pressed='true'] {
-    border-color: var(--c-orange);
-    background: var(--c-orange);
-    color: var(--c-white);
+    border-color: var(--c-cta);
+    background: var(--c-cta);
+    color: var(--c-on-cta);
   }
 
   .filter__btn[aria-pressed='true'] span {
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--c-on-cta);
+    opacity: 0.85;
   }
 
   .listing__grid > li[hidden] {

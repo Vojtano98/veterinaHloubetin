@@ -146,11 +146,11 @@ const isActive = (href: string) => {
 
   .menu a:hover {
     opacity: 1;
-    color: var(--c-orange);
+    color: var(--c-accent-bright);
   }
 
   .menu a[aria-current='page'] {
-    color: var(--c-orange);
+    color: var(--c-accent-bright);
   }
 
   .menu__mobile-cta {
@@ -161,8 +161,8 @@ const isActive = (href: string) => {
     flex: 0 0 auto;
     padding: 10px 22px;
     border-radius: 100px;
-    background: var(--c-orange);
-    color: var(--c-white);
+    background: var(--c-cta);
+    color: var(--c-on-cta);
     font-family: var(--f-head);
     font-size: 14px;
     font-weight: 800;
@@ -174,7 +174,7 @@ const isActive = (href: string) => {
 
   .header-cta:hover {
     opacity: 1;
-    background: #ff8a00;
+    background: var(--c-cta-hover);
     transform: translateY(-1px);
   }
 
@@ -234,7 +234,7 @@ const isActive = (href: string) => {
       display: block;
       height: 3px;
       border-radius: 2px;
-      background: var(--c-orange-soft);
+      background: var(--c-burger);
       transition: transform 250ms ease, opacity 250ms ease;
     }
 
@@ -301,7 +301,7 @@ const isActive = (href: string) => {
       border: 0;
       border-radius: 100px;
       background: var(--c-cream);
-      color: var(--c-orange-deep);
+      color: var(--c-accent-text);
       font-weight: 800;
       text-align: center;
     }

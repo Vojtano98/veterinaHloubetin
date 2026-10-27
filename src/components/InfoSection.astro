@@ -126,7 +126,7 @@ import petExpert from '../assets/uploads/2024/10/PetExpert-conversion.webp';
     align-items: center;
     gap: 6px;
     margin-top: auto;
-    color: var(--c-orange-deep);
+    color: var(--c-accent-text);
     font-size: 15px;
     font-weight: 800;
   }
@@ -140,18 +140,18 @@ import petExpert from '../assets/uploads/2024/10/PetExpert-conversion.webp';
   /* Pohotovost zvýrazněná */
   .fact--alert {
     border-color: transparent;
-    background: linear-gradient(150deg, #f99420 0%, #ff7a1a 100%);
-    color: #fff5ea;
+    background: linear-gradient(150deg, var(--c-alert-from) 0%, var(--c-alert-to) 100%);
+    color: var(--c-on-alert);
     box-shadow: 0 16px 30px -16px rgba(255, 112, 0, 0.6);
   }
 
   .fact--alert .fact__icon {
     background: rgba(255, 255, 255, 0.2);
-    color: #fff;
+    color: var(--c-on-alert-strong);
   }
 
   .fact--alert .fact__title {
-    color: #fff;
+    color: var(--c-on-alert-strong);
   }
 
   .fact--alert .fact__action {
@@ -159,7 +159,7 @@ import petExpert from '../assets/uploads/2024/10/PetExpert-conversion.webp';
     padding: 10px 18px;
     border-radius: 100px;
     background: #fff;
-    color: var(--c-orange-deep);
+    color: var(--c-accent-text);
     font-size: 16px;
   }
 

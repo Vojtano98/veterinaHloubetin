@@ -159,7 +159,20 @@ klávesnice, čtečka – VoiceOver); simulace výpadku Reservanta (zablokovat `
 
 ---
 
-## Etapa 3 – Kontrast a přístupnost (P1-4, P3-3, P3-4, P3-5, P3-15)
+## Etapa 3 – Kontrast a přístupnost (P1-4, P3-3, P3-4, P3-5, P3-15) – ⏳ varianty připravené k výběru (27. 10. 2026)
+
+**Stav:**
+
+- Barvy textu jsou rozdělené podle účelu do proměnných v `global.css` (`--c-cta`, `--c-on-cta`, `--c-accent-text`, `--c-label`,
+  `--c-muted`, `--c-bar`, `--c-alert-*`, `--c-burger`, `--c-focus` …) – výchozí hodnoty jsou původní, ostrý web se nezměnil
+  (ověřeno porovnáním vypočtených barev všech prvků na 8 stránkách proti nasazenému náhledu).
+- Varianty **A** (tmavý text na značkové oranžové) a **B** (tmavší oranžová `#b45309` s bílým textem) jsou jen na náhledu:
+  přepínač vlevo dole nebo odkaz `?barvy=a` / `?barvy=b` / `?barvy=puvodni` (`src/components/BarvyPrepinac.astro`, dočasné).
+  U B je místo navrhovaného `#c2410c` použitá `#b45309` – má stejný odstín jako značková oranžová (jen tmavší, `#c2410c` je do červena)
+  a web ji už používá pro odkazy.
+- Změřený kontrast (8 stránek, všechny texty kromě textu přes fotografii): původní 285 z 960 pod WCAG AA, A i B shodně 36 –
+  zbývají jen iniciály v kolečkách recenzí a hvězdičky (dekorace, řešit zvlášť).
+- **Čeká na volbu kliniky.** Pak: vybrané hodnoty do `:root`, odstranit přepínač a blok variant, ARIA úpravy (body 3–4 níže).
 
 1. Připravit dvě varianty barev na náhledu (A: tmavý text na oranžové, B: tmavší oranžová `#c2410c`) → volba kliniky.
 2. Úprava proměnných v `global.css` (nová `--c-cta`, malý oranžový text → `--c-link`, šedé popisky ≥ 4,5 : 1).
