@@ -33,6 +33,7 @@ Chybně zapsaná výjimka v `site.ts` (tvar data, letní/zimní čas, pořadí �
 | Přesměrování, cache, HTTPS | `public/.htaccess` |
 | Indexace a adresa webu (viz níže) | `astro.config.mjs`, `src/lib/indexing.ts`, `src/pages/robots.txt.ts` |
 | Kontaktní formulář (odeslání e-mailu) | `public/odeslat.php` |
+| Kontrola polí formuláře v prohlížeči (stejná pravidla jako PHP) | `src/lib/kontaktni-formular.ts` |
 
 ### Nový článek
 

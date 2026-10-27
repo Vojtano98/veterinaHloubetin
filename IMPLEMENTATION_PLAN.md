@@ -123,7 +123,24 @@ data v `site.ts` → build skončil chybou s popisem. Vše vráceno, celý postu
 
 ---
 
-## Etapa 2 – Konverzní cesty (P1-7, P2-4, P2-5, P2-6, P3-13)
+## Etapa 2 – Konverzní cesty (P1-7, P2-4, P2-5, P2-6, P3-13) – ✅ hotovo 27. 10. 2026
+
+**Jak je to provedené:**
+
+- **Reservanto:** při načítání text „Načítám rezervační formulář…“, po 8 s bez formuláře karta „Rezervační formulář se
+  nepodařilo načíst“ s telefonem a odkazem na kontaktní formulář; prázdný rámeček se schová. Když formulář dorazí později,
+  zobrazí se normálně (sleduje se vložení iframe). Ověřeno i se schválně rozbitou adresou skriptu Reservanta.
+- **Formulář:** chyba přímo u pole (`aria-describedby`), kurzor na první chybné pole, chyba zmizí hned po opravě. Pravidla
+  jsou v `src/lib/kontaktni-formular.ts` (stejná jako v PHP) a mají 8 testů. Bez JavaScriptu `odeslat.php` vrací kód důvodu
+  (`?odeslano=0&chyba=pole|rychle|limit|…`) a stránka ukáže konkrétní text. Na náhledu GitHub Pages se formulář jen zkontroluje
+  a místo odeslání ukáže, že se zprávy z náhledu neodesílají. Povinný souhlas zůstal – rozhodne klinika.
+  Barva chybových textů ztmavena na `#b42318` (kontrast nad 4,5 : 1).
+- **Karta „Zanechte nám zprávu“** vede na `/kontakty/#napiste-nam`, e-mail zůstal vidět jako text.
+- **Kontaktní karty** odebrány z `/kontakty/` a z článků; konec stránky tvoří vlnka do patičky jako dřív.
+  Na telefonu (375 px) jsou stránky kratší: článek o ~390 px, Kontakty o ~370 px. Stránka Články karty ponechává.
+- **Názvy akcí:** „Online rezervace“ a „Rezervace služeb“ u tlačítek nahrazeny „Objednat se online“; v hlavičce a mobilní
+  liště zůstává krátké „Objednat se“, položka menu a název stránky zůstávají „Rezervace služeb“.
+- **Neověřeno:** změnu v `odeslat.php` nešlo spustit (PHP není na počítači ani na náhledu) – otestovat v etapě 7.
 
 1. **Záloha Reservanta (P1-7):** v `rezervace-sluzeb.astro` text „Rezervační formulář se nenačetl…“ s telefonem a odkazem
    na formulář; skrýt, jakmile se v kontejneru objeví iframe (CSS `:has(iframe)`, záložně kontrola po 8 s).
@@ -213,7 +230,8 @@ Předpoklad: přístup k WEDOS (FTP/SFTP) a rozhodnutí o testovací adrese (sub
    - odeslání do 3 s → 429;
    - 6. odeslání z jedné IP za hodinu → 429;
    - diakritika v jméně a předmětu, odpověď přes Reply-To jde klientovi;
-   - bez JavaScriptu → přesměrování s `?odeslano=1`.
+   - bez JavaScriptu → přesměrování s `?odeslano=1`; s chybou `?odeslano=0&chyba=pole` (prázdné pole), `chyba=rychle`,
+     `chyba=limit` a na stránce se ukáže odpovídající text.
 4. Ověřit dvojí načtení CookieYes (P1-5) se zapnutým GTM (síťový panel).
 5. PageSpeed Insights mobil/desktop pro úvod, rezervace a jeden článek (výchozí hodnoty pro etapu 4).
 6. Projít rezervaci na telefonu až po poslední krok bez odeslání (P2-10).
@@ -235,7 +253,7 @@ připravené změny GTM (P1-2) k odsouhlasení.
 | --- | --- | --- |
 | 0 Pojistky indexace a doména | S – ✅ hotovo | ano |
 | 1 Automatické kontroly | M – ✅ hotovo | doporučeno |
-| 2 Konverzní cesty | M | ne (záloha Reservanta doporučena) |
+| 2 Konverzní cesty | M – ✅ hotovo | ne (záloha Reservanta doporučena) |
 | 3 Kontrast a přístupnost | S–M + volba varianty | ne |
 | 4 Výkon | S | ne |
 | 5 Úklid kódu | M | ne |

@@ -1,10 +1,14 @@
 ---
 // Kontaktní formulář – odesílá na /odeslat.php (PHP na hostingu WEDOS).
-// Funguje i bez JavaScriptu (klasické odeslání + přesměrování zpět).
+// Funguje i bez JavaScriptu (klasické odeslání + přesměrování zpět). Na náhledu (GitHub Pages) PHP neběží,
+// proto se tam formulář jen zkontroluje a neodesílá.
+import { isPreview } from '../lib/indexing';
+
 const { source = 'kontakty' } = Astro.props as { source?: string };
+const id = (name: string) => `${source}-${name}-chyba`;
 ---
 
-<form class="cform" action="/odeslat.php" method="post" novalidate data-cform>
+<form class="cform" action="/odeslat.php" method="post" novalidate data-cform data-preview={isPreview ? '1' : undefined}>
   <input type="hidden" name="zdroj" value={source} />
   <input type="hidden" name="ts" value="" data-ts />
   <div class="cform__hp" aria-hidden="true">
@@ -14,15 +18,18 @@ const { source = 'kontakty' } = Astro.props as { source?: string };
   <div class="cform__grid">
     <label class="field">
       <span class="field__label">Jméno a příjmení <abbr title="povinné">*</abbr></span>
-      <input type="text" name="jmeno" required maxlength="120" autocomplete="name" />
+      <input type="text" name="jmeno" required maxlength="120" autocomplete="name" aria-describedby={id('jmeno')} />
+      <span class="field__error" id={id('jmeno')} data-error></span>
     </label>
     <label class="field">
       <span class="field__label">Telefon</span>
-      <input type="tel" name="telefon" maxlength="40" autocomplete="tel" inputmode="tel" />
+      <input type="tel" name="telefon" maxlength="40" autocomplete="tel" inputmode="tel" aria-describedby={id('telefon')} />
+      <span class="field__error" id={id('telefon')} data-error></span>
     </label>
     <label class="field">
       <span class="field__label">E-mail <abbr title="povinné">*</abbr></span>
-      <input type="email" name="email" required maxlength="160" autocomplete="email" />
+      <input type="email" name="email" required maxlength="160" autocomplete="email" aria-describedby={id('email')} />
+      <span class="field__error" id={id('email')} data-error></span>
     </label>
     <label class="field">
       <span class="field__label">Zvíře (druh, jméno)</span>
@@ -30,15 +37,19 @@ const { source = 'kontakty' } = Astro.props as { source?: string };
     </label>
     <label class="field field--full">
       <span class="field__label">Zpráva <abbr title="povinné">*</abbr></span>
-      <textarea name="zprava" rows="6" required maxlength="5000"></textarea>
+      <textarea name="zprava" rows="6" required maxlength="5000" aria-describedby={id('zprava')}></textarea>
+      <span class="field__error" id={id('zprava')} data-error></span>
     </label>
-    <label class="check field--full">
-      <input type="checkbox" name="souhlas" value="1" required />
-      <span>
-        Souhlasím se <a href="/ochrana-osobnich-udaju/" target="_blank">zpracováním osobních údajů</a> za účelem vyřízení
-        mého dotazu. <abbr title="povinné">*</abbr>
-      </span>
-    </label>
+    <div class="field--full cform__consent">
+      <label class="check">
+        <input type="checkbox" name="souhlas" value="1" required aria-describedby={id('souhlas')} />
+        <span>
+          Souhlasím se <a href="/ochrana-osobnich-udaju/" target="_blank" rel="noopener">zpracováním osobních údajů</a> za účelem vyřízení
+          mého dotazu. <abbr title="povinné">*</abbr>
+        </span>
+      </label>
+      <span class="field__error" id={id('souhlas')} data-error></span>
+    </div>
   </div>
 
   <p class="cform__note">
@@ -121,6 +132,23 @@ const { source = 'kontakty' } = Astro.props as { source?: string };
     border-color: #d64545;
   }
 
+  /* Text chyby přímo u pole (barva nestačí jako jediný signál) */
+  .field__error {
+    color: #b42318;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .field__error:empty {
+    display: none;
+  }
+
+  .cform__consent .field__error:not(:empty) {
+    display: block;
+    margin: 6px 0 0 28px;
+  }
+
   .check {
     display: flex;
     align-items: flex-start;
@@ -144,7 +172,7 @@ const { source = 'kontakty' } = Astro.props as { source?: string };
   }
 
   .check.is-invalid span {
-    color: #d64545;
+    color: #b42318;
   }
 
   .cform__note {
@@ -182,7 +210,11 @@ const { source = 'kontakty' } = Astro.props as { source?: string };
   }
 
   .cform__status.is-error {
-    color: #d64545;
+    color: #b42318;
+  }
+
+  .cform__status.is-info {
+    color: var(--c-ink);
   }
 
   @media (max-width: 767px) {
@@ -193,45 +225,63 @@ const { source = 'kontakty' } = Astro.props as { source?: string };
 </style>
 
 <script>
+  import { consentError, fieldError, resultText } from '../lib/kontaktni-formular';
+
   document.querySelectorAll<HTMLFormElement>('[data-cform]').forEach((form) => {
     const ts = form.querySelector<HTMLInputElement>('[data-ts]')!;
     const status = form.querySelector<HTMLElement>('[data-status]')!;
     const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const consent = form.querySelector<HTMLInputElement>('input[name="souhlas"]')!;
+    const checked = [...form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[aria-describedby]')];
     ts.value = String(Math.floor(Date.now() / 1000));
 
-    // Výsledek po odeslání bez JavaScriptu (přesměrování s ?odeslano=…)
-    const result = new URLSearchParams(location.search).get('odeslano');
-    if (result) {
-      setStatus(result === '1', result === '1' ? 'Děkujeme, zpráva byla odeslána. Ozveme se Vám co nejdříve.' : 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu nebo nám zavolejte.');
+    // Výsledek po odeslání bez JavaScriptu (odeslat.php přesměruje zpět s ?odeslano=…&chyba=…)
+    const params = new URLSearchParams(location.search);
+    const sent = params.get('odeslano');
+    if (sent) {
+      const r = resultText(sent, params.get('chyba'));
+      setStatus(r.ok ? 'ok' : 'error', r.text);
       form.scrollIntoView({ block: 'center' });
     }
 
-    function setStatus(ok: boolean, text: string) {
+    function setStatus(kind: 'ok' | 'error' | 'info', text: string) {
       status.textContent = text;
-      status.classList.toggle('is-ok', ok);
-      status.classList.toggle('is-error', !ok);
+      status.classList.toggle('is-ok', kind === 'ok');
+      status.classList.toggle('is-error', kind === 'error');
+      status.classList.toggle('is-info', kind === 'info');
     }
 
-    function validate() {
-      let firstInvalid: HTMLElement | null = null;
-      form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required]').forEach((el) => {
-        const valid = el.type === 'checkbox' ? (el as HTMLInputElement).checked : el.checkValidity() && el.value.trim() !== '';
-        if (el.type === 'checkbox') el.closest('.check')?.classList.toggle('is-invalid', !valid);
-        else el.setAttribute('aria-invalid', String(!valid));
-        if (!valid && !firstInvalid) firstInvalid = el;
-      });
-      if (firstInvalid) (firstInvalid as HTMLElement).focus();
-      return !firstInvalid;
+    // Zkontroluje pole, zobrazí u něj chybu a vrátí, zda je v pořádku
+    function check(el: HTMLInputElement | HTMLTextAreaElement) {
+      const message = el === consent ? consentError(consent.checked) : fieldError(el.name, el.value);
+      const error = document.getElementById(el.getAttribute('aria-describedby')!)!;
+      error.textContent = message;
+      if (el === consent) el.closest('.check')?.classList.toggle('is-invalid', Boolean(message));
+      el.setAttribute('aria-invalid', String(Boolean(message)));
+      return !message;
     }
+
+    // Po prvním upozornění se chyba aktualizuje průběžně, jakmile ji návštěvník opraví
+    checked.forEach((el) =>
+      el.addEventListener(el === consent ? 'change' : 'input', () => {
+        if (el.getAttribute('aria-invalid') === 'true') check(el);
+      }),
+    );
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      if (!validate()) {
-        setStatus(false, 'Vyplňte prosím všechna povinná pole.');
+      const invalid = checked.filter((el) => !check(el));
+      if (invalid.length) {
+        setStatus('error', invalid.length === 1 ? 'Zkontrolujte prosím zvýrazněné pole.' : 'Zkontrolujte prosím zvýrazněná pole.');
+        invalid[0].focus();
+        return;
+      }
+      if (form.dataset.preview) {
+        setStatus('info', 'Na náhledu webu se zprávy neodesílají – formulář bude fungovat na ostrém webu.');
         return;
       }
       submit.disabled = true;
-      setStatus(true, 'Odesílám…');
+      setStatus('info', 'Odesílám…');
       try {
         const res = await fetch(form.action, {
           method: 'POST',
@@ -242,13 +292,13 @@ const { source = 'kontakty' } = Astro.props as { source?: string };
         if (res.ok && data.ok) {
           form.reset();
           ts.value = String(Math.floor(Date.now() / 1000));
-          setStatus(true, 'Děkujeme, zpráva byla odeslána. Ozveme se Vám co nejdříve.');
+          setStatus('ok', 'Děkujeme, zpráva byla odeslána. Ozveme se Vám co nejdříve.');
           (window as any).dataLayer?.push({ event: 'contactFormSubmit', formSource: form.zdroj?.value });
         } else {
-          setStatus(false, data.error || 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu nebo nám zavolejte.');
+          setStatus('error', data.error || 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu nebo nám zavolejte.');
         }
       } catch {
-        setStatus(false, 'Zprávu se nepodařilo odeslat (chyba připojení). Zkuste to prosím znovu nebo nám zavolejte.');
+        setStatus('error', 'Zprávu se nepodařilo odeslat (chyba připojení). Zkuste to prosím znovu nebo nám zavolejte.');
       } finally {
         submit.disabled = false;
       }

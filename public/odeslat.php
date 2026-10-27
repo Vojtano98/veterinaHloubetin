@@ -26,7 +26,8 @@ if (is_file(__DIR__ . '/odeslat.config.php')) {
 
 $wantsJson = str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json');
 
-function respond(bool $ok, string $error = '', int $code = 200): never
+// $reason = krátký kód chyby pro odeslání bez JavaScriptu (texty v src/lib/kontaktni-formular.ts)
+function respond(bool $ok, string $error = '', int $code = 200, string $reason = ''): never
 {
     global $wantsJson, $config;
     if ($wantsJson) {
@@ -35,7 +36,8 @@ function respond(bool $ok, string $error = '', int $code = 200): never
         header('Cache-Control: no-store');
         echo json_encode(['ok' => $ok, 'error' => $error], JSON_UNESCAPED_UNICODE);
     } else {
-        header('Location: ' . $config['redirect'] . '?odeslano=' . ($ok ? '1' : '0') . '#napiste-nam', true, 303);
+        $query = '?odeslano=' . ($ok ? '1' : '0') . ($reason !== '' ? '&chyba=' . $reason : '');
+        header('Location: ' . $config['redirect'] . $query . '#napiste-nam', true, 303);
     }
     exit;
 }
@@ -55,14 +57,14 @@ function oneLine(string $v): string
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     header('Allow: POST', true, 405);
-    respond(false, 'Nepovolená metoda.', 405);
+    respond(false, 'Nepovolená metoda.', 405, 'metoda');
 }
 
 // Kontrola původu požadavku (jen z vlastního webu)
 $origin = $_SERVER['HTTP_ORIGIN'] ?? ($_SERVER['HTTP_REFERER'] ?? '');
 $host = $_SERVER['HTTP_HOST'] ?? '';
 if ($origin !== '' && $host !== '' && parse_url($origin, PHP_URL_HOST) !== $host) {
-    respond(false, 'Neplatný požadavek.', 403);
+    respond(false, 'Neplatný požadavek.', 403, 'puvod');
 }
 
 // Ochrana proti robotům: skryté pole + minimální doba vyplňování
@@ -71,7 +73,7 @@ if (field('web', 200) !== '') {
 }
 $ts = (int) ($_POST['ts'] ?? 0);
 if ($ts > 0 && (time() - $ts) < (int) $config['min_seconds']) {
-    respond(false, 'Formulář byl odeslán příliš rychle, zkuste to prosím znovu.', 429);
+    respond(false, 'Formulář byl odeslán příliš rychle, zkuste to prosím znovu.', 429, 'rychle');
 }
 
 // Omezení počtu odeslání z jedné IP adresy
@@ -86,7 +88,7 @@ if (is_file($rateFile)) {
     $hits = array_filter((array) json_decode((string) file_get_contents($rateFile), true), fn ($t) => $t > time() - 3600);
 }
 if (count($hits) >= (int) $config['rate_limit']) {
-    respond(false, 'Odeslali jste příliš mnoho zpráv. Zkuste to prosím později nebo nám zavolejte.', 429);
+    respond(false, 'Odeslali jste příliš mnoho zpráv. Zkuste to prosím později nebo nám zavolejte.', 429, 'limit');
 }
 
 $jmeno   = oneLine(field('jmeno', 120));
@@ -104,7 +106,7 @@ if (mb_strlen($zprava) < 2) $errors[] = 'zprávu';
 if (!$souhlas) $errors[] = 'souhlas se zpracováním osobních údajů';
 if ($telefon !== '' && !preg_match('/^[0-9 +()\/.-]{6,40}$/', $telefon)) $errors[] = 'platné telefonní číslo';
 if ($errors) {
-    respond(false, 'Vyplňte prosím: ' . implode(', ', $errors) . '.', 422);
+    respond(false, 'Vyplňte prosím: ' . implode(', ', $errors) . '.', 422, 'pole');
 }
 
 $body  = "Nová zpráva z kontaktního formuláře na webu\n";
@@ -140,7 +142,7 @@ $sent = mail(
 
 if (!$sent) {
     error_log('[kontaktni-formular] mail() selhal pro ' . $email);
-    respond(false, 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu nebo nám zavolejte.', 500);
+    respond(false, 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu nebo nám zavolejte.', 500, 'odeslani');
 }
 
 $hits[] = time();

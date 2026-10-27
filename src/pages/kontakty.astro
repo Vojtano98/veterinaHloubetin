@@ -2,8 +2,8 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import ContactCards from '../components/ContactCards.astro';
 import ContactForm from '../components/ContactForm.astro';
+import Wave from '../components/Wave.astro';
 import Icon from '../components/Icon.astro';
 import OpenStatus from '../components/OpenStatus.astro';
 import { site } from '../data/site';
@@ -129,6 +129,7 @@ const jsonLd = {
     </div>
   </section>
 
+  <!-- Kontaktní karty tu nejsou – adresa, telefon i e-mail jsou nahoře na stránce -->
   <section class="section map-section" aria-label="Mapa">
     <div class="row">
       <!-- Mapa se načte, až k ní návštěvník doroluje (loading="lazy") -->
@@ -141,9 +142,8 @@ const jsonLd = {
           allowfullscreen></iframe>
       </div>
     </div>
+    <Wave variant="waves" position="bottom" color="#f3eded" height="72px" class="map-wave" />
   </section>
-
-  <ContactCards />
 </Base>
 
 <script>
@@ -427,9 +427,9 @@ const jsonLd = {
     object-fit: cover;
   }
 
-  /* Kontaktní karty navazují hned pod mapou */
+  /* Mapa je poslední sekce – vlnka přechází do patičky */
   .map-section {
-    padding: 4px 0 0;
+    padding: 4px 0 calc(var(--section-pad) + 72px);
   }
 
   .map {
@@ -476,6 +476,12 @@ const jsonLd = {
     }
     .map iframe {
       height: 340px;
+    }
+    .map-section {
+      padding-bottom: 60px;
+    }
+    .map-section :global(.map-wave) {
+      height: 44px !important;
     }
   }
 </style>

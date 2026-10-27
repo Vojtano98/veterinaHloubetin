@@ -4,7 +4,7 @@ import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import InfoBox from '../components/InfoBox.astro';
-import ContactCards from '../components/ContactCards.astro';
+import Wave from '../components/Wave.astro';
 import Icon from '../components/Icon.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { getArticles, relatedArticles, formatDate, isoDate, readingTime, type Article } from '../lib/articles';
@@ -200,7 +200,7 @@ const jsonLd = [
               </p>
             </div>
             <a class="btn" href="/rezervace-sluzeb/">
-              Online rezervace
+              Objednat se online
             </a>
           </aside>
         )
@@ -232,13 +232,13 @@ const jsonLd = [
     )
   }
 
+  <!-- Jediný kontaktní blok na konci článku (adresa, telefon, hodiny); e-mail a sítě jsou v patičce -->
   <section class="ask">
     <div class="row">
       <InfoBox title="Máte nějaké dotazy?" subtitle="Zavolejte nám, nebo se u nás rovnou zastavte." layout="stacked" />
     </div>
+    <Wave variant="waves" position="bottom" color="#f3eded" height="72px" class="ask-wave" />
   </section>
-
-  <ContactCards />
 </Base>
 
 <style>
@@ -556,8 +556,10 @@ const jsonLd = [
     list-style: none;
   }
 
+  /* Poslední sekce článku – vlnka přechází do patičky */
   .ask {
-    padding: 20px 0 23px;
+    position: relative;
+    padding: 20px 0 calc(23px + 72px);
   }
 
   @media (max-width: 980px) {
@@ -591,6 +593,12 @@ const jsonLd = [
     }
     .related__grid {
       grid-template-columns: 1fr;
+    }
+    .ask {
+      padding-bottom: 60px;
+    }
+    .ask :global(.ask-wave) {
+      height: 44px !important;
     }
   }
 </style>

@@ -17,9 +17,19 @@ import { site } from '../data/site';
       <p class="rez__lead"><strong>Pro objednání na základní úkony vašeho mazlíka můžete využít tento objednávací formulář.</strong></p>
       <p class="rez__note"><em>Je potřeba Vás objednat ke konkrétnímu doktorovi.</em> Nenajdete svůj požadavek ve formuláři? <a href="#jine-objednani">Objednejte se telefonicky</a>.</p>
 
-      <div class="rez__widget">
+      <div class="rez__widget" data-rez-widget>
         <!-- Rezervační formulář Reservanto -->
         <div class="reservanto-iframe" data-id={site.integrations.reservantoId}></div>
+        <!-- Stav načítání: zobrazí ho skript, dokud Reservanto nevloží formulář; když se nenačte, nabídne jinou cestu -->
+        <p class="rez__status rez__status--loading" aria-hidden="true">Načítám rezervační formulář…</p>
+        <div class="rez__status rez__status--failed card" role="status">
+          <p class="rez__failed-title">Rezervační formulář se nepodařilo načíst.</p>
+          <p>
+            Zkuste stránku obnovit, nebo se objednejte telefonicky na
+            <a href={site.phones.main.href}>{site.phones.main.label}</a> či přes
+            <a href="/kontakty/#napiste-nam">kontaktní formulář</a>.
+          </p>
+        </div>
         <noscript>
           <p>Pro zobrazení rezervačního formuláře je potřeba povolit JavaScript. Objednat se můžete také telefonicky na {site.phones.main.label}.</p>
         </noscript>
@@ -59,6 +69,27 @@ import { site } from '../data/site';
   <ContactCards />
 </Base>
 
+<script>
+  // Záloha pro případ, že se Reservanto nenačte (výpadek, blokátor reklam, pomalá síť):
+  // nejdřív „Načítám…“, po 8 s bez formuláře náhradní kontakt. Když formulář dorazí později, zobrazí se normálně.
+  const widget = document.querySelector<HTMLElement>('[data-rez-widget]');
+  const box = widget?.querySelector('.reservanto-iframe');
+  if (widget && box) {
+    const ready = () => {
+      if (!box.querySelector('iframe')) return false;
+      widget.dataset.state = 'ready';
+      return true;
+    };
+    if (!ready()) {
+      widget.dataset.state = 'loading';
+      const observer = new MutationObserver(() => ready() && observer.disconnect());
+      observer.observe(box, { childList: true, subtree: true });
+      setTimeout(() => {
+        if (widget.dataset.state === 'loading') widget.dataset.state = 'failed';
+      }, 8000);
+    }
+  }
+</script>
 <script is:inline defer src="https://booking.reservanto.cz/Script/reservanto-iframe.js"></script>
 <script is:inline>
   // Odeslání úspěšné rezervace z Reservanta do GTM (převzato z původního webu)
@@ -186,8 +217,60 @@ import { site } from '../data/site';
   }
 
   .rez__widget {
+    position: relative;
     max-width: 950px;
     margin: 24px auto 0;
+  }
+
+  .rez__status {
+    display: none;
+  }
+
+  .rez__widget[data-state='loading'] .rez__status--loading {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    right: 0;
+    display: block;
+    color: #8a7a6c;
+    font-family: var(--f-head);
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .rez__widget[data-state='failed'] .rez__status--failed {
+    display: block;
+    padding: 24px 28px;
+    border-left: 5px solid var(--c-orange);
+    background: var(--c-cream-2);
+    color: var(--c-ink);
+    font-family: var(--f-head);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .rez__failed-title {
+    padding-bottom: 6px;
+    color: var(--c-heading);
+    font-size: 20px;
+    font-weight: 800;
+  }
+
+  .rez__status--failed a {
+    color: var(--c-link);
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    white-space: nowrap;
+  }
+
+  /* Bez formuláře nenechávat prázdnou plochu */
+  .rez__widget[data-state='failed'] .reservanto-iframe {
+    height: auto;
+    min-height: 0;
+    box-shadow: none;
   }
 
   /* Reservanto vkládá iframe s height:100 %, kontejner proto musí mít pevnou výšku (jinak spadne na 150 px) */
