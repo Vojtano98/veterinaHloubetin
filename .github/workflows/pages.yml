@@ -24,8 +24,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          # Nejnovější 22.x – testy v TypeScriptu potřebují Node 22.18+
+          check-latest: true
           cache: npm
       - run: npm ci
+      # Při chybě se náhled nenasadí
+      - name: Typová kontrola
+        run: npm run typecheck
+      - name: Testy výjimek a otevírací doby
+        run: npm test
       - name: Sestavení náhledu
         run: npm run build
         env:
@@ -37,6 +44,11 @@ jobs:
         run: node scripts/rebase-links.mjs
         env:
           BASE_PATH: /${{ github.event.repository.name }}
+      - name: Kontrola výstupu (odkazy, nadpisy, noindex)
+        run: npm run check
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}
+          PUBLIC_PREVIEW: '1'
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

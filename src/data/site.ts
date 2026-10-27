@@ -41,7 +41,7 @@ export const site = {
   ],
 
   // Mimořádné časy (pohotovost, svátky…). Zobrazí se jen v daném okně a pak samy zmizí.
-  // Pozor na letní (+02:00) a zimní (+01:00) čas.
+  // Pozor na letní (+02:00) a zimní (+01:00) čas – špatný posun nebo tvar zastaví build s popisem chyby.
   // Vzory:
   //   pohotovost: { from: '2026-10-25T20:30:00+01:00', to: '2026-10-26T08:00:00+01:00', announceFrom: '2026-10-25T00:00:00+01:00' }
   //   jiné hodiny: { kind: 'hodiny', date: '2026-10-29', opens: '09:00', closes: '19:00' }  (bez opens/closes = zavřeno)

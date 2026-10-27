@@ -21,8 +21,8 @@ Značky: ☐ = udělat · **[teď]** = lze připravit už teď · **[spuštění
 | --- | --- | --- | --- |
 | ☑ | Indexace jen přes `PUBLIC_INDEXING=true`, jinak `noindex` + `Disallow: /` + `X-Robots-Tag` | etapa 0 | hotovo 27. 10. 2026 |
 | ☑ | Doména z jedné proměnné `PUBLIC_SITE_URL` (canonical, OG, JSON-LD, sitemap, robots); navíc jen v `.htaccess` | etapa 0 | hotovo 27. 10. 2026 |
-| ☐ | **[teď]** Kontrolní skript výstupu (odkazy, H1, canonical, režim indexace) | etapa 1 | připraveno k implementaci |
-| ☐ | **[teď]** Testy logiky výjimek a otevírací doby | etapa 1 | připraveno k implementaci |
+| ☑ | Kontrolní skript výstupu (odkazy, H1, canonical, režim indexace) – `npm run check` | etapa 1 | hotovo 27. 10. 2026 |
+| ☑ | Testy logiky výjimek (`npm test`) a kontrola zápisu výjimek při buildu | etapa 1 | hotovo 27. 10. 2026 |
 | ☑ | Struktura HTML, jedna H1 na stránku, hierarchie nadpisů | celý web | hotovo (ověřeno skriptem) |
 | ☑ | Dynamické `title` a `description` na každé stránce | `Base.astro`, frontmatter | hotovo |
 | ☑ | Canonical na každé stránce | `Base.astro` | hotovo (po etapě 0 z proměnné) |
@@ -78,7 +78,11 @@ Značky: ☐ = udělat · **[teď]** = lze připravit už teď · **[spuštění
    PUBLIC_SITE_URL=https://veterinahloubetin.cz PUBLIC_INDEXING=true npm run build
    ```
 
-   Build musí na začátku vypsat `[indexace] ZAPNUTÁ – https://veterinahloubetin.cz`. Po etapě 1 navíc musí projít `npm run check`.
+   Build musí na začátku vypsat `[indexace] ZAPNUTÁ – https://veterinahloubetin.cz`. Potom musí projít kontrola se stejnými proměnnými:
+
+   ```bash
+   PUBLIC_SITE_URL=https://veterinahloubetin.cz PUBLIC_INDEXING=true npm run check
+   ```
 2. ☐ Kontrola výstupu před nahráním:
    - `dist/robots.txt` obsahuje `Allow: /` a `Sitemap: https://veterinahloubetin.cz/sitemap-index.xml`;
    - `dist/index.html` obsahuje `index, follow` a canonical `https://veterinahloubetin.cz/`;

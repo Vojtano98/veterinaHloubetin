@@ -119,3 +119,53 @@ export function barInfo(list: Vyjimka[], now = new Date()): { kind: 'pohotovost'
 
 /** Konec probíhající pohotovosti pro pilulku („8:00“ nebo „zítřka 8:00“) */
 export const untilText = (to: Date, now = new Date()) => `${until(to, now)}${time(to)}`;
+
+const ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(Z|[+-]\d{2}:\d{2})$/;
+const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+/** Posun času v Praze v daném okamžiku: „+01:00“ v zimě, „+02:00“ v létě */
+const pragueOffset = (d: Date) =>
+  new Intl.DateTimeFormat('en-US', { timeZone: TZ, timeZoneName: 'longOffset' })
+    .formatToParts(d)
+    .find((p) => p.type === 'timeZoneName')
+    ?.value.replace('GMT', '') || '+00:00';
+
+/** Kontrola zápisu výjimek v site.ts (tvar data, letní/zimní čas, pořadí časů). Prázdný seznam = v pořádku. */
+export function validateVyjimky(list: Vyjimka[]): string[] {
+  const problems: string[] = [];
+  const instant = (label: string, value?: string) => {
+    if (value === undefined) return undefined;
+    if (!ISO.test(value) || Number.isNaN(Date.parse(value))) {
+      problems.push(`${label}: „${value}“ není datum a čas ve tvaru 2026-10-25T20:30:00+01:00`);
+      return undefined;
+    }
+    const d = new Date(value);
+    const offset = value.endsWith('Z') ? '+00:00' : value.slice(-6);
+    if (offset !== pragueOffset(d)) problems.push(`${label}: „${value}“ má posun ${offset}, v Praze tehdy platí ${pragueOffset(d)} (letní/zimní čas)`);
+    return d;
+  };
+
+  list.forEach((v, i) => {
+    const name = `výjimka č. ${i + 1}`;
+    if (isHodiny(v)) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(v.date) || new Date(`${v.date}T12:00:00Z`).toISOString().slice(0, 10) !== v.date) {
+        problems.push(`${name}: datum „${v.date}“ musí být skutečný den ve tvaru RRRR-MM-DD`);
+      }
+      if (Boolean(v.opens) !== Boolean(v.closes)) problems.push(`${name}: zadejte opens i closes, nebo ani jedno (= celý den zavřeno)`);
+      else if (v.opens && v.closes) {
+        if (!HHMM.test(v.opens) || !HHMM.test(v.closes)) problems.push(`${name}: časy musí mít tvar HH:MM, např. '09:00'`);
+        else if (v.opens >= v.closes) problems.push(`${name}: otevírá (${v.opens}) až po zavření (${v.closes})`);
+      }
+      const from = instant(`${name} announceFrom`, v.announceFrom);
+      const to = instant(`${name} announceTo`, v.announceTo);
+      if (from && to && from >= to) problems.push(`${name}: announceFrom musí být dřív než announceTo`);
+    } else {
+      const from = instant(`${name} from`, v.from);
+      const to = instant(`${name} to`, v.to);
+      const announce = instant(`${name} announceFrom`, v.announceFrom);
+      if (from && to && from >= to) problems.push(`${name}: začátek (from) musí být dřív než konec (to)`);
+      if (from && announce && announce > from) problems.push(`${name}: announceFrom nesmí být až po začátku pohotovosti`);
+    }
+  });
+  return problems;
+}

@@ -38,7 +38,7 @@ for (const file of files) {
   );
   // srcset="/a.webp 400w, /b.webp 800w"
   s = s.replace(/\bsrcset="([^"]*)"/g, (_, v) =>
-    `srcset="${v.replace(/(^|,\s*)(\/(?!\/)[^\s,]+)/g, (m, sep, url) => sep + prefix(url))}"`,
+    `srcset="${v.replace(/(^|,\s*)(\/(?!\/)[^\s,]+)/g, (_, sep, url) => sep + prefix(url))}"`,
   );
   // url(/…) v CSS a inline stylech
   s = s.replace(/url\((['"]?)(\/(?!\/)[^)'"]+)\1\)/g, (_, q, url) => `url(${q}${prefix(url)}${q})`);

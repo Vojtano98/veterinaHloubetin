@@ -10,7 +10,13 @@ npm install
 npm run dev       # vývoj na http://localhost:4321
 npm run build     # výstup do složky dist/
 npm run preview   # náhled sestaveného webu
+npm run typecheck # typová kontrola (astro check)
+npm test          # testy mimořádných časů a otevírací doby (tests/)
+npm run check     # kontrola sestaveného webu v dist/: odkazy, kotvy, H1, canonical, režim indexace
 ```
+
+Na GitHubu se všechny kontroly spouští před každým nasazením náhledu – když některá selže, náhled se nenasadí.
+Chybně zapsaná výjimka v `site.ts` (tvar data, letní/zimní čas, pořadí časů) zastaví build s popisem chyby.
 
 ## Kde co upravit
 
@@ -94,7 +100,12 @@ Testovací adresa musí běžet na HTTPS – jinak ji pravidlo v `.htaccess` př
 PUBLIC_SITE_URL=https://veterinahloubetin.cz PUBLIC_INDEXING=true npm run build
 ```
 
-Před nahráním zkontrolujte, že `dist/robots.txt` obsahuje `Allow: /` a `dist/.htaccess` **neobsahuje** `X-Robots-Tag`.
+Před nahráním spusťte kontrolu se stejnými proměnnými – ověří mimo jiné, že web je opravdu indexovatelný
+(`robots.txt` s `Allow: /`, `.htaccess` bez `X-Robots-Tag`, canonical a sitemapa na správné doméně):
+
+```bash
+PUBLIC_SITE_URL=https://veterinahloubetin.cz PUBLIC_INDEXING=true npm run check
+```
 
 Formulář:
 

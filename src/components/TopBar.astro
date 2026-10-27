@@ -1,5 +1,10 @@
 ---
 import { site } from '../data/site';
+import { validateVyjimky } from '../lib/vyjimky';
+
+// Chybně zapsaná výjimka (tvar data, letní/zimní čas) zastaví build – jinak by se lišta tiše ukázala ve špatnou dobu
+const problems = validateVyjimky(site.vyjimky);
+if (problems.length) throw new Error(`Chyba ve výjimkách v src/data/site.ts:\n- ${problems.join('\n- ')}`);
 
 // Ordinační hodiny do lišty – plný text na desktopu, zkrácený na mobilu; dnešní den zvýrazní skript
 const fullName: Record<string, string> = { So: 'sobota', Ne: 'neděle' };

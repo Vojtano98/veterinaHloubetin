@@ -81,9 +81,28 @@ interní odkazy 0 chyb; vývojový server bez chyb.
 
 ---
 
-## Etapa 1 – Minimální automatické kontroly (P2-1)
+## Etapa 1 – Minimální automatické kontroly (P2-1) – ✅ hotovo 27. 10. 2026
 
 **Cíl:** Chyby v odkazech, indexaci a časové logice se zachytí před nasazením, bez těžkých nástrojů.
+
+**Jak je to provedené:**
+
+- `tsconfig.json` (`astro/tsconfigs/strict`), dev závislosti `@astrojs/check` a `typescript`, `npm run typecheck`.
+  Výsledek: 0 chyb, 0 varování (opravena jedna nápověda – nepoužitý parametr v `rebase-links.mjs`).
+- `scripts/check-dist.mjs` (`npm run check`): režim indexace ve všech třech signálech + očekávání podle proměnných, odkazy
+  včetně `srcset` a kotev, H1, title, description, canonical (cesta i doména, s `PUBLIC_SITE_URL` i shoda), odkaz na sitemapu,
+  JSON-LD, duplicitní `id`, odkazy bez lomítka; při indexaci i adresy v sitemapě. Na náhledu ověří podsložku v odkazech.
+- `tests/vyjimky.test.ts` (`npm test`, vestavěný `node:test`): 24 testů – okno čtvrtka 29. 10., výchozí oznámení 7 dní předem,
+  pohotovost přes půlnoc, „zítra/zítřka“, obě změny času, den podle Prahy místo UTC, přednost pohotovosti.
+- Navíc: `validateVyjimky()` ve `vyjimky.ts` – build se zastaví, když je výjimka v `site.ts` zapsaná špatně
+  (tvar data/času, **posun letního/zimního času**, pořadí časů). Do kódu pro prohlížeč se nedostane.
+- GitHub Action: typová kontrola → testy → build → úprava odkazů → kontrola výstupu; při chybě se náhled nenasadí.
+
+**Ověření, že kontroly chyby opravdu zachytí:** podstrčený rozbitý odkaz, neexistující kotva, druhá H1 a chybějící
+`X-Robots-Tag` → `check` našel všechny 4; změna `<` na `<=` u konce oznámení → 1 test selhal; posun `+02:00` u zimního
+data v `site.ts` → build skončil chybou s popisem. Vše vráceno, celý postup pak prošel.
+
+**Původní zadání etapy:**
 
 1. `tsconfig.json` s `"extends": "astro/tsconfigs/strict"`; dev závislosti `@astrojs/check` a `typescript`; skript `npm run typecheck` (`astro check`).
 2. `scripts/check-dist.mjs` (vychází z kontrolního skriptu použitého při auditu), `npm run check`:
@@ -215,7 +234,7 @@ připravené změny GTM (P1-2) k odsouhlasení.
 | Etapa | Náročnost | Blokuje spuštění |
 | --- | --- | --- |
 | 0 Pojistky indexace a doména | S – ✅ hotovo | ano |
-| 1 Automatické kontroly | M | doporučeno |
+| 1 Automatické kontroly | M – ✅ hotovo | doporučeno |
 | 2 Konverzní cesty | M | ne (záloha Reservanta doporučena) |
 | 3 Kontrast a přístupnost | S–M + volba varianty | ne |
 | 4 Výkon | S | ne |
