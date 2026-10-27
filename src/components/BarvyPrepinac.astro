@@ -1,7 +1,7 @@
 ---
 // DOČASNĚ – jen na náhledu (PUBLIC_PREVIEW=1): přepínání barevných variant k porovnání (etapa 3, AUDIT P1-4).
 // Varianty jsou v src/styles/global.css (:root[data-barvy]). Po výběru varianty komponentu i varianty odstranit.
-// Odkaz s ?barvy=a nebo ?barvy=a2 rovnou otevře danou variantu; volba se pamatuje v rámci záložky.
+// Odkaz s ?barvy=c rovnou otevře variantu C, ?barvy=puvodni původní barvy; volba se pamatuje v rámci záložky.
 ---
 
 <script is:inline>
@@ -13,15 +13,14 @@
       if (p) sessionStorage.setItem('barvy', p);
       v = sessionStorage.getItem('barvy');
     } catch (e) {}
-    if (v === 'a' || v === 'a2') document.documentElement.dataset.barvy = v;
+    if (v === 'c') document.documentElement.dataset.barvy = v;
   })();
 </script>
 
 <div class="barvy" role="group" aria-label="Porovnání barev (jen na náhledu)" data-barvy-panel>
   <span class="barvy__title">Barvy:</span>
   <button type="button" data-barvy-volba="puvodni">Původní</button>
-  <button type="button" data-barvy-volba="a">A</button>
-  <button type="button" data-barvy-volba="a2">A2</button>
+  <button type="button" data-barvy-volba="c">C – čitelnější texty</button>
 </div>
 
 <style>

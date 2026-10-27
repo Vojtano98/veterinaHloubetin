@@ -73,36 +73,17 @@
   --gutter: 5.5%;
 }
 
-/* DOČASNĚ – varianty kontrastu k porovnání na náhledu (přepínač v BarvyPrepinac.astro, jen PUBLIC_PREVIEW=1).
-   Po výběru varianty se vybrané hodnoty přesunou do :root a tento blok i přepínač se odstraní. */
-:root[data-barvy='a'],
-:root[data-barvy='a2'] {
-  --c-accent-text: #b45309; /* 5,0 : 1 na bílé, 4,7 : 1 na krémové */
-  --c-accent-bright: #b45309;
-  --c-label: #766658; /* 5,5 : 1 na bílé, 4,8 : 1 na patičce */
-  --c-muted: #6b6b6b; /* 5,3 : 1 na bílé, 4,9 : 1 na krémové */
+/* DOČASNĚ – varianta kontrastu k porovnání na náhledu (přepínač v BarvyPrepinac.astro, jen PUBLIC_PREVIEW=1).
+   Tlačítka, horní lišta a karta Pohotovost zůstávají v původních barvách, čitelnější jsou jen drobné texty.
+   Po rozhodnutí se hodnoty buď přesunou do :root, nebo se blok i přepínač odstraní. */
+:root[data-barvy='c'] {
+  --c-accent-text: #b45309; /* 5,0 : 1 na bílé, 4,7 : 1 na krémové (dnes #ff7000: 2,8 : 1) */
+  --c-accent-bright: #b45309; /* aktivní položka menu, 404, číslování (dnes #f99420: 2,3 : 1) */
+  --c-label: #766658; /* 5,5 : 1 na bílé (dnes #8a7a6c: 4,1 : 1) */
+  --c-muted: #6b6b6b; /* 5,3 : 1 (dnes #888: 3,5 : 1) */
   --c-hint: #766658;
-  --c-burger: #b45309;
-  --c-focus: #b45309;
-  --c-bar-special: #b45309;
-  --c-on-bar-special: var(--c-white);
-}
-
-/* Značková oranžová zůstává, text na ní teple hnědý místo bílého.
-   A: kaštanová – nejsvětlejší hnědá, která projde všude (tlačítko 5,6 : 1, lišta 5,6 : 1, karta Pohotovost 4,8 : 1) */
-:root[data-barvy='a'] {
-  --c-on-cta: #522800;
-  --c-on-bar: #522800;
-  --c-on-alert: #522800;
-  --c-on-alert-strong: #522800;
-}
-
-/* A2: tmavě hnědá, kterou web už používá ve výzvě u služeb (tlačítko 6,1 : 1, karta Pohotovost 5,3 : 1) */
-:root[data-barvy='a2'] {
-  --c-on-cta: #3a2a1c;
-  --c-on-bar: #3a2a1c;
-  --c-on-alert: #3a2a1c;
-  --c-on-alert-strong: #3a2a1c;
+  --c-burger: #b45309; /* ikona menu na mobilu (dnes 2,0 : 1) */
+  --c-focus: #b45309; /* rámeček fokusu při ovládání klávesnicí */
 }
 
 @media (min-width: 1350px) {

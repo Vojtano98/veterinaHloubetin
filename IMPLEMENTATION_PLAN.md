@@ -174,7 +174,13 @@ klávesnice, čtečka – VoiceOver); simulace výpadku Reservanta (zablokovat `
 - Přepínač jen na náhledu vlevo dole nebo odkaz `?barvy=a` / `?barvy=a2` / `?barvy=puvodni` (`src/components/BarvyPrepinac.astro`, dočasné).
 - Změřený kontrast (8 stránek, všechny texty kromě textu přes fotografii): původní 285 z 960 pod WCAG AA, varianty 36 –
   zbývají jen iniciály v kolečkách recenzí a hvězdičky (dekorace, řešit zvlášť).
-- **Čeká na volbu.** Pak: vybrané hodnoty do `:root`, odstranit přepínač a blok variant, ARIA úpravy (body 3–4 níže).
+- 3. kolo (mimo náhled, jen obrázek): sytější oranžová `#cc4b00` s bílým textem, jasná `#e07800` s větším písmem, broskvová
+  tlačítka, bílá tlačítka s rámečkem – uživatel nechce žádnou z nich. **Barvy tlačítek, lišty a karty Pohotovost zůstávají původní**
+  (vědomé rozhodnutí; bílý text na `#f99420` má 2,3 : 1 a normu splnit nemůže).
+- 4. kolo: **varianta C** – původní tlačítka, lišta a karta, čitelnější jen drobné texty (nadtitulky, štítky, šedé popisky, datum,
+  aktivní položka menu, ikona menu, rámeček fokusu). Změřeno: 95 z 960 textů pod normou (z toho 36 dekorací v recenzích)
+  místo dnešních 285. Na náhledu `?barvy=c`; A, A2 a B odstraněny.
+- **Čeká na volbu:** C natrvalo, nebo vše původní. Pak odstranit přepínač a dokončit ARIA úpravy (body 3–4 níže).
 
 1. Připravit dvě varianty barev na náhledu (A: tmavý text na oranžové, B: tmavší oranžová `#c2410c`) → volba kliniky.
 2. Úprava proměnných v `global.css` (nová `--c-cta`, malý oranžový text → `--c-link`, šedé popisky ≥ 4,5 : 1).
