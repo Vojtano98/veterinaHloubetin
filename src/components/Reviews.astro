@@ -7,6 +7,9 @@ const toTime = (d: string) => {
   const [day, month, year] = d.split('/').map(Number);
   return new Date(year, month - 1, day).getTime();
 };
+// „06/09/2026“ → „6. 9. 2026“ (zobrazení) a „2026-09-06“ (atribut datetime)
+const czDate = (d: string) => d.split('/').map(Number).join('. ');
+const isoDate = (d: string) => d.split('/').reverse().join('-');
 const detailed = (t: string) => (t.length >= 80 ? 1 : 0);
 const reviews = (allReviews as { name: string; date: string; rating: number; text: string; url?: string; source?: string }[])
   .filter((r) => r.rating >= 4)
@@ -28,7 +31,7 @@ const palette = ['#f99420', '#316eff', '#2bb3a3', '#a35ad6', '#e0574f', '#4c9a2a
   <button class="reviews__nav reviews__nav--prev" type="button" aria-label="Předchozí recenze" data-prev>
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
   </button>
-  <ul class="reviews__track" data-track aria-label="Recenze klientů z Google">
+  <ul class="reviews__track" data-track aria-label="Recenze klientů z Google a Firmy.cz">
     {
       reviews.map((r, i) => (
         <li class="review">
@@ -45,7 +48,7 @@ const palette = ['#f99420', '#316eff', '#2bb3a3', '#a35ad6', '#e0574f', '#4c9a2a
                 ) : (
                   <span class="review__name">{r.name}</span>
                 )}
-                <span class="review__date">{r.date}</span>
+                <time class="review__date" datetime={isoDate(r.date)}>{czDate(r.date)}</time>
               </span>
 {r.source === 'firmy' ? (
                 <img class="review__src" src="/img/firmy-cz.svg" width="66" height="14" alt="Firmy.cz" title="Recenze z Firmy.cz" />

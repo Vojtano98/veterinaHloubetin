@@ -196,6 +196,8 @@ Seřazeno podle skutečného dopadu, ne podle snadnosti.
   Oranžovou ponechat pro plochy, ikony a dekorace. Ukážu obě varianty vedle sebe před změnou.
 - **Přínos:** Čitelnost CTA na slunci a pro starší klienty, splnění WCAG AA, pravděpodobně i vyšší proklikovost hlavních tlačítek (hypotéza).
 - **Náročnost:** S–M. **Riziko regrese:** nízké technicky, střední vizuálně (změna dojmu ze značky).
+- **Rozhodnutí (27. 10. 2026):** po porovnání osmi barevných řešení na náhledu zůstávají barvy původní – žádná varianta
+  vzhledově nevyhovovala. Nález zůstává otevřený jako vědomě přijaté riziko; podrobnosti a změřené odstíny v IMPLEMENTATION_PLAN.md (etapa 3).
 
 #### P1-5 CookieYes se pravděpodobně načítá dvakrát a synchronně blokuje vykreslení (hypotéza)
 

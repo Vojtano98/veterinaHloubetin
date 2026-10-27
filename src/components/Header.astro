@@ -40,7 +40,8 @@ const isActive = (href: string) => {
           <a class="menu__call" href={site.phones.main.href}>Zavolat {site.phones.main.label}</a>
         </li>
       </ul>
-      <a class="header-status" href="/kontakty/" aria-label="Ordinační hodiny"><OpenStatus compact /></a>
+      <!-- Čtečka přečte „Ordinační hodiny: Otevřeno do 19:00“ (aria-label by stav přebil) -->
+      <a class="header-status" href="/kontakty/"><span class="sr-only">Ordinační hodiny: </span><OpenStatus compact /></a>
       <a class="header-cta" href="/rezervace-sluzeb/">Objednat se</a>
     </nav>
   </div>
@@ -404,8 +405,11 @@ const isActive = (href: string) => {
     menu.addEventListener('click', (e) => {
       if ((e.target as HTMLElement).closest('a')) setOpen(false);
     });
+    // Esc zavře menu a vrátí kurzor na tlačítko, ať návštěvník s klávesnicí neztratí místo na stránce
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key !== 'Escape' || burger.getAttribute('aria-expanded') !== 'true') return;
+      setOpen(false);
+      burger.focus();
     });
     document.addEventListener('click', (e) => {
       if (!(e.target as HTMLElement).closest('[data-header]')) setOpen(false);

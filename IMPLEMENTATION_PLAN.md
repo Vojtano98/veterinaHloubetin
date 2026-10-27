@@ -159,7 +159,17 @@ klávesnice, čtečka – VoiceOver); simulace výpadku Reservanta (zablokovat `
 
 ---
 
-## Etapa 3 – Kontrast a přístupnost (P1-4, P3-3, P3-4, P3-5, P3-15) – ⏳ varianty připravené k výběru (27. 10. 2026)
+## Etapa 3 – Kontrast a přístupnost (P1-4, P3-3, P3-4, P3-5, P3-15) – ✅ uzavřeno 27. 10. 2026, barvy beze změny
+
+**Výsledek:** Uživatel po čtyřech kolech nechce žádnou změnu barev (ani drobných textů) – **všechny barvy zůstávají původní**.
+Přepínač a varianty jsou z náhledu odstraněné. Barevné proměnné v `global.css` zůstaly (s původními hodnotami, vzhled se
+nemění) – kdyby se ke kontrastu později vracelo, stačí změnit hodnoty na jednom místě; změřené odstíny z kol 1–4 jsou níže.
+Hotové úpravy bez vlivu na vzhled: pilulka v hlavičce se čte jako „Ordinační hodiny: Otevřeno do …“ (místo `aria-label`,
+který stav přebíjel), Esc zavře mobilní menu a vrátí kurzor na tlačítko, popisky kontaktních karet nejsou nadpisy H2,
+recenze mají popisek „z Google a Firmy.cz“ a datum v českém tvaru „6. 9. 2026“ s `<time datetime>`.
+Zůstává otevřené: kontrast bílého textu na oranžové (P1-4) – vědomé rozhodnutí kvůli vzhledu značky.
+
+**Průběh výběru:**
 
 **Stav:**
 
@@ -180,7 +190,7 @@ klávesnice, čtečka – VoiceOver); simulace výpadku Reservanta (zablokovat `
 - 4. kolo: **varianta C** – původní tlačítka, lišta a karta, čitelnější jen drobné texty (nadtitulky, štítky, šedé popisky, datum,
   aktivní položka menu, ikona menu, rámeček fokusu). Změřeno: 95 z 960 textů pod normou (z toho 36 dekorací v recenzích)
   místo dnešních 285. Na náhledu `?barvy=c`; A, A2 a B odstraněny.
-- **Čeká na volbu:** C natrvalo, nebo vše původní. Pak odstranit přepínač a dokončit ARIA úpravy (body 3–4 níže).
+- Uživatel nechce ani variantu C → barvy beze změny, přepínač odstraněn, ARIA úpravy a české datum hotové.
 
 1. Připravit dvě varianty barev na náhledu (A: tmavý text na oranžové, B: tmavší oranžová `#c2410c`) → volba kliniky.
 2. Úprava proměnných v `global.css` (nová `--c-cta`, malý oranžový text → `--c-link`, šedé popisky ≥ 4,5 : 1).
@@ -275,7 +285,7 @@ připravené změny GTM (P1-2) k odsouhlasení.
 | 0 Pojistky indexace a doména | S – ✅ hotovo | ano |
 | 1 Automatické kontroly | M – ✅ hotovo | doporučeno |
 | 2 Konverzní cesty | M – ✅ hotovo | ne (záloha Reservanta doporučena) |
-| 3 Kontrast a přístupnost | S–M + volba varianty | ne |
+| 3 Kontrast a přístupnost | ✅ uzavřeno, barvy beze změny | ne |
 | 4 Výkon | S | ne |
 | 5 Úklid kódu | M | ne |
 | 6 Bezpečnost serveru | M | ne (CSP Report-Only lze i po spuštění) |

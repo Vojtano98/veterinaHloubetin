@@ -11,28 +11,28 @@ import pets from '../assets/uploads/2024/10/Vet-13.webp';
     <a class="cc" href="/kontakty/#napiste-nam">
       <span class="cc__icon"><Icon name="mail" size={24} /></span>
       <div class="cc__body">
-        <h2 class="cc__title">Zanechte nám zprávu</h2>
+        <p class="cc__title">Zanechte nám zprávu</p>
         <span class="cc__value">{site.email.split('@')[0]}@<wbr />{site.email.split('@')[1]}</span>
       </div>
     </a>
     <a class="cc" href={site.mapsUrl} target="_blank" rel="noopener">
       <span class="cc__icon"><Icon name="pin" size={24} /></span>
       <div class="cc__body">
-        <h2 class="cc__title">Jsme vám vždy nablízku</h2>
+        <p class="cc__title">Jsme vám vždy nablízku</p>
         <span class="cc__value">{site.address.full}</span>
       </div>
     </a>
     <a class="cc cc--alert" href={site.phones.main.href}>
       <span class="cc__icon"><Icon name="phone" size={24} /></span>
       <div class="cc__body">
-        <h2 class="cc__title">Pohotovost na telefonu</h2>
+        <p class="cc__title">Pohotovost na telefonu</p>
         <span class="cc__value">{site.phones.main.label}</span>
       </div>
     </a>
     <div class="cc cc--follow" style={`--pets:url(${pets.src})`}>
       <span class="cc__icon"><Icon name="heart" size={24} /></span>
       <div class="cc__body">
-        <h2 class="cc__title">Sledujte nás</h2>
+        <p class="cc__title">Sledujte nás</p>
         <div class="social">
           <a href={site.social.facebook} target="_blank" rel="noopener">
             <Icon name="facebook" size={16} /> Facebook
