@@ -6,7 +6,6 @@
 @import '@fontsource-variable/nunito/wght.css';
 @import '@fontsource-variable/nunito/wght-italic.css';
 @import '@fontsource-variable/open-sans/wght.css';
-@import '@fontsource-variable/nunito-sans/wght.css';
 
 :root {
   /* Barvy */
@@ -54,7 +53,6 @@
   /* Typografie */
   --f-head: 'Nunito Variable', 'Nunito', Helvetica, Arial, Lucida, sans-serif;
   --f-body: 'Open Sans Variable', 'Open Sans', Arial, sans-serif;
-  --f-sans: 'Nunito Sans Variable', 'Nunito Sans', Helvetica, Arial, sans-serif;
 
   /* Stíny a zaoblení */
   --sh-card: 6px 6px 18px 0 rgba(0, 0, 0, 0.12);

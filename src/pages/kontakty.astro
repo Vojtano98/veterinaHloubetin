@@ -11,6 +11,9 @@ import mapa from '../assets/uploads/2025/12/Mapa-Veterina-min.jpg';
 import budova1 from '../assets/uploads/2024/05/Web-Photos-DSC6556.webp';
 import budova2 from '../assets/uploads/2024/05/Photos-for-Web.webp';
 
+// Fotky budovy: na telefonu přes celou šířku řádku, na počítači polovina řádku (max. ~530 px)
+const photoSizes = '(max-width: 767px) 80vw, (max-width: 1350px) 40vw, 530px';
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ContactPage',
@@ -124,8 +127,8 @@ const jsonLd = {
 
   <section class="photos" aria-label="Budova kliniky">
     <div class="row photos__grid">
-      <Image src={budova1} alt="Obchodní dům Havana, ve kterém sídlí Veterinární klinika Hloubětín" width={1024} class="photo" />
-      <Image src={budova2} alt="Budova obchodního domu Havana u metra Hloubětín" width={1024} class="photo" />
+      <Image src={budova1} alt="Obchodní dům Havana, ve kterém sídlí Veterinární klinika Hloubětín" width={1024} widths={[480, 640, 768, 1024]} sizes={photoSizes} class="photo" />
+      <Image src={budova2} alt="Budova obchodního domu Havana u metra Hloubětín" width={1024} widths={[480, 640, 768, 1024]} sizes={photoSizes} class="photo" />
     </div>
   </section>
 

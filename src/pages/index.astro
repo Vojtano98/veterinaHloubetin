@@ -21,7 +21,9 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
   rawTitle
   description="Veterinární klinika Hloubětín se zaměřuje na prevenci, diagnostiku a léčbu nemocí malých zvířat od roku 2008. Psi, kočky, drobní savci, plazi i exotičtí ptáci. Praha 9 – u metra Hloubětín."
 >
+  <!-- Fotka psa je v CSS pozadí, prohlížeč by ji jinak našel až po stažení stylů – přednačíst správnou velikost -->
   <link slot="head" rel="preload" as="image" href={hero.src} media="(min-width: 768px)" fetchpriority="high" />
+  <link slot="head" rel="preload" as="image" href={heroSm.src} media="(max-width: 767px)" fetchpriority="high" />
 
   <!-- HERO -->
   <section class="hero" style={`--hero:url(${hero.src});--hero-sm:url(${heroSm.src})`}>
