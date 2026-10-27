@@ -6,7 +6,8 @@ export const site = {
   name: 'Veterinární klinika Hloubětín',
   company: 'Veterina Hloubětín s.r.o.',
   ico: '28381416',
-  url: 'https://veterinahloubetin.cz',
+  // Adresa webu z astro.config.mjs (PUBLIC_SITE_URL), bez lomítka na konci
+  url: import.meta.env.SITE.replace(/\/$/, ''),
   description:
     'Veterinární klinika Hloubětín se zaměřuje na prevenci, diagnostiku a léčbu nemocí malých zvířat od roku 2008. Klinika pro Prahu 9, Prahu 14 a široké okolí.',
 

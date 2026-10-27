@@ -8,6 +8,7 @@ import MobileBar from '../components/MobileBar.astro';
 import favicon from '../assets/uploads/2024/06/Navrh-bez-nazvu-6.png';
 import ogDefault from '../assets/og/sdileni-veterina.jpg';
 import { getImage } from 'astro:assets';
+import { indexing, isPreview } from '../lib/indexing';
 
 interface Props {
   title: string;
@@ -38,9 +39,8 @@ const {
 } = Astro.props;
 
 const fullTitle = rawTitle ? title : `${title} - ${site.name}`;
-// Náhledová verze (GitHub Pages): neindexovat a nespouštět měření
-const isPreview = import.meta.env.PUBLIC_PREVIEW === '1';
-const robots = noindex || isPreview ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+// Indexovat jen při výslovném PUBLIC_INDEXING=true (src/lib/indexing.ts); náhled navíc nespouští měření
+const robots = indexing && !noindex ? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' : 'noindex, nofollow';
 const canonical = new URL(Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/', site.url).href;
 // Náhled při sdílení odkazu (WhatsApp, Messenger, Facebook…): 1200 × 630, u článků jejich fotka ořezaná
 // s ohledem na nejzajímavější část. Na náhledu (GitHub Pages) musí adresy mířit na náhled, jinak se obrázek nenačte.
@@ -111,7 +111,8 @@ const ld = [org, website, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {/* Stránka, která se nikdy nemá indexovat (404), canonical nepotřebuje */}
+    {!noindex && <link rel="canonical" href={canonical} />}
     <meta name="robots" content={robots} />
     <meta name="theme-color" content="#f99521" />
 
@@ -137,7 +138,7 @@ const ld = [org, website, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd
     <link rel="icon" href={icon32.src} sizes="32x32" />
     <link rel="icon" href={icon192.src} sizes="192x192" />
     <link rel="apple-touch-icon" href={icon180.src} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    {indexing && <link rel="sitemap" href="/sitemap-index.xml" />}
 
     <!-- CookieYes musí být načten před GTM kvůli správě souhlasů -->
     {!isPreview && <script is:inline id="cookieyes" type="text/javascript" src={site.integrations.cookieyes}></script>}

@@ -9,7 +9,8 @@ ErrorDocument 404 /404.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # HTTPS + bez www
+  # HTTPS + bez www. Doména musí odpovídat PUBLIC_SITE_URL (astro.config.mjs).
+  # Testovací adresa musí běžet na HTTPS, jinak ji toto pravidlo přesměruje na ostrý web.
   RewriteCond %{HTTPS} off [OR]
   RewriteCond %{HTTP_HOST} ^www\. [NC]
   RewriteRule ^ https://veterinahloubetin.cz%{REQUEST_URI} [L,R=301]

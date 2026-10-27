@@ -25,6 +25,7 @@ npm run preview   # náhled sestaveného webu
 | Ochrana osobních údajů | `src/content/stranky/ochrana-osobnich-udaju.md` |
 | Barvy, fonty, základní styly | `src/styles/global.css` |
 | Přesměrování, cache, HTTPS | `public/.htaccess` |
+| Indexace a adresa webu (viz níže) | `astro.config.mjs`, `src/lib/indexing.ts`, `src/pages/robots.txt.ts` |
 | Kontaktní formulář (odeslání e-mailu) | `public/odeslat.php` |
 
 ### Nový článek
@@ -60,12 +61,44 @@ Všechny recenze jsou v `src/data/reviews.json`; na webu se zobrazují jen 4 a 5
 - **Google** – doplňují se ručně (položky bez `source`). Automaticky jen přes placené Places API,
   kopírování z Map Google podmínky nedovolují.
 
+## Indexace a adresa webu
+
+Web je ve výchozím stavu **neindexovatelný**. Indexace se zapíná jen výslovně při ostrém spuštění.
+Proměnné se zadávají přímo v příkazu (soubor `.env` se pro ně nepoužívá):
+
+| Proměnná | Význam |
+| --- | --- |
+| `PUBLIC_INDEXING` | jen hodnota `true` povolí indexaci. Jinak má každá stránka `noindex, nofollow`, `robots.txt` zakazuje celý web a `dist/.htaccess` posílá hlavičku `X-Robots-Tag: noindex` (i pro PDF a obrázky) |
+| `PUBLIC_SITE_URL` | adresa webu ve tvaru `https://domena.cz` – canonical, sitemapa, OG obrázky, strukturovaná data. Bez ní se použije `https://veterinahloubetin.cz` (`astro.config.mjs`); s `PUBLIC_INDEXING=true` je povinná |
+| `PUBLIC_PREVIEW` | `1` = náhled na GitHub Pages: bez GTM a CookieYes, bez sitemapy, nikdy se neindexuje |
+
+Režim vypíše build hned na začátku: `[indexace] vypnutá (noindex)` nebo `[indexace] ZAPNUTÁ – https://…`.
+Doména je kromě `astro.config.mjs` ještě v přesměrování v `public/.htaccess` – při změně domény upravit obojí.
+
 ## Nasazení na WEDOS
 
-1. `npm run build`
-2. Obsah složky `dist/` (včetně skrytého `.htaccess`) nahrajte do kořene webu (`www/`) přes FTP/SFTP.
-3. Hosting musí mít **PHP 8.1+** (kvůli `odeslat.php`).
-4. Volitelně vytvořte vedle `odeslat.php` soubor `odeslat.config.php` a přepište výchozí nastavení:
+Hosting musí mít **PHP 8.1+** (kvůli `odeslat.php`). Obsah složky `dist/` (včetně skrytého `.htaccess`) se nahrává
+do kořene webu (`www/`) přes FTP/SFTP.
+
+**Testovací nasazení** (neindexované, výchozí):
+
+```bash
+npm run build
+```
+
+Testovací adresa musí běžet na HTTPS – jinak ji pravidlo v `.htaccess` přesměruje na ostrý web.
+
+**Ostré spuštění** – jen podle [MIGRATION_CHECKLIST.md](MIGRATION_CHECKLIST.md), indexace se zapíná výslovně:
+
+```bash
+PUBLIC_SITE_URL=https://veterinahloubetin.cz PUBLIC_INDEXING=true npm run build
+```
+
+Před nahráním zkontrolujte, že `dist/robots.txt` obsahuje `Allow: /` a `dist/.htaccess` **neobsahuje** `X-Robots-Tag`.
+
+Formulář:
+
+1. Volitelně vytvořte vedle `odeslat.php` soubor `odeslat.config.php` a přepište výchozí nastavení:
 
 ```php
 <?php
@@ -75,5 +108,5 @@ return [
 ];
 ```
 
-5. Po nasazení odešlete zkušební zprávu z formuláře na `/kontakty/` a ověřte doručení.
-6. V Google Search Console odešlete `https://veterinahloubetin.cz/sitemap-index.xml`.
+2. Po nasazení odešlete zkušební zprávu z formuláře na `/kontakty/` a ověřte doručení.
+3. Až po ostrém spuštění: v Google Search Console odešlete `https://veterinahloubetin.cz/sitemap-index.xml`.

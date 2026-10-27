@@ -1,7 +1,0 @@
-# Veterinární klinika Hloubětín
-# Obsah je otevřený pro vyhledávače i AI asistenty (Google, Bing, ChatGPT, Perplexity, Claude…)
-User-agent: *
-Allow: /
-Disallow: /odeslat.php
-
-Sitemap: https://veterinahloubetin.cz/sitemap-index.xml

@@ -1,6 +1,7 @@
 // Po sestavení náhledu pro GitHub Pages přidá podsložku (BASE_PATH) ke všem
 // odkazům začínajícím „/“, které Astro samo neupravilo (menu, odkazy v článcích…).
 // Produkční build na WEDOS tento skript nepoužívá.
+//   node scripts/rebase-links.mjs [složka]   (výchozí dist)
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -10,7 +11,13 @@ if (!base) {
   process.exit(0);
 }
 
-const dist = path.resolve('dist');
+const dist = path.resolve(process.argv[2] || 'dist');
+
+// Sitemapa náhledu by obsahovala nesmyslné adresy (produkční doména + podsložka náhledu) – náhled ji nepotřebuje
+for (const name of fs.readdirSync(dist)) {
+  if (/^sitemap.*\.xml$/.test(name)) fs.rmSync(path.join(dist, name));
+}
+
 const files = [];
 (function walk(dir) {
   for (const name of fs.readdirSync(dir)) {
@@ -38,6 +45,5 @@ for (const file of files) {
   if (s !== before) fs.writeFileSync(file, s);
 }
 
-// Náhled nesmí indexovat vyhledávače
-fs.writeFileSync(path.join(dist, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
-console.log(`Odkazy upraveny pro ${base} (${files.length} souborů).`);
+// Neindexování náhledu zajišťuje už build (PUBLIC_PREVIEW=1 → noindex a robots.txt „Disallow: /“)
+console.log(`Odkazy upraveny pro ${base} (${files.length} souborů), sitemapa odstraněna.`);
