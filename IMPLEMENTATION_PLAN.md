@@ -204,7 +204,19 @@ stránkách; screenshoty 375 / 1440 px před a po.
 
 ---
 
-## Etapa 4 – Výkon (P2-2, P2-3, P3-7)
+## Etapa 4 – Výkon (P2-2, P2-3, P3-7) – ⏳ neviditelné úpravy hotové (27. 10. 2026), výměna písma čeká na schválení
+
+**Hotovo (vzhled beze změny):**
+
+- Přednačtení menší fotky banneru na telefonu (`media="(max-width: 767px)"`), na počítači zůstává přednačtení velké fotky.
+- Fotky budovy na Kontaktech mají varianty 480/640/768/1024 px a `sizes` – nejmenší varianta stránky 226 kB místo 424 kB
+  (telefony s hustotou 3× dál dostanou 1024 px, protože ji potřebují).
+- Odebrán nepoužitý font Nunito Sans (import, proměnná `--f-sans` i balíček) – o 5 souborů písma a ~2 kB CSS na stránku méně.
+- P3-7 (zmenšení originálů ve `src/assets`) **vynecháno**: návštěvníci originály nestahují, šlo by jen o rychlejší nahrávání
+  na FTP a přepsání zdrojových fotek ztrátovou kompresí za to nestojí.
+
+**Čeká na schválení:** Open Sans → Nunito. Open Sans je vidět jen v horní liště s hodinami a v textu zásad ochrany údajů;
+na každé stránce se kvůli tomu stahují 2 soubory (83,5 kB). Ukázka před/po poslána, nenasazeno.
 
 1. Mobilní preload obrázku banneru (`media="(max-width: 767px)"`).
 2. Fonty: odebrat Nunito Sans; Open Sans nahradit Nunito v `body`, horní liště a zásadách → odebrat import (≈ 83 kB méně na první návštěvu).
