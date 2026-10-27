@@ -76,7 +76,7 @@
 /* DOČASNĚ – varianty kontrastu k porovnání na náhledu (přepínač v BarvyPrepinac.astro, jen PUBLIC_PREVIEW=1).
    Po výběru varianty se vybrané hodnoty přesunou do :root a tento blok i přepínač se odstraní. */
 :root[data-barvy='a'],
-:root[data-barvy='b'] {
+:root[data-barvy='a2'] {
   --c-accent-text: #b45309; /* 5,0 : 1 na bílé, 4,7 : 1 na krémové */
   --c-accent-bright: #b45309;
   --c-label: #766658; /* 5,5 : 1 na bílé, 4,8 : 1 na patičce */
@@ -88,23 +88,21 @@
   --c-on-bar-special: var(--c-white);
 }
 
-/* A: značková oranžová zůstává, text na ní tmavý (6,3 : 1) */
+/* Značková oranžová zůstává, text na ní teple hnědý místo bílého.
+   A: kaštanová – nejsvětlejší hnědá, která projde všude (tlačítko 5,6 : 1, lišta 5,6 : 1, karta Pohotovost 4,8 : 1) */
 :root[data-barvy='a'] {
-  --c-on-cta: var(--c-ink);
-  --c-on-bar: var(--c-ink);
-  --c-on-alert: var(--c-ink);
-  --c-on-alert-strong: var(--c-ink);
+  --c-on-cta: #522800;
+  --c-on-bar: #522800;
+  --c-on-alert: #522800;
+  --c-on-alert-strong: #522800;
 }
 
-/* B: tmavší oranžová s bílým textem (5,0 : 1); mimořádné oznámení v liště ještě tmavší */
-:root[data-barvy='b'] {
-  --c-cta: #b45309;
-  --c-cta-hover: #92400e;
-  --c-bar: #b45309;
-  --c-bar-special: #7c2d12;
-  --c-alert-from: #b45309;
-  --c-alert-to: #92400e;
-  --c-on-alert: var(--c-white);
+/* A2: tmavě hnědá, kterou web už používá ve výzvě u služeb (tlačítko 6,1 : 1, karta Pohotovost 5,3 : 1) */
+:root[data-barvy='a2'] {
+  --c-on-cta: #3a2a1c;
+  --c-on-bar: #3a2a1c;
+  --c-on-alert: #3a2a1c;
+  --c-on-alert-strong: #3a2a1c;
 }
 
 @media (min-width: 1350px) {
