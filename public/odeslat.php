@@ -8,6 +8,10 @@
 
 declare(strict_types=1);
 
+// Čas v e-mailu podle Prahy, ne podle nastavení serveru; verzi PHP neprozrazovat
+date_default_timezone_set('Europe/Prague');
+header_remove('X-Powered-By');
+
 $config = [
     'to'        => 'ordinace@veterinahloubetin.cz',
     // Odesílatel musí být adresa na doméně webu (kvůli SPF/DKIM), odpověď jde na e-mail klienta
@@ -71,15 +75,18 @@ if ($origin !== '' && $host !== '' && parse_url($origin, PHP_URL_HOST) !== $host
 if (field('web', 200) !== '') {
     respond(true); // tváříme se, že vše proběhlo
 }
+// Prohlížeč s JavaScriptem čas vždy doplní. Bez JavaScriptu pole zůstane prázdné a formulář musí projít.
 $ts = (int) ($_POST['ts'] ?? 0);
-if ($ts > 0 && (time() - $ts) < (int) $config['min_seconds']) {
+if (($wantsJson && $ts === 0) || ($ts > 0 && (time() - $ts) < (int) $config['min_seconds'])) {
     respond(false, 'Formulář byl odeslán příliš rychle, zkuste to prosím znovu.', 429, 'rychle');
 }
 
 // Omezení počtu odeslání z jedné IP adresy
 $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-$rateDir = sys_get_temp_dir() . '/vh-form';
-if (!is_dir($rateDir)) {
+// Přednostně vlastní složka mimo kořen webu (sdílené /tmp může hosting kdykoli promazat)
+$rateDir = dirname(__DIR__) . '/.vh-form';
+if (!@is_dir($rateDir) && !@mkdir($rateDir, 0700, true)) {
+    $rateDir = sys_get_temp_dir() . '/vh-form';
     @mkdir($rateDir, 0700, true);
 }
 $rateFile = $rateDir . '/' . hash('sha256', $ip) . '.json';
@@ -141,7 +148,7 @@ $sent = mail(
 );
 
 if (!$sent) {
-    error_log('[kontaktni-formular] mail() selhal pro ' . $email);
+    error_log('[kontaktni-formular] mail() selhal');
     respond(false, 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu nebo nám zavolejte.', 500, 'odeslani');
 }
 

@@ -264,7 +264,25 @@ PageSpeed Insights (mobil) až na testovací adrese WEDOS – změřit před a p
 
 ---
 
-## Etapa 6 – Bezpečnost serveru (P2-7, P3-8, P3-9)
+## Etapa 6 – Bezpečnost serveru (P2-7, P3-8, P3-9) – ✅ hotovo 31. 10. 2026, ověření PHP a GTM čeká na WEDOS
+
+**Jak je to provedené:**
+
+- `.htaccess`: `Content-Security-Policy-Report-Only` s doménami CookieYes, GTM/GA4, Google Ads, Sklik, Reservanto, Google Maps a Firmy.cz.
+  Jen hlásí do konzole, nic neblokuje. `unsafe-inline` je nutné kvůli vloženým skriptům a GTM.
+- Cache: soubory s otiskem v názvu rok (`immutable`), ostatní statické soubory včetně PDF jeden den, HTML/XML/TXT bez cache.
+- `odeslat.php`: pražský čas, `header_remove('X-Powered-By')`, log bez e-mailu klienta, limit odeslání ve složce `.vh-form` vedle kořene webu
+  (když tam zapisovat nejde, použije se dočasná složka), odeslání přes JS bez `ts` se odmítne, bez JS projde.
+
+**Ověřeno lokálně v Apache 2.4:** konfigurace bez chyby; HTTPS/hostitel 301; přesměrování z WordPressu 301, `wp-login.php` 410,
+`odeslat.config.php` 403, neexistující stránka 404; bezpečnostní hlavičky a `X-Robots-Tag`; cache na vzorku souborů + regulární výraz
+na všech 183 souborech. CSP v prohlížeči: Reservanto, mapa a obrázek Firmy.cz bez porušení; kontrolní podstrčený obrázek zachycen, nezablokován.
+
+**Neověřeno, patří do etapy 7:** běh `odeslat.php` (lokálně jen kontrola syntaxe, PHP není k dispozici), zápis do `.vh-form` na WEDOS,
+CSP se zapnutým GTM, CookieYes, GA4 a Sklikem (v prohlížeči bez souhlasu se měřicí značky nenačtou, domény GA4/Ads/Sklik jsou podle dokumentace
+a chybějící doplní hlášení v konzoli).
+
+**Původní zadání etapy:**
 
 1. `.htaccess`: `Content-Security-Policy-Report-Only` s doménami GTM, GA4, Sklik, CookieYes, Reservanto, Google Maps, Firmy.cz;
    `Header unset X-Powered-By`; kratší cache pro soubory bez otisku (`/logo.png`, `/img/*`).
@@ -293,6 +311,7 @@ Předpoklad: přístup k WEDOS (FTP/SFTP) a rozhodnutí o testovací adrese (sub
    - bez JavaScriptu → přesměrování s `?odeslano=1`; s chybou `?odeslano=0&chyba=pole` (prázdné pole), `chyba=rychle`,
      `chyba=limit` a na stránce se ukáže odpovídající text.
 4. Ověřit dvojí načtení CookieYes (P1-5) se zapnutým GTM (síťový panel).
+   Zároveň projít web s přijatými cookies a v konzoli sledovat hlášení CSP; chybějící domény doplnit do `.htaccess`.
 5. PageSpeed Insights mobil/desktop pro úvod, rezervace a jeden článek (výchozí hodnoty pro etapu 4).
 6. Projít rezervaci na telefonu až po poslední krok bez odeslání (P2-10).
 
@@ -317,6 +336,6 @@ připravené změny GTM (P1-2) k odsouhlasení.
 | 3 Kontrast a přístupnost | ✅ uzavřeno, barvy beze změny | ne |
 | 4 Výkon | ✅ uzavřeno, písmo beze změny | ne |
 | 5 Úklid kódu | M – ✅ hotovo | ne |
-| 6 Bezpečnost serveru | M | ne (CSP Report-Only lze i po spuštění) |
+| 6 Bezpečnost serveru | M – ✅ hotovo | ne |
 | 7 Testovací nasazení WEDOS | M | ano |
 | 8 Ostré spuštění | M | – |

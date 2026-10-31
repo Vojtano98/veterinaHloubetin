@@ -49,8 +49,23 @@ ErrorDocument 404 /404.html
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
   Header always set Strict-Transport-Security "max-age=31536000"
 
-  # Dlouhá cache pro statické soubory s otiskem v názvu
-  <FilesMatch "\.(css|js|webp|avif|jpg|jpeg|png|svg|woff2?)$">
+  # CSP zatím jen hlásí porušení do konzole prohlížeče, nic neblokuje. Ostrou hlavičku (bez -Report-Only)
+  # zapnout až po týdnu v provozu bez hlášení. Nová služba v GTM = doplnit její domény sem.
+  Header always set Content-Security-Policy-Report-Only "default-src 'self'; \
+    script-src 'self' 'unsafe-inline' https://cdn-cookieyes.com https://*.googletagmanager.com https://booking.reservanto.cz https://c.seznam.cz https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net; \
+    style-src 'self' 'unsafe-inline' https://cdn-cookieyes.com; \
+    img-src 'self' data: https://www.firmy.cz https://cdn-cookieyes.com https://*.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://c.seznam.cz https://www.google.com https://www.google.cz https://googleads.g.doubleclick.net; \
+    font-src 'self'; \
+    connect-src 'self' https://cdn-cookieyes.com https://log.cookieyes.com https://*.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://c.seznam.cz https://www.google.com; \
+    frame-src https://booking.reservanto.cz https://www.google.com https://www.googletagmanager.com; \
+    object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+
+  # Soubory bez otisku v názvu (logo, ikony, PDF) se můžou změnit – cache na den
+  <FilesMatch "\.(css|js|webp|avif|jpg|jpeg|png|svg|woff2?|pdf)$">
+    Header set Cache-Control "public, max-age=86400"
+  </FilesMatch>
+  # Soubory z buildu mají v názvu otisk (nazev.AbCd1234.js, nazev.AbCd1234_x.webp) – nemění se, cache na rok
+  <FilesMatch "\.[A-Za-z0-9_-]{8}(_[A-Za-z0-9_-]+)?\.(css|js|webp|avif|jpg|jpeg|png|svg|woff2?)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
   <FilesMatch "\.(html|xml|txt)$">
