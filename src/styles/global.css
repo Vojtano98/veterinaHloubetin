@@ -71,11 +71,6 @@
   --gutter: 5.5%;
 }
 
-/* DOČASNĚ – porovnání písma na náhledu (přepínač v PismoPrepinac.astro, jen PUBLIC_PREVIEW=1) */
-:root[data-pismo='nunito'] {
-  --f-body: var(--f-head);
-}
-
 @media (min-width: 1350px) {
   :root {
     --section-pad: 54px;

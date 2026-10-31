@@ -5,7 +5,6 @@ import TopBar from '../components/TopBar.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
-import PismoPrepinac from '../components/PismoPrepinac.astro';
 import favicon from '../assets/uploads/2024/06/Navrh-bez-nazvu-6.png';
 import ogDefault from '../assets/og/sdileni-veterina.jpg';
 import { getImage } from 'astro:assets';
@@ -176,8 +175,6 @@ const ld = [org, website, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd
         style="display:none;visibility:hidden"
         title="Google Tag Manager"></iframe>
     </noscript>}
-    {/* DOČASNĚ: porovnání písma jen na náhledu */}
-    {isPreview && <PismoPrepinac />}
     <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
     <TopBar />
     <Header section={section} />

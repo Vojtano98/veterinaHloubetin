@@ -272,6 +272,7 @@ Seřazeno podle skutečného dopadu, ne podle snadnosti.
 - **Řešení:** Odebrat import Nunito Sans; sjednotit lištu a tělo na Nunito a Open Sans odebrat (vizuální změna drobná – ukázat).
 - **Přínos:** Jeden font na stránku místo dvou → méně požadavků, méně přeskakování písma.
 - **Náročnost:** S. **Riziko regrese:** nízké (vizuálně zkontrolovat lištu a zásady).
+- **Rozhodnutí (31. 10. 2026):** Nunito Sans je odstraněné; Open Sans po porovnání na náhledu zůstává (nález v této části vědomě ponechán).
 
 #### P2-4 Kontaktní formulář: zpětná vazba a překážky
 

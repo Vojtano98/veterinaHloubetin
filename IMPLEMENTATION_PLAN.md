@@ -204,7 +204,7 @@ stránkách; screenshoty 375 / 1440 px před a po.
 
 ---
 
-## Etapa 4 – Výkon (P2-2, P2-3, P3-7) – ⏳ neviditelné úpravy hotové (27. 10. 2026), výměna písma čeká na schválení
+## Etapa 4 – Výkon (P2-2, P2-3, P3-7) – ✅ uzavřeno 31. 10. 2026, písmo Open Sans zůstává
 
 **Hotovo (vzhled beze změny):**
 
@@ -215,9 +215,8 @@ stránkách; screenshoty 375 / 1440 px před a po.
 - P3-7 (zmenšení originálů ve `src/assets`) **vynecháno**: návštěvníci originály nestahují, šlo by jen o rychlejší nahrávání
   na FTP a přepsání zdrojových fotek ztrátovou kompresí za to nestojí.
 
-**Čeká na schválení:** Open Sans → Nunito. Open Sans je vidět jen v horní liště s hodinami a v textu zásad ochrany údajů;
-na každé stránce se kvůli tomu stahují 2 soubory (83,5 kB). Na náhledu je dočasný přepínač (`?pismo=nunito` / `?pismo=puvodni`,
-`src/components/PismoPrepinac.astro`); po rozhodnutí se přepínač odstraní.
+**Rozhodnutí o písmu:** Open Sans zůstává v horní liště a v textu zásad ochrany údajů. Výměna za Nunito by ušetřila 83,5 kB při první
+návštěvě, ale uživatel ji po porovnání na náhledu nechce; dopad na rychlost je malý. Dočasný přepínač je odstraněný.
 
 1. Mobilní preload obrázku banneru (`media="(max-width: 767px)"`).
 2. Fonty: odebrat Nunito Sans; Open Sans nahradit Nunito v `body`, horní liště a zásadách → odebrat import (≈ 83 kB méně na první návštěvu).
@@ -299,7 +298,7 @@ připravené změny GTM (P1-2) k odsouhlasení.
 | 1 Automatické kontroly | M – ✅ hotovo | doporučeno |
 | 2 Konverzní cesty | M – ✅ hotovo | ne (záloha Reservanta doporučena) |
 | 3 Kontrast a přístupnost | ✅ uzavřeno, barvy beze změny | ne |
-| 4 Výkon | S | ne |
+| 4 Výkon | ✅ uzavřeno, písmo beze změny | ne |
 | 5 Úklid kódu | M | ne |
 | 6 Bezpečnost serveru | M | ne (CSP Report-Only lze i po spuštění) |
 | 7 Testovací nasazení WEDOS | M | ano |
