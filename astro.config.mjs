@@ -41,6 +41,16 @@ const noindexHeader = {
   },
 };
 
+// Staré adresy obrázků z WordPressu (Google Obrázky, odkazy z jiných webů) dál fungují: originály zůstávají ve wp-content/uploads
+const wpUploads = {
+  name: 'wp-uploads',
+  hooks: {
+    'astro:build:done': ({ dir }) => {
+      fs.cpSync('./src/assets/uploads', new URL('wp-content/uploads', dir), { recursive: true });
+    },
+  },
+};
+
 // Datum poslední změny článků pro <lastmod> v sitemapě (z frontmatteru)
 const articleDates = Object.fromEntries(
   fs
@@ -73,6 +83,7 @@ export default defineConfig({
       },
     }),
     noindexHeader,
+    wpUploads,
   ],
   vite: {
     // Režim indexace pro stránky a robots.txt (src/lib/indexing.ts) – stejná hodnota jako pro .htaccess výše

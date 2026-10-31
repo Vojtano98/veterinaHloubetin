@@ -80,20 +80,18 @@ Proměnné se zadávají přímo v příkazu (soubor `.env` se pro ně nepouží
 | `PUBLIC_PREVIEW` | `1` = náhled na GitHub Pages: bez GTM a CookieYes, bez sitemapy, nikdy se neindexuje |
 
 Režim vypíše build hned na začátku: `[indexace] vypnutá (noindex)` nebo `[indexace] ZAPNUTÁ – https://…`.
-Doména je kromě `astro.config.mjs` ještě v přesměrování v `public/.htaccess` – při změně domény upravit obojí.
+Přesměrování v `public/.htaccess` berou doménu z požadavku, adresa webu je tak jen v `astro.config.mjs`.
 
 ## Nasazení na WEDOS
 
-Hosting musí mít **PHP 8.1+** (kvůli `odeslat.php`). Obsah složky `dist/` (včetně skrytého `.htaccess`) se nahrává
-do kořene webu (`www/`) přes FTP/SFTP.
+Hosting musí mít **PHP 8.1+** (kvůli `odeslat.php`). Web leží ve složce `www/domains/veterinahloubetin.cz/`, obsah `dist/`
+(včetně skrytého `.htaccess`) se nahrává tam přes FTP. Soubor `www/.htaccess` patří hostingu a směruje do této složky, **nepřepisovat**.
 
-**Testovací nasazení** (neindexované, výchozí):
+**Testovací nasazení** do `www/domains/test.veterinahloubetin.cz/` (neindexované, výchozí):
 
 ```bash
 npm run build
 ```
-
-Testovací adresa musí běžet na HTTPS – jinak ji pravidlo v `.htaccess` přesměruje na ostrý web.
 
 **Ostré spuštění** – jen podle [MIGRATION_CHECKLIST.md](MIGRATION_CHECKLIST.md), indexace se zapíná výslovně:
 

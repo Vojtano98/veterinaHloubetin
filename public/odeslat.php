@@ -8,9 +8,11 @@
 
 declare(strict_types=1);
 
-// Čas v e-mailu podle Prahy, ne podle nastavení serveru; verzi PHP neprozrazovat
+// Čas v e-mailu podle Prahy, ne podle nastavení serveru; verzi PHP ani chyby neprozrazovat
+// (WEDOS má ve výchozím nastavení display_errors zapnuté, varování by rozbilo odpověď JSON)
 date_default_timezone_set('Europe/Prague');
 header_remove('X-Powered-By');
+ini_set('display_errors', '0');
 
 $config = [
     'to'        => 'ordinace@veterinahloubetin.cz',
@@ -83,8 +85,10 @@ if (($wantsJson && $ts === 0) || ($ts > 0 && (time() - $ts) < (int) $config['min
 
 // Omezení počtu odeslání z jedné IP adresy
 $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-// Přednostně vlastní složka mimo kořen webu (sdílené /tmp může hosting kdykoli promazat)
-$rateDir = dirname(__DIR__) . '/.vh-form';
+// Přednostně vlastní složka vedle www/ na hostingu, tedy mimo web (sdílené /tmp může hosting kdykoli promazat).
+// Web může ležet přímo ve www/ i ve www/domains/nazev/.
+$ftpRoot = preg_match('~^(.*)/www(/|$)~', __DIR__, $m) ? $m[1] : dirname(__DIR__);
+$rateDir = $ftpRoot . '/.vh-form';
 if (!@is_dir($rateDir) && !@mkdir($rateDir, 0700, true)) {
     $rateDir = sys_get_temp_dir() . '/vh-form';
     @mkdir($rateDir, 0700, true);

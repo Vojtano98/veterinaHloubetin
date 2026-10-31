@@ -298,10 +298,17 @@ rezervace, mapa, GTM v Tag Assistantu. Ostrou CSP až po týdnu bez hlášení v
 
 ## Etapa 7 – Testovací nasazení na WEDOS (P1-1, P1-5, P2-10)
 
-Předpoklad: přístup k WEDOS (FTP/SFTP) a rozhodnutí o testovací adrese (subdoména nebo podsložka).
+Předpoklad: přístup k WEDOS (FTP). Testovací adresa je `test.veterinahloubetin.cz` ve složce `www/domains/test.veterinahloubetin.cz/`
+(doména i certifikát jsou připravené). Přesný postup: oddíl C v [MIGRATION_CHECKLIST.md](MIGRATION_CHECKLIST.md).
+
+**Připraveno 31. 10. 2026 (porovnání se živým WordPressem a dokumentací WEDOS):** `.htaccess` funguje v kořeni i ve složce
+`www/domains/…` a nemá v sobě pevnou doménu; ověřeno v Apache se stejným omezením `AllowOverride` a výchozím směrováním WEDOS.
+Doplněno 131 starých adres obrázků, 7 přesměrování PDF letáků, archivy `/2024/`. `odeslat.php` neukazuje chyby (WEDOS má `display_errors` zapnuté)
+a limit ukládá vedle `www/`. Tyto dvě změny v PHP nejsou spuštěné, ověří je tato etapa.
 
 1. Build bez `PUBLIC_INDEXING` (= `noindex` + `X-Robots-Tag`), volitelně HTTP heslo přes `.htaccess`.
 2. Ověřit verzi PHP (8.1+), `mail()`, doručení na `ordinace@…`, SPF/DKIM (hlavičky přijaté zprávy).
+   Za WEDOS Protection může být nutné přidat do SPF adresy webhostingu. Ověřit, že `REMOTE_ADDR` je adresa návštěvníka, jinak by limit platil pro všechny.
 3. Testy formuláře (bezpečně, jen na vlastní adresu kliniky):
    - prázdný formulář → 422 s výčtem polí; neplatný e-mail; neplatný telefon;
    - vyplněný honeypot `web` → tváří se úspěšně, e-mail neodejde;
