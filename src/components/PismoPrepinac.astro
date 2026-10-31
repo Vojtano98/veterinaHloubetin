@@ -1,0 +1,93 @@
+---
+// DOČASNĚ – jen na náhledu (PUBLIC_PREVIEW=1): porovnání písma horní lišty a textu zásad (etapa 4, AUDIT P2-3).
+// Varianta je v src/styles/global.css (:root[data-pismo]). Po rozhodnutí komponentu i variantu odstranit.
+// Odkaz s ?pismo=nunito nebo ?pismo=puvodni rovnou otevře danou podobu; volba se pamatuje v rámci záložky.
+---
+
+<script is:inline>
+  // Nastavit písmo ještě před vykreslením obsahu stránky
+  (function () {
+    var v = null;
+    try {
+      var p = new URLSearchParams(location.search).get('pismo');
+      if (p) sessionStorage.setItem('pismo', p);
+      v = sessionStorage.getItem('pismo');
+    } catch (e) {}
+    if (v === 'nunito') document.documentElement.dataset.pismo = v;
+  })();
+</script>
+
+<div class="pismo" role="group" aria-label="Porovnání písma (jen na náhledu)" data-pismo-panel>
+  <span class="pismo__title">Písmo:</span>
+  <button type="button" data-pismo-volba="puvodni">Open Sans (dnes)</button>
+  <button type="button" data-pismo-volba="nunito">Nunito</button>
+</div>
+
+<style>
+  .pismo {
+    position: fixed;
+    left: 16px;
+    bottom: 20px;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 6px 5px 12px;
+    border-radius: 100px;
+    background: #222;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .pismo__title {
+    padding-right: 4px;
+  }
+
+  .pismo button {
+    padding: 6px 10px;
+    border: 0;
+    border-radius: 100px;
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .pismo button[aria-pressed='true'] {
+    background: #fff;
+    color: #222;
+  }
+
+  @media (max-width: 767px) {
+    .pismo {
+      left: 10px;
+      bottom: calc(80px + env(safe-area-inset-bottom));
+    }
+  }
+</style>
+
+<script>
+  const panel = document.querySelector<HTMLElement>('[data-pismo-panel]');
+  if (panel) {
+    const root = document.documentElement;
+    const sync = () =>
+      panel.querySelectorAll<HTMLButtonElement>('button').forEach((b) => {
+        b.setAttribute('aria-pressed', String(b.dataset.pismoVolba === (root.dataset.pismo ?? 'puvodni')));
+      });
+    panel.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-pismo-volba]');
+      if (!b) return;
+      const v = b.dataset.pismoVolba!;
+      if (v === 'puvodni') delete root.dataset.pismo;
+      else root.dataset.pismo = v;
+      try {
+        sessionStorage.setItem('pismo', v);
+      } catch {}
+      sync();
+    });
+    sync();
+  }
+</script>

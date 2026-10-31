@@ -216,7 +216,8 @@ stránkách; screenshoty 375 / 1440 px před a po.
   na FTP a přepsání zdrojových fotek ztrátovou kompresí za to nestojí.
 
 **Čeká na schválení:** Open Sans → Nunito. Open Sans je vidět jen v horní liště s hodinami a v textu zásad ochrany údajů;
-na každé stránce se kvůli tomu stahují 2 soubory (83,5 kB). Ukázka před/po poslána, nenasazeno.
+na každé stránce se kvůli tomu stahují 2 soubory (83,5 kB). Na náhledu je dočasný přepínač (`?pismo=nunito` / `?pismo=puvodni`,
+`src/components/PismoPrepinac.astro`); po rozhodnutí se přepínač odstraní.
 
 1. Mobilní preload obrázku banneru (`media="(max-width: 767px)"`).
 2. Fonty: odebrat Nunito Sans; Open Sans nahradit Nunito v `body`, horní liště a zásadách → odebrat import (≈ 83 kB méně na první návštěvu).
