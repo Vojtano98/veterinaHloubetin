@@ -209,6 +209,10 @@ b {
   border: 0;
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 .skip-link {
   position: absolute;
   left: 16px;

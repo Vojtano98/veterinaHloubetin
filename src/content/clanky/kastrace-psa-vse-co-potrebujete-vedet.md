@@ -26,13 +26,9 @@ Kastrace psa je důležitý krok, který vyžaduje správnou přípravu. Před s
 
 ## Předoperační vyšetření: Je krevní test nutný?
 
-
-
 Před operací je doporučeno provést odběr krve, který stanoví krevní obraz a základní biochemické parametry. Toto vyšetření může být provedeno předem nebo těsně před zákrokem a trvá asi **20 minut**. Pokud se rozhodnete krevní test neabsolvovat, je třeba podepsat revers, že jste toto vyšetření odmítli.
 
 ## Samotný zákrok: Jak kastrace probíhá?
-
-
 
 Kastrace psa se provádí v celkové anestezii v inhalační narkóze, aby byl zajištěn maximální komfort a bezpečnost pro vašeho mazlíčka. Při operaci je chirurgickým řezem před šourkem zajištěn přístup k varlatům, která jsou následně podvázána a odstraněna. Celý proces trvá přibližně hodinu.
 

@@ -30,23 +30,16 @@ Ne všichni psi snášejí chlad stejně dobře. Některé skupiny jsou k prochl
 
 ## Jak snížit riziko podchlazení
 -   V silných mrazech **zkracujte délku procházek**.
-    
 -   U citlivějších psů zvažte **použití psího oblečku**.
-    
 -   Po návratu domů psa **vždy důkladně osušte**, zejména tlapky, břicho a hrudník.
-    
 
 ### Příznaky podchlazení
 Mezi varovné signály patří:
 
 -   třes,
-    
 -   apatie,
-    
 -   zpomalené reakce,
-    
 -   ztuhlost svalů.
-    
 
 Pokud máte podezření na podchlazení, psa **pozvolna zahřejte** a v případě potřeby **kontaktujte veterinárního lékaře**.
 
@@ -58,23 +51,17 @@ Obleček je vhodný především pro psy, kteří hůře udržují tělesnou tep
 
 -   **Krátkosrstá a bezsrstá plemena**  
     (např. čivava, italský chrtík, whippet, dobrman, stafordšírský teriér, ridgeback, čínský chocholatý pes)
-    
+
 -   **Malá plemena**, která rychleji ztrácejí teplo
-    
 -   **Štěňata, senioři a nemocní psi**, zejména po operacích, se srdečním onemocněním, oslabenou imunitou nebo s bolestmi kloubů
-    
 
 ## Orientační teploty pro použití oblečku
 Nezáleží pouze na teplotě, ale také na **větru, vlhkosti a délce pobytu venku**:
 
 -   **pod +5 °C** – obleček je vhodný pro krátkosrsté, malé a citlivé psy
-    
 -   **kolem 0 °C a níže** – obleček doporučen pro většinu krátkosrstých psů
-    
 -   **pod −5 °C** – obleček může mít smysl i u některých středních plemen, zejména při delších procházkách
-    
 -   **silný vítr, mokrý sníh nebo déšť** – obleček je vhodný i při vyšších teplotách
-    
 
 Pokud se pes třese, zvedá tlapky, zpomaluje chůzi nebo se snaží vrátit domů, je velmi pravděpodobné, že mu je zima.
 
@@ -83,10 +70,9 @@ Některá plemena jsou na chlad přirozeně dobře uzpůsobená díky husté srs
 
 -   **Severská a pastevecká plemena**  
     (husky, aljašský malamut, samojed, bernský salašnický pes, německý ovčák)
-    
+
 -   **Střední a velká plemena s podsadou**  
     (například labrador retrívr a zlatý retrívr)
-    
 
 U zdravých, aktivních psů v pohybu obvykle není obleček při běžných procházkách nutný. Je však důležité si uvědomit, že **vlhko a vítr výrazně snižují izolační schopnost srsti**.
 
@@ -94,13 +80,9 @@ U zdravých, aktivních psů v pohybu obvykle není obleček při běžných pro
 I u odolnějších plemen může být obleček vhodný:
 
 -   při **dlouhém pobytu venku v silném mrazu** (cca pod −5 °C),
-    
 -   při **větrném a velmi vlhkém počasí**,
-    
 -   u **starších psů s artrózou**,
-    
 -   u psů **po nemoci nebo s omezeným pohybem**.
-    
 
 V těchto případech je ideální **lehká funkční bunda nebo nepromokavá vesta**, která chrání hrudník a bedra, aniž by psa přehřívala.
 
@@ -108,13 +90,9 @@ V těchto případech je ideální **lehká funkční bunda nebo nepromokavá ve
 Kvalitní zimní obleček by měl:
 
 -   chránit **hrudník, břicho a bedra**,
-    
 -   být **větruodolný a nepromokavý**,
-    
 -   mít **prodyšnou, hřejivou vnitřní vrstvu**,
-    
 -   umožňovat **volný pohyb bez tření**.
-    
 
 Nevhodné jsou příliš těsné nebo čistě „módní“ oblečky, které psa omezují nebo mu způsobují stres.
 
@@ -124,24 +102,16 @@ Zimní období je velmi náročné pro psí tlapky. **Sůl a chemické posypy** 
 ### Jak tlapky chránit
 
 -   Po každé procházce tlapky **opláchněte vlažnou vodou**.
-    
 -   Pravidelně **kontrolujte polštářky**.
-    
 -   Používejte **ochranné balzámy**.
-    
 -   U citlivých psů zvažte **ochranné botičky**.
-    
 
 ## Kdy vyhledat veterináře
 Pokud si u psa všimnete:
 
 -   kulhání,
-    
 -   silného zarudnutí nebo bolestivosti tlapek,
-    
 -   apatie,
-    
 -   kašle nebo jiných neobvyklých příznaků,
-    
 
 > neváhejte **kontaktovat veterinární kliniku**. Včasná péče může předejít vážnějším komplikacím a zajistit psovi rychlejší návrat k plnému zdraví.

@@ -1,5 +1,5 @@
 ---
-import { Image, getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ArticleCard from '../components/ArticleCard.astro';
@@ -9,6 +9,7 @@ import Icon from '../components/Icon.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { getArticles, relatedArticles, formatDate, isoDate, readingTime, type Article } from '../lib/articles';
 import { memberById } from '../data/team';
+import { ogImage } from '../lib/og';
 import { site } from '../data/site';
 
 export async function getStaticPaths() {
@@ -30,7 +31,8 @@ const mainImage = d.heroImage ?? d.cover;
 const shareImage = [d.heroImage, d.cover]
   .filter((img): img is NonNullable<typeof img> => Boolean(img) && img!.width >= 600)
   .sort((a, b) => b.width - a.width)[0];
-const ogImg = await getImage({ src: mainImage, width: 1200, format: 'jpg' });
+// Stejný obrázek jako náhled při sdílení, ať se negeneruje druhá velká varianta
+const ogImg = await ogImage(shareImage ?? mainImage);
 const showUpdated = d.updatedDate && d.updatedDate.toDateString() !== d.pubDate.toDateString();
 // Shrnutí a FAQ: na produkci jen po schválení veterinářem, ve vývoji jako označený návrh
 const showAi = d.aiContentApproved || import.meta.env.DEV;

@@ -28,13 +28,9 @@ Psincový kašel je **infekční zánět horních cest dýchacích**, který moh
 Mezi nejčastější původce patří:
 
 -   **Psí adenovirus**
-    
 -   **Virus parainfluenzy**
-    
 -   **Bakterie Bordetella bronchiseptica**
-    
 -   **Mykoplazma**
-    
 
 Onemocnění může vzniknout i působením jediného patogenu, avšak **kombinace více původců** (například viru a bakterie) obvykle způsobuje **závažnější a déle trvající průběh**.
 
@@ -50,11 +46,8 @@ Kašel bývá nejhorší **v noci** a často psa **budí ze spánku**.
 **Další příznaky mohou zahrnovat:**
 
 -   kýchání,
-    
 -   **výtok z nosu nebo očí**,
-    
 -   **zvýšenou teplotu**, únavu, nechutenství (u těžších průběhů).
-    
 
 Ve většině případů však pes **zůstává čilý** a **chuť k jídlu bývá zachována**.
 
@@ -66,13 +59,9 @@ Rizikovou skupinou jsou **štěňata, starší psi, březí feny** a **jedinci s
 U **mírných forem** obvykle není potřeba nasazovat léky. Důležité je:
 
 -   zajistit **klidový režim a teplo**,
-    
 -   podávat **měkkou, šetrnou stravu**, která nedráždí hrdlo,
-    
 -   zajistit **dostatek tekutin**,
-    
 -   při venčení **nahradit obojek postrojem**, aby se netlačilo na krk.
-    
 
 Na podporu imunity lze podat doplňky jako **betaglukan** nebo **imunoglukan**.  
 Pro **ulehčení kašle** může pomoci **jitrocelový sirup**.

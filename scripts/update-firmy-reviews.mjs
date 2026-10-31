@@ -7,6 +7,7 @@
 // Přístup pro Claude povoluje robots.txt Firmy.cz (User-agent: Claude-User / ClaudeBot).
 
 import { readFile, writeFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 
 const URL_FIRMY =
   'https://www.firmy.cz/detail/2290030-veterinarni-klinika-hloubetin-praha-hloubetin.html?sortReviews=newest';
@@ -48,12 +49,14 @@ export function parse(html) {
       const date = block.match(/class="date subtle">([^<]+)</)?.[1];
       const comment = block.match(/class="comment">([\s\S]*?)<\/div>/)?.[1];
       const url = block.match(/class="author" href="([^"]+)"/)?.[1]?.replace(/&amp;/g, '&');
+      // Odkaz pochází z cizí stránky – na web smí jen https
+      const safeUrl = url?.startsWith('https://') ? url : undefined;
       return {
         name: name ? decode(name) : null,
         date: date ? toDate(date) : null,
         rating: full + (half ? 0.5 : 0),
         text: comment ? decode(comment) : '',
-        url,
+        url: safeUrl,
         source: 'firmy',
       };
     })
@@ -95,7 +98,10 @@ async function main() {
   added.forEach((r) => console.log(`+ ${r.date} ${r.name} (${r.rating} ★): ${r.text.slice(0, 60)}`));
 }
 
-main().catch((err) => {
-  console.error(err.message);
-  process.exit(1);
-});
+// Při importu z testů se nic nestahuje ani nezapisuje
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch((err) => {
+    console.error(err.message);
+    process.exit(1);
+  });
+}

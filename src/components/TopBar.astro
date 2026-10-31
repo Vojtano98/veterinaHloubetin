@@ -66,15 +66,15 @@ const hours = site.hours.map((h) => ({
       specialHours.hidden = info?.kind !== 'hodiny';
       regular.hidden = Boolean(info);
       bar.classList.toggle('is-special', Boolean(info));
+
+      // Zvýraznění dnešního dne (podle času v Praze), po půlnoci se přesune samo
+      const today = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Prague', weekday: 'short' }).format(new Date()).slice(0, 2);
+      bar.querySelectorAll<HTMLElement>('[data-days]').forEach((el) => {
+        el.classList.toggle('is-today', (el.dataset.days ?? '').split(' ').includes(today));
+      });
     };
     update();
     setInterval(update, 60_000);
-
-    // Zvýraznění dnešního dne (podle času v Praze)
-    const today = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Prague', weekday: 'short' }).format(new Date()).slice(0, 2);
-    bar.querySelectorAll<HTMLElement>('[data-days]').forEach((el) => {
-      el.classList.toggle('is-today', (el.dataset.days ?? '').split(' ').includes(today));
-    });
   });
 </script>
 
@@ -132,10 +132,6 @@ const hours = site.hours.map((h) => ({
     background: var(--c-bar-special);
     color: var(--c-on-bar-special);
     font-weight: 700;
-  }
-
-  .nowrap {
-    white-space: nowrap;
   }
 
   @media (max-width: 767px) {

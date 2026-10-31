@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import { footerNav, site } from '../data/site';
+import { nav, site } from '../data/site';
 import Icon from './Icon.astro';
 import OpenStatus from './OpenStatus.astro';
 import logo from '../assets/uploads/2024/05/Upload-Image-removebg-preview.png';
@@ -29,7 +29,7 @@ const hasCookieYes = import.meta.env.PUBLIC_PREVIEW !== '1';
     <nav aria-labelledby="footer-menu">
       <h2 id="footer-menu" class="footer-title">Menu</h2>
       <ul class="footer-links">
-        {footerNav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
       </ul>
     </nav>
 
@@ -116,10 +116,6 @@ const hasCookieYes = import.meta.env.PUBLIC_PREVIEW !== '1';
     aspect-ratio: 447 / 261;
     object-fit: cover;
     object-position: 50% 39%;
-  }
-
-  .nowrap {
-    white-space: nowrap;
   }
 
   .about-1,

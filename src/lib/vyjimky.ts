@@ -120,6 +120,69 @@ export function barInfo(list: Vyjimka[], now = new Date()): { kind: 'pohotovost'
 /** Konec probíhající pohotovosti pro pilulku („8:00“ nebo „zítřka 8:00“) */
 export const untilText = (to: Date, now = new Date()) => `${until(to, now)}${time(to)}`;
 
+/** Týdenní rozvrh: index 0 = neděle, [otevírá, zavírá] nebo null = zavřeno */
+export type Rozvrh = ([string, string] | null)[];
+
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const dayShort = ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'];
+
+const toMin = (t: string) => {
+  const [h, m] = t.split(':').map(Number);
+  return h * 60 + m;
+};
+
+/** Den v týdnu (0 = neděle) a minuta dne v Praze */
+function nowInPrague(d: Date) {
+  const parts = new Intl.DateTimeFormat('en-GB', { timeZone: TZ, weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(d);
+  const get = (t: string) => parts.find((p) => p.type === t)?.value ?? '';
+  return { day: WEEKDAYS.indexOf(get('weekday')), min: Number(get('hour')) * 60 + Number(get('minute')) };
+}
+
+/** Stav pro pilulku „Otevřeno / Zavřeno“; compact = krátký text do hlavičky a patičky */
+export function openStatus(schedule: Rozvrh, list: Vyjimka[], compact: boolean, now = new Date()) {
+  const ex = current(list, now);
+  if (ex) {
+    const text = compact ? `Pohotovost do ${time(ex.to)}` : `Mimořádná pohotovost · do ${untilText(ex.to, now)}`;
+    return { open: false, emergency: true, text };
+  }
+
+  const { day, min } = nowInPrague(now);
+  // Otevírací doba za `i` dní: výjimka pro ten den (např. 9:00–19:00 nebo zavřeno), jinak běžný rozvrh.
+  // Poledne daného kalendářního dne, aby změna času nikdy nepřeskočila na vedlejší den.
+  const hoursIn = (i: number) => {
+    const exception = hoursOn(list, new Date((dayNum(now) + i + 0.5) * DAY));
+    return exception === undefined ? schedule[(day + i) % 7] : exception;
+  };
+
+  const today = hoursIn(0);
+  const open = Boolean(today && min >= toMin(today[0]) && min < toMin(today[1]));
+  const opensLaterToday = Boolean(today && min < toMin(today[0]));
+  let text = '';
+  if (open) {
+    text = compact ? `Otevřeno do ${fmt(today![1])}` : `Nyní otevřeno · zavíráme v ${fmt(today![1])}`;
+  } else if (opensLaterToday) {
+    text = compact ? `Zavřeno · dnes ${fmt(today![0])}` : `Nyní zavřeno · otevíráme dnes v ${fmt(today![0])}`;
+  } else {
+    for (let i = 1; i <= 7; i++) {
+      const hours = hoursIn(i);
+      if (!hours) continue;
+      const d = (day + i) % 7;
+      text = compact
+        ? `Zavřeno · ${i === 1 ? 'zítra' : dayShort[d]} ${fmt(hours[0])}`
+        : `Nyní zavřeno · otevíráme ${i === 1 ? 'zítra' : dayIn[d]} v ${fmt(hours[0])}`;
+      break;
+    }
+  }
+
+  // Po zavírací době, ale ještě dnes začne mimořádná pohotovost: oranžově, ne červeně jako „zavřeno“
+  const later = laterToday(list, now);
+  if (!open && later && !opensLaterToday) {
+    const text = compact ? `Pohotovost od ${time(later.from)}` : `Dnes mimořádná pohotovost od ${time(later.from)}`;
+    return { open: false, emergency: true, text };
+  }
+  return { open, emergency: false, text };
+}
+
 const ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(Z|[+-]\d{2}:\d{2})$/;
 const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/;
 

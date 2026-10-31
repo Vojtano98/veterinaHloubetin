@@ -229,7 +229,24 @@ PageSpeed Insights (mobil) až na testovací adrese WEDOS – změřit před a p
 
 ---
 
-## Etapa 5 – Úklid kódu a logika otevírací doby (P2-9, P3-6, P3-10, P3-11, P3-12, P3-14)
+## Etapa 5 – Úklid kódu a logika otevírací doby (P2-9, P3-6, P3-10, P3-11, P3-12, P3-14) – ✅ hotovo 31. 10. 2026
+
+**Jak je to provedené:**
+
+- Výpočet pilulky Otevřeno/Zavřeno je čistá funkce `openStatus()` ve `vyjimky.ts`, `OpenStatus.astro` jen vykreslí výsledek.
+  Porovnání se starou logikou po půlhodinách přes celý rok (70 080 případů): 8 rozdílů, všechny v noci změny času s výjimkou,
+  kde stará logika počítala špatný den. Opraveno a pokryto testy.
+- Zvýraznění dnešního dne v liště se přepočítává s ostatním, po půlnoci se samo přesune.
+- `footerNav` (shodné s `nav`) zrušeno, `.nowrap` je jen v `global.css`, telefon v JSON-LD se bere ze `site.phones`.
+- OG obrázek počítá jedna funkce `src/lib/og.ts`; JSON-LD článku ho používá, takže se negeneruje druhý velký JPG (o 15 souborů méně).
+- Volné seznamy v článcích vyčištěny (4 články), text beze změny.
+- Skript recenzí pouští na web jen odkazy `https://`; při importu z testů nic nestahuje ani nezapisuje (`tests/recenze.test.ts`).
+- Ponecháno: silueta sestry bez fotky (nevykresluje se, je připravená pro budoucí použití – rozhodne klinika)
+  a rok v patičce počítaný při buildu.
+
+**Ověření:** text všech 21 stránek shodný před a po, JSON-LD se liší jen obrázkem u 14 článků; 40 testů, typová kontrola, kontrola výstupu.
+
+**Původní zadání etapy:**
 
 1. Výpočet stavu „Otevřeno/Zavřeno“ přesunout z `OpenStatus.astro` do čisté funkce ve `vyjimky.ts`, komponenta jen vykreslí;
    pokrýt testy z etapy 1 (včetně přechodu času a výjimky na neděli).
@@ -299,7 +316,7 @@ připravené změny GTM (P1-2) k odsouhlasení.
 | 2 Konverzní cesty | M – ✅ hotovo | ne (záloha Reservanta doporučena) |
 | 3 Kontrast a přístupnost | ✅ uzavřeno, barvy beze změny | ne |
 | 4 Výkon | ✅ uzavřeno, písmo beze změny | ne |
-| 5 Úklid kódu | M | ne |
+| 5 Úklid kódu | M – ✅ hotovo | ne |
 | 6 Bezpečnost serveru | M | ne (CSP Report-Only lze i po spuštění) |
 | 7 Testovací nasazení WEDOS | M | ano |
 | 8 Ostré spuštění | M | – |

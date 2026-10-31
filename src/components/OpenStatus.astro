@@ -90,87 +90,15 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
 </style>
 
 <script>
-  import { current, hoursOn, laterToday, time, untilText, type Vyjimka } from '../lib/vyjimky';
-
-  const dayNames = ['v neděli', 'v pondělí', 'v úterý', 've středu', 've čtvrtek', 'v pátek', 'v sobotu'];
-  // Krátká pilulka v hlavičce musí být úzká i na malých telefonech
-  const dayShort = ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'];
-  const toMin = (t: string) => {
-    const [h, m] = t.split(':').map(Number);
-    return h * 60 + m;
-  };
-  const fmt = (t: string) => t.replace(/^0/, '');
-
-  function nowInPrague() {
-    const parts = new Intl.DateTimeFormat('en-GB', {
-      timeZone: 'Europe/Prague',
-      weekday: 'short',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    }).formatToParts(new Date());
-    const get = (t: string) => parts.find((p) => p.type === t)?.value ?? '';
-    const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(get('weekday'));
-    return { day, min: Number(get('hour')) * 60 + Number(get('minute')) };
-  }
+  import { openStatus, type Rozvrh, type Vyjimka } from '../lib/vyjimky';
 
   function update(el: HTMLElement) {
-    const schedule: ([string, string] | null)[] = JSON.parse(el.dataset.schedule || '[]');
-    const { day, min } = nowInPrague();
-    const text = el.querySelector<HTMLElement>('[data-open-text]')!;
-    const compact = el.dataset.compact === '1';
+    const schedule: Rozvrh = JSON.parse(el.dataset.schedule || '[]');
     const vyjimky: Vyjimka[] = JSON.parse(el.dataset.vyjimky || '[]');
-    const now = new Date();
-    // Otevírací doba za `i` dní: výjimka pro ten den (např. 9:00–19:00 nebo zavřeno), jinak běžný rozvrh
-    const hoursIn = (i: number) => {
-      const ex = hoursOn(vyjimky, new Date(now.getTime() + i * 86_400_000));
-      return ex === undefined ? schedule[(day + i) % 7] : ex;
-    };
-    const today = hoursIn(0);
-    let open = false;
-    let msg = '';
-    const ex = current(vyjimky, now);
-    const exLater = laterToday(vyjimky, now);
-    if (ex) {
-      text.textContent = compact
-        ? `Pohotovost do ${time(ex.to)}`
-        : `Mimořádná pohotovost · do ${untilText(ex.to, now)}`;
-      el.classList.remove('is-open');
-      el.classList.add('is-emergency');
-      el.hidden = false;
-      return;
-    }
-    el.classList.remove('is-emergency');
-    if (today && min >= toMin(today[0]) && min < toMin(today[1])) {
-      open = true;
-      msg = compact ? `Otevřeno do ${fmt(today[1])}` : `Nyní otevřeno · zavíráme v ${fmt(today[1])}`;
-    } else if (today && min < toMin(today[0])) {
-      msg = compact ? `Zavřeno · dnes ${fmt(today[0])}` : `Nyní zavřeno · otevíráme dnes v ${fmt(today[0])}`;
-    } else {
-      for (let i = 1; i <= 7; i++) {
-        const d = (day + i) % 7;
-        const s = hoursIn(i);
-        if (s) {
-          const when = i === 1 ? 'zítra' : dayNames[d];
-          msg = compact
-            ? `Zavřeno · ${i === 1 ? 'zítra' : dayShort[d]} ${fmt(s[0])}`
-            : `Nyní zavřeno · otevíráme ${when} v ${fmt(s[0])}`;
-          break;
-        }
-      }
-    }
-    // Po zavírací době, ale ještě dnes začne mimořádná pohotovost
-    const opensLaterToday = today && min < toMin(today[0]);
-    // Zobrazí se oranžově jako pohotovost, ne červeně jako „zavřeno“
-    const soon = !open && exLater && !opensLaterToday;
-    if (soon) {
-      msg = compact
-        ? `Pohotovost od ${time(exLater.from)}`
-        : `Dnes mimořádná pohotovost od ${time(exLater.from)}`;
-    }
-    text.textContent = msg;
-    el.classList.toggle('is-open', open);
-    el.classList.toggle('is-emergency', Boolean(soon));
+    const status = openStatus(schedule, vyjimky, el.dataset.compact === '1');
+    el.querySelector<HTMLElement>('[data-open-text]')!.textContent = status.text;
+    el.classList.toggle('is-open', status.open);
+    el.classList.toggle('is-emergency', status.emergency);
     el.hidden = false;
   }
 

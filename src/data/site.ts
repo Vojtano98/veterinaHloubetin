@@ -80,12 +80,3 @@ export const nav = [
   { label: 'Rezervace služeb', href: '/rezervace-sluzeb/' },
   { label: 'Kontakty', href: '/kontakty/' },
 ];
-
-export const footerNav = [
-  { label: 'Služby', href: '/#sluzby' },
-  { label: 'Ceník', href: '/cenik-zakroku-a-vysetreni/' },
-  { label: 'O nás', href: '/#onas' },
-  { label: 'Články', href: '/clanky/' },
-  { label: 'Rezervace služeb', href: '/rezervace-sluzeb/' },
-  { label: 'Kontakty', href: '/kontakty/' },
-];
