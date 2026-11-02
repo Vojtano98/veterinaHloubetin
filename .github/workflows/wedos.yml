@@ -1,5 +1,5 @@
 # Ostrý web na WEDOS – po každém pushi do větve main se po kontrolách nahraje přes FTPS.
-# Přístup je v GitHub Secrets (WEDOS_FTP_USER, WEDOS_FTP_PASSWORD), FTP účet smí jen do složky webu.
+# Přístup je v GitHub Secrets (WEDOS_FTP_USER, WEDOS_FTP_PASSWORD), nahrává se jen do složky webu.
 # Bez těchto secrets se web jen sestaví a zkontroluje, nic se nenahraje.
 name: Ostrý web na WEDOS
 
@@ -69,10 +69,7 @@ jobs:
           LFTP_PASSWORD: ${{ secrets.WEDOS_FTP_PASSWORD }}
           ZKOUSKA: ${{ inputs.zkouska && '--dry-run' || '' }}
         run: |
-          # odeslat.php musí na serveru už být: pojistka proti účtu namířenému do jiné složky.
-          # Soubory v _astro a wp-content se mění zřídka, porovnávají se jen podle velikosti.
-          # Nic se nemaže. Stránky jdou až po obrázcích a skriptech, na které odkazují.
-          lftp -c "
+          PRIPOJENI="
             set cmd:fail-exit true;
             set ftp:ssl-force true;
             set ftp:ssl-protect-data true;
@@ -81,9 +78,17 @@ jobs:
             set net:max-retries 3;
             set net:timeout 30;
             open --env-password -u '$FTP_USER' 349086.w86.wedos.net;
-            pwd;
-            cls -1a;
-            glob --exist odeslat.php;
+            cd domains/veterinahloubetin.cz;
+          "
+          # Pojistka: bez odeslat.php a .htaccess v cílové složce to není složka webu, nic se nenahraje.
+          lftp -c "$PRIPOJENI cls -1a;" > cil.txt
+          if ! grep -qx 'odeslat.php' cil.txt || ! grep -qx '.htaccess' cil.txt; then
+            echo "::error::Cílová složka nevypadá jako web, nic se nenahrálo."
+            exit 1
+          fi
+          # Soubory v _astro a wp-content se mění zřídka, porovnávají se jen podle velikosti.
+          # Nic se nemaže. Stránky jdou až po obrázcích a skriptech, na které odkazují.
+          lftp -c "$PRIPOJENI
             mirror -R $ZKOUSKA --no-perms --ignore-time --parallel=4 dist/_astro _astro;
             mirror -R $ZKOUSKA --no-perms --ignore-time --parallel=4 dist/wp-content wp-content;
             mirror -R $ZKOUSKA --no-perms --parallel=4 -x '^_astro/' -x '^wp-content/' dist .;
