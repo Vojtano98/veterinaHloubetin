@@ -130,7 +130,7 @@ Musí skončit `vše v pořádku` a `indexace: ZAPNUTÁ`.
 
 **D4. Přepnutí** (hned po sobě, v tomto pořadí)
 
-1. ☐ Přesunout `www/domains/veterinahloubetin.cz` do kořene FTP (vedle `www`) jako `wp-zaloha`. Pokud to hosting nedovolí, napsat do ní `.htaccess` s řádkem `Require all denied`.
+1. ☐ Přesunout `www/domains/veterinahloubetin.cz` do kořene FTP (vedle `www`) jako `wp-zaloha`. Vedlejší FTP účet nad `www` nedosáhne, proto použít náhradní postup: přejmenovat ji na `www/domains/wp-zaloha` a po kroku 2 v ní přejmenovat `.htaccess` na `.htaccess-wordpress` a nahrát nový s pravidly `RewriteEngine On` a `RewriteRule ^ - [F,L]`.
 2. ☐ Přejmenovat `www/domains/novy-web` na `www/domains/veterinahloubetin.cz`.
 3. ☐ Vyčistit cache: [client.wedos.global](https://client.wedos.global/) → doména → **CDN Cache** → vyčistit.
 4. ☐ Pokud web hlásí 403: administrace WEDOS → Nástroje → Opravit práva souborů.
