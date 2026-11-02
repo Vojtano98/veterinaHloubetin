@@ -273,4 +273,33 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
       grid-template-columns: 52px 1fr;
     }
   }
+
+  /* Dlaždice přes celou šířku: tlačítko vpravo vedle údaje, na užším telefonu se nevejde */
+  @media (min-width: 480px) and (max-width: 767px) {
+    .tile {
+      align-items: center;
+    }
+    .tile__body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 12px;
+    }
+    .tile__label,
+    .tile__value,
+    .hours {
+      grid-column: 1 / -1;
+    }
+    a.tile .tile__label,
+    a.tile .tile__value {
+      grid-column: 1;
+    }
+    .tile__action {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      align-self: center;
+      margin-top: 0;
+      padding: 9px 16px;
+    }
+  }
 </style>
