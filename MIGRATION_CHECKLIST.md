@@ -14,6 +14,13 @@ Oddíl **G** je plán návratu, **H** kontrolní příkazy.
 - `test.veterinahloubetin.cz` už míří na hosting a má platný certifikát (`*.veterinahloubetin.cz`).
 - Doména má ověření Google v DNS (`google-site-verification`), to zůstává a výměna webu ho neovlivní.
 - Na e-maily z formuláře jsou v DNS připravené DKIM klíče `key1/key2.wedos-dkim`, SPF končí `-all`, DMARC je `p=none`.
+- **SPF musí obsahovat adresy webhostingu, jinak se zprávy z formuláře nedoručí** (ověřeno 2. 11. 2026: zkušební zpráva se vrátila s `550 5.7.1`). Záznam `a` kvůli Protection míří na proxy, ne na hosting. Web přitom hlásí úspěch, protože `mail()` zprávu jen předá poštovnímu serveru, a vrácená zpráva přijde do ordinace. Správný záznam (adresy ověřit v detailu Webhostingu, tabulka Adresy služeb):
+
+  ```text
+  v=spf1 mx a ip4:46.28.106.220 ip6:2a02:2b88:1:4::11c include:_spf.we.wedos.net -all
+  ```
+
+  Starý WordPress posílá přes plugin Easy WP SMTP, proto se ho to netýká.
 
 **Porovnání živého WordPressu s novým webem** (všech 20 stránek ze sitemapy):
 
