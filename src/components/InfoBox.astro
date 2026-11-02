@@ -274,8 +274,16 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     }
   }
 
+  /* Tablety: tři dlaždice vedle sebe by telefon a hodiny ořízly */
+  @media (min-width: 768px) and (max-width: 980px) {
+    .info-box,
+    .info-box--stacked {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
   /* Dlaždice přes celou šířku: tlačítko vpravo vedle údaje, na užším telefonu se nevejde */
-  @media (min-width: 480px) and (max-width: 767px) {
+  @media (min-width: 480px) and (max-width: 980px) {
     .tile {
       align-items: center;
     }
@@ -291,12 +299,13 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
       grid-column: 1 / -1;
     }
     a.tile .tile__label,
-    a.tile .tile__value {
+    a.tile .tile__value,
+    .tile__hint {
       grid-column: 1;
     }
     .tile__action {
       grid-column: 2;
-      grid-row: 1 / span 2;
+      grid-row: 1 / span 3;
       align-self: center;
       margin-top: 0;
       padding: 9px 16px;

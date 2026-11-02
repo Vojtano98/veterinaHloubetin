@@ -21,8 +21,8 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
   description="Veterinární klinika Hloubětín se zaměřuje na prevenci, diagnostiku a léčbu nemocí malých zvířat od roku 2008. Psi, kočky, drobní savci, plazi i exotičtí ptáci. Praha 9 – u metra Hloubětín."
 >
   <!-- Fotka psa je v CSS pozadí, prohlížeč by ji jinak našel až po stažení stylů – přednačíst správnou velikost -->
-  <link slot="head" rel="preload" as="image" href={hero.src} media="(min-width: 768px)" fetchpriority="high" />
-  <link slot="head" rel="preload" as="image" href={heroSm.src} media="(max-width: 767px)" fetchpriority="high" />
+  <link slot="head" rel="preload" as="image" href={hero.src} media="(min-width: 981px)" fetchpriority="high" />
+  <link slot="head" rel="preload" as="image" href={heroSm.src} media="(max-width: 980px)" fetchpriority="high" />
 
   <!-- HERO -->
   <section class="hero" style={`--hero:url(${hero.src});--hero-sm:url(${heroSm.src})`}>
@@ -89,7 +89,7 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
     z-index: 10;
     padding: 58px 0 0;
     background-color: var(--c-brown);
-    background-image: linear-gradient(73deg, #b79371 22%, rgba(180, 166, 155, 0) 73%), var(--hero);
+    background-image: linear-gradient(73deg, #8f6d4f 30%, rgba(143, 109, 79, 0.75) 50%, rgba(143, 109, 79, 0) 73%), var(--hero);
     background-position: right bottom;
     background-size: cover;
     background-repeat: no-repeat;
@@ -297,10 +297,6 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
   }
 
   @media (max-width: 980px) {
-    .hero {
-      background-image: linear-gradient(76deg, #b79371 50%, rgba(183, 147, 113, 0.35) 99%), var(--hero);
-      background-position: right center;
-    }
     .hero__text {
       width: 100%;
       margin: 40px 0 40px;
@@ -318,7 +314,7 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
       /* Pes jako nízký pruh nahoře, aby nadpis zůstal nad cookie lištou */
       padding-top: 140px;
       background-image:
-        linear-gradient(180deg, rgba(183, 147, 113, 0) 0, rgba(183, 147, 113, 0) 110px, #b79371 200px),
+        linear-gradient(180deg, rgba(143, 109, 79, 0) 0, rgba(143, 109, 79, 0) 110px, #8f6d4f 200px),
         var(--hero-sm);
       background-size: 100% auto, 130% auto;
       background-position: 0 0, 88% -48px;
@@ -381,8 +377,8 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
     .hero {
       padding-top: 0;
       background-image:
-        linear-gradient(180deg, rgba(183, 147, 113, 0) 170px, #b79371 250px),
-        linear-gradient(90deg, #b79371 30%, rgba(183, 147, 113, 0.5) 100%),
+        linear-gradient(180deg, rgba(143, 109, 79, 0) 170px, #8f6d4f 250px),
+        linear-gradient(90deg, #8f6d4f 30%, rgba(143, 109, 79, 0.5) 100%),
         var(--hero-sm);
       background-size: auto, auto, auto 270px;
       background-position: 0 0, 0 0, right -20px;
@@ -392,16 +388,19 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
     }
   }
 
-  /* Širší telefony a tablety na výšku: nízký pruh s psem vpravo, text pod ním přes celou šířku */
-  @media (min-width: 480px) and (max-width: 767px) {
+  /* Širší telefony a tablety: nízký pruh s psem vpravo, text pod ním přes celou šířku */
+  @media (min-width: 480px) and (max-width: 980px) {
     .hero {
       padding-top: 190px;
       background-image:
-        linear-gradient(180deg, rgba(183, 147, 113, 0) 150px, #b79371 270px),
-        linear-gradient(90deg, #b79371 calc(100% - 520px), rgba(183, 147, 113, 0) calc(100% - 300px)),
+        linear-gradient(180deg, rgba(143, 109, 79, 0) 150px, #8f6d4f 270px),
+        linear-gradient(90deg, #8f6d4f calc(100% - 520px), rgba(143, 109, 79, 0) calc(100% - 300px)),
         var(--hero-sm);
       background-size: auto, auto, auto 340px;
       background-position: 0 0, 0 0, right -30px;
+    }
+    .hero__text {
+      margin: 10px 0 30px;
     }
     .hero__text h1 {
       font-size: 40px;

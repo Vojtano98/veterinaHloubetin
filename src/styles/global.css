@@ -22,7 +22,7 @@
   --c-blue: #316eff;
   --c-link: #b45309; /* tmavší oranžová – kontrast 5:1 na bílé (WCAG AA) */
   --c-navy: #121f60;
-  --c-brown: #b79371;
+  --c-brown: #8f6d4f;
   --c-heading: #333;
   --c-ink: #2b2b2b;
   --c-text: #666;
@@ -34,9 +34,9 @@
   --c-cta: var(--c-orange); /* pozadí hlavních tlačítek */
   --c-cta-hover: #ff8a00;
   --c-on-cta: var(--c-white); /* text a ikona na tlačítku */
-  --c-accent-text: var(--c-orange-deep); /* malý oranžový text: nadtitulky, štítky, odkazy */
+  --c-accent-text: var(--c-link); /* malý oranžový text: nadtitulky, štítky, odkazy */
   --c-accent-bright: var(--c-orange); /* světlejší oranžový text: aktivní položka menu, 404, číslování obsahu */
-  --c-label: #8a7a6c; /* šedohnědé popisky */
+  --c-label: #6f6054; /* šedohnědé popisky */
   --c-muted: #888; /* datum, poznámky */
   --c-hint: #a08a76; /* drobná nápověda (posuňte do strany) */
   --c-bar: var(--c-orange-bar); /* horní lišta */
@@ -45,8 +45,8 @@
   --c-on-bar-special: var(--c-white);
   --c-alert-from: #f99420; /* karta Pohotovost */
   --c-alert-to: #ff7a1a;
-  --c-on-alert: #fff5ea;
-  --c-on-alert-strong: var(--c-white);
+  --c-on-alert: #3a2410;
+  --c-on-alert-strong: #3a2410;
   --c-burger: var(--c-orange-soft); /* tlačítko menu na mobilu */
   --c-focus: var(--c-orange); /* rámeček fokusu při ovládání klávesnicí */
 
