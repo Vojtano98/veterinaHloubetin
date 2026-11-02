@@ -1,0 +1,88 @@
+# Ostrý web na WEDOS – po každém pushi do větve main se po kontrolách nahraje přes FTPS.
+# Přístup je v GitHub Secrets (WEDOS_FTP_USER, WEDOS_FTP_PASSWORD), FTP účet smí jen do složky webu.
+# Bez těchto secrets se web jen sestaví a zkontroluje, nic se nenahraje.
+name: Ostrý web na WEDOS
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
+    inputs:
+      zkouska:
+        description: 'Jen zkouška: připojit se a vypsat změny, nic nenahrát'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+# Dvě nahrávání nesmí běžet přes sebe, rozběhnuté se nepřerušuje
+concurrency:
+  group: wedos
+  cancel-in-progress: false
+
+env:
+  PUBLIC_SITE_URL: https://veterinahloubetin.cz
+  PUBLIC_INDEXING: 'true'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Jsou nastavené přístupy?
+        id: pristup
+        env:
+          FTP_USER: ${{ secrets.WEDOS_FTP_USER }}
+          LFTP_PASSWORD: ${{ secrets.WEDOS_FTP_PASSWORD }}
+        run: |
+          if [ -n "$FTP_USER" ] && [ -n "$LFTP_PASSWORD" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::Chybí secrets WEDOS_FTP_USER a WEDOS_FTP_PASSWORD, web se nenahraje."
+          fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          # Nejnovější 22.x – testy v TypeScriptu potřebují Node 22.18+
+          check-latest: true
+          cache: npm
+      - run: npm ci
+      # Při chybě se web nenahraje
+      - name: Typová kontrola
+        run: npm run typecheck
+      - name: Testy výjimek a otevírací doby
+        run: npm test
+      - name: Ostré sestavení
+        run: npm run build
+      - name: Kontrola výstupu (odkazy, nadpisy, zapnutá indexace)
+        run: npm run check
+      - name: Instalace lftp
+        if: steps.pristup.outputs.ready == 'true'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+      - name: Nahrání na WEDOS
+        if: steps.pristup.outputs.ready == 'true'
+        env:
+          FTP_USER: ${{ secrets.WEDOS_FTP_USER }}
+          LFTP_PASSWORD: ${{ secrets.WEDOS_FTP_PASSWORD }}
+          ZKOUSKA: ${{ inputs.zkouska && '--dry-run' || '' }}
+        run: |
+          # odeslat.php musí na serveru už být: pojistka proti účtu namířenému do jiné složky.
+          # Soubory v _astro a wp-content se mění zřídka, porovnávají se jen podle velikosti.
+          # Nic se nemaže. Stránky jdou až po obrázcích a skriptech, na které odkazují.
+          lftp --env-password -u "$FTP_USER" -e "
+            set cmd:fail-exit true;
+            set ftp:ssl-force true;
+            set ftp:ssl-protect-data true;
+            set ssl:verify-certificate true;
+            set ftp:list-options -a;
+            set net:max-retries 3;
+            set net:timeout 30;
+            ls odeslat.php;
+            mirror -R $ZKOUSKA --no-perms --ignore-time --parallel=4 dist/_astro _astro;
+            mirror -R $ZKOUSKA --no-perms --ignore-time --parallel=4 dist/wp-content wp-content;
+            mirror -R $ZKOUSKA --no-perms --parallel=4 -x '^_astro/' -x '^wp-content/' dist .;
+            bye
+          " 349086.w86.wedos.net

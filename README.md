@@ -87,6 +87,8 @@ Přesměrování v `public/.htaccess` berou doménu z požadavku, adresa webu je
 Hosting musí mít **PHP 8.1+** (kvůli `odeslat.php`). Web leží ve složce `www/domains/veterinahloubetin.cz/`, obsah `dist/`
 (včetně skrytého `.htaccess`) se nahrává tam přes FTP. Soubor `www/.htaccess` patří hostingu a směruje do této složky, **nepřepisovat**.
 
+**Automatické nasazení:** po každém pushi do `main` workflow [wedos.yml](.github/workflows/wedos.yml) spustí kontroly, sestaví ostrou verzi a nahraje ji přes FTPS. Změny jen v `.md` se nenahrávají. Přístup je v GitHub Secrets `WEDOS_FTP_USER` a `WEDOS_FTP_PASSWORD`, vedlejší FTP účet má adresář `www/domains/veterinahloubetin.cz`. Nahrávání nic nemaže. CDN cache se nečistí automaticky.
+
 **Testovací nasazení** do `www/domains/test.veterinahloubetin.cz/` (neindexované, výchozí):
 
 ```bash

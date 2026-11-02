@@ -185,7 +185,7 @@ Další růst už nezáleží na technice, ale na recenzích, zmínkách na jin�
 
 **Co čekat:** adresy, titulky i obsah zůstávají, takže jde o nejbezpečnější typ výměny. Výkyvy pozic v řádu dnů až několika týdnů jsou přesto běžné a nikdo nemůže zaručit, že nenastanou. Znepokojivý je až propad, který po 2 až 3 týdnech neodeznívá, nebo nárůst chyb v Search Console.
 
-Týdenní úloha recenzí: po spuštění ověřit, že se doplněné recenze dostanou i na WEDOS, ne jen na náhled (GitHub Action nasazuje jen náhled).
+Týdenní úloha recenzí: po spuštění ověřit, že se doplněné recenze dostanou i na WEDOS. Push do `main` je nahraje přes [wedos.yml](.github/workflows/wedos.yml), jakmile jsou nastavené přístupy.
 
 ## G. Plán návratu
 
