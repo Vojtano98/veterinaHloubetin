@@ -81,7 +81,9 @@ jobs:
             set net:max-retries 3;
             set net:timeout 30;
             open --env-password -u '$FTP_USER' 349086.w86.wedos.net;
-            ls odeslat.php;
+            pwd;
+            cls -1a;
+            glob --exist odeslat.php;
             mirror -R $ZKOUSKA --no-perms --ignore-time --parallel=4 dist/_astro _astro;
             mirror -R $ZKOUSKA --no-perms --ignore-time --parallel=4 dist/wp-content wp-content;
             mirror -R $ZKOUSKA --no-perms --parallel=4 -x '^_astro/' -x '^wp-content/' dist .;
