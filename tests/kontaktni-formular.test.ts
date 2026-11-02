@@ -33,7 +33,7 @@ describe('fieldError', () => {
 
 describe('resultText – výsledek odeslání bez JavaScriptu', () => {
   test('odesláno', () => {
-    assert.deepEqual(resultText('1', null), { ok: true, text: 'Děkujeme, zpráva byla odeslána. Ozveme se Vám co nejdříve.' });
+    assert.deepEqual(resultText('1', null), { ok: true, text: 'Děkujeme, zpráva byla odeslána. Ozveme se vám co nejdříve.' });
   });
   test('kódy chyb z odeslat.php', () => {
     assert.match(resultText('0', 'pole').text, /povinné pole/);

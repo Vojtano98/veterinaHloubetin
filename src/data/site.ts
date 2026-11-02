@@ -23,8 +23,8 @@ export const site = {
     city: 'Praha',
     zip: '198 00',
     note: 'Obchodní dům Havana',
-    short: 'Mochovská 535, Praha 198 00',
-    full: 'Mochovská 535, Praha, 198 00',
+    short: 'Mochovská 535, 198 00 Praha',
+    full: 'Mochovská 535, 198 00 Praha',
     lat: 50.1069901,
     lng: 14.537373,
   },
@@ -75,8 +75,8 @@ export const site = {
 export const nav = [
   { label: 'Služby', href: '/#sluzby' },
   { label: 'Ceník', href: '/cenik-zakroku-a-vysetreni/' },
+  { label: 'Objednání', href: '/rezervace-sluzeb/' },
   { label: 'O nás', href: '/#onas' },
   { label: 'Články', href: '/clanky/' },
-  { label: 'Rezervace služeb', href: '/rezervace-sluzeb/' },
   { label: 'Kontakty', href: '/kontakty/' },
 ];

@@ -30,8 +30,6 @@ const jsonLd = {
 >
   <PageHero
     title="Kontaktujte nás"
-    subtitle="Jsme tu vždy pro Vás a Vaše mazlíčky."
-    lead="Poskytujeme tu nejlepší péči a vytvořili jsme prostředí, kam se i váš kamarád bude rád vracet."
     crumbs={[{ label: 'Kontakty' }]}
   />
 
@@ -53,16 +51,15 @@ const jsonLd = {
           <Icon name="clock" size={26} class="blurb__icon" />
           <div>
             <h2 class="blurb__title">Ordinační hodiny</h2>
-            <p>{site.hours.map((h) => <>{h.days}: {h.time}<br /></>)}</p>
+            <p>{site.hours.map((h) => <>{h.days}: <span class="nowrap">{h.time}</span><br /></>)}</p>
             <OpenStatus class="blurb__status" />
           </div>
         </div>
         <div class="blurb">
           <Icon name="phone" size={26} class="blurb__icon" />
           <div>
-            <h2 class="blurb__title">Kontakty</h2>
+            <h2 class="blurb__title">Telefon</h2>
             <p>
-              Ordinace &amp; pohotovost:<br />
               <a class="blurb__phone" href={site.phones.main.href}>{site.phones.main.label}</a>
             </p>
           </div>
@@ -70,8 +67,9 @@ const jsonLd = {
         <div class="blurb">
           <Icon name="mail" size={26} class="blurb__icon" />
           <div>
-            <h2 class="blurb__title">Email</h2>
+            <h2 class="blurb__title">E-mail</h2>
             <p><a class="u" href={`mailto:${site.email}`}>{site.email}</a></p>
+            <p><a class="u" href="#napiste-nam">Napsat zprávu přes formulář</a></p>
           </div>
         </div>
       </div>
@@ -113,11 +111,11 @@ const jsonLd = {
         <div class="form-card__intro">
           <h2 id="form-title" class="form-card__title">Napište nám</h2>
           <p>
-            Máte dotaz nebo se chcete objednat ke konkrétnímu lékaři? Zanechte nám zprávu a ozveme se Vám co nejdříve zpět.
+            Máte dotaz nebo se chcete objednat ke konkrétnímu lékaři? Zanechte nám zprávu a ozveme se vám co nejdříve zpět.
           </p>
           <p>
-            Na základní úkony (vakcinace, čipování…) se můžete objednat také přes
-            <a href="/rezervace-sluzeb/">online rezervaci</a>.
+            Na základní úkony (očkování, čipování…) se můžete
+            <a href="/rezervace-sluzeb/">objednat také online</a>.
           </p>
         </div>
         <ContactForm />

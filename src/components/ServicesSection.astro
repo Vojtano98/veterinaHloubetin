@@ -20,7 +20,7 @@ import vetIllustration from '../assets/uploads/2024/05/vet-06.png';
         Od prevence a očkování přes interní medicínu až po chirurgii, stomatologii a péči o exotická zvířata.
       </p>
       <div class="svc__actions">
-        <a class="btn" href="/rezervace-sluzeb/">Objednat se online</a>
+        <a class="btn" href="/rezervace-sluzeb/">Objednat se</a>
         <a class="svc__link" href="/cenik-zakroku-a-vysetreni/">Zobrazit ceník <Icon name="arrow" size={18} /></a>
       </div>
     </div>
@@ -38,33 +38,37 @@ import vetIllustration from '../assets/uploads/2024/05/vet-06.png';
               <span class="svc-card__img">
                 <Image src={s.image} alt="" width={144} height={144} loading="lazy" />
               </span>
-              <h3 class="svc-card__title">{s.title}</h3>
+              <h3 class="svc-card__title">
+                <!-- Na telefonu rozbaluje kartu, jinde (i bez JavaScriptu) je vypnuté a karta je otevřená -->
+                <button class="svc-card__toggle" type="button" disabled aria-expanded="true" aria-controls={`${s.id}-obsah`}>{s.title}</button>
+              </h3>
             </div>
-            <ul class="svc-card__list">
-              {s.items.map((it) => (
-                <li>
-                  <Icon name="check" size={16} class="svc-card__check" />
-                  <span>{it}</span>
-                </li>
-              ))}
-            </ul>
-            {s.articles && (
-              <div class="svc-card__read">
-                <p class="svc-card__read-label">Přečtěte si</p>
-                <ul>
-                  {s.articles.map((a) => (
-                    <li>
-                      <a href={`/${a.slug}/`}>{a.label}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            <div class="svc-card__content" id={`${s.id}-obsah`}>
+              <ul class="svc-card__list">
+                {s.items.map((it) => (
+                  <li>
+                    <Icon name="check" size={16} class="svc-card__check" />
+                    <span>{it}</span>
+                  </li>
+                ))}
+              </ul>
+              {s.articles && (
+                <div class="svc-card__read">
+                  <p class="svc-card__read-label">Přečtěte si</p>
+                  <ul>
+                    {s.articles.map((a) => (
+                      <li>
+                        <a href={`/${a.slug}/`}>{a.label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </li>
         ))
       }
     </ul>
-    <p class="svc__swipe" aria-hidden="true">Posuňte do strany pro další služby →</p>
 
     <div class="svc-cta">
       <div class="svc-cta__text">
@@ -76,17 +80,50 @@ import vetIllustration from '../assets/uploads/2024/05/vet-06.png';
           <Icon name="phone" size={18} />
           {site.phones.main.label}
         </a>
-        <a class="btn" href="/rezervace-sluzeb/">Objednat se online</a>
+        <a class="btn" href="/rezervace-sluzeb/">Objednat se</a>
       </div>
     </div>
   </div>
 </section>
 
+<script>
+  // Na telefonu se karty rozbalují klepnutím, aby sekce nebyla dlouhá. První je otevřená jako ukázka,
+  // karta z odkazu (/#stomatologie) se otevře sama.
+  const cards = [...document.querySelectorAll<HTMLElement>('.svc-card')];
+  const phone = window.matchMedia('(max-width: 767px)');
+
+  const setOpen = (card: HTMLElement, open: boolean) => {
+    card.classList.toggle('is-collapsed', !open);
+    card.querySelector('.svc-card__toggle')!.setAttribute('aria-expanded', String(open));
+  };
+
+  const apply = () => {
+    const target = location.hash.slice(1);
+    const opened = cards.some((c) => c.id === target) ? target : cards[0]?.id;
+    cards.forEach((card) => {
+      card.querySelector<HTMLButtonElement>('.svc-card__toggle')!.disabled = !phone.matches;
+      setOpen(card, !phone.matches || card.id === opened);
+    });
+  };
+
+  cards.forEach((card) => {
+    card.querySelector('.svc-card__toggle')!.addEventListener('click', () => {
+      setOpen(card, card.classList.contains('is-collapsed'));
+    });
+  });
+  phone.addEventListener('change', apply);
+  window.addEventListener('hashchange', () => {
+    const card = cards.find((c) => c.id === location.hash.slice(1));
+    if (card) setOpen(card, true);
+  });
+  apply();
+</script>
+
 <style>
   .svc {
     position: relative;
     margin-top: -16px;
-    padding: 3vw 0 60px;
+    padding: 3vw 0 80px;
     background-color: var(--c-cream);
     background-image: linear-gradient(180deg, #fff6ef 0%, #fffaf6 70%, #ffffff 100%);
   }
@@ -130,6 +167,7 @@ import vetIllustration from '../assets/uploads/2024/05/vet-06.png';
   .svc__link {
     display: inline-flex;
     align-items: center;
+    min-height: 44px;
     gap: 2px;
     color: var(--c-black);
     font-family: var(--f-head);
@@ -244,6 +282,21 @@ import vetIllustration from '../assets/uploads/2024/05/vet-06.png';
     line-height: 1.25;
   }
 
+  .svc-card__toggle {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+  }
+
+  .svc-card__content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+
   .svc-card__list {
     display: grid;
     gap: 8px;
@@ -309,10 +362,6 @@ import vetIllustration from '../assets/uploads/2024/05/vet-06.png';
     opacity: 1;
     background: var(--c-cta);
     color: var(--c-on-cta);
-  }
-
-  .svc__swipe {
-    display: none;
   }
 
   /* ---------- Výzva pod kartami ---------- */
@@ -395,7 +444,7 @@ import vetIllustration from '../assets/uploads/2024/05/vet-06.png';
   @media (max-width: 767px) {
     .svc {
       padding-top: 17vw;
-      padding-bottom: 40px;
+      padding-bottom: 48px;
     }
     .svc__title {
       font-size: 26px;
@@ -404,40 +453,59 @@ import vetIllustration from '../assets/uploads/2024/05/vet-06.png';
       font-size: 16px;
     }
 
-    /* Na mobilu vodorovný posuvný pás karet */
-    .svc__body {
-      width: 100%;
-    }
+    /* Na telefonu rozbalovací seznam: celá hlavička karty je tlačítko */
     .svc__grid {
-      display: flex;
-      gap: 14px;
-      padding: 6px 16px 18px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scroll-padding-left: 16px;
-      scrollbar-width: none;
-    }
-    .svc__grid::-webkit-scrollbar {
-      display: none;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
     }
     .svc-card {
-      flex: 0 0 82%;
-      scroll-snap-align: start;
+      padding: 14px 16px;
     }
     .svc-card:hover {
       transform: none;
     }
-    .svc__swipe {
-      display: block;
-      margin: 0 16px;
-      color: var(--c-hint);
-      font-family: var(--f-head);
-      font-size: 13px;
-      font-weight: 700;
-      text-align: right;
+    .svc-card__head {
+      position: relative;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding-right: 26px;
+    }
+    .svc-card__head::after {
+      content: '';
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid var(--c-accent-text);
+      border-bottom: 2px solid var(--c-accent-text);
+      transform: translateY(-70%) rotate(45deg);
+      transition: transform 200ms ease;
+      pointer-events: none;
+    }
+    .svc-card:not(.is-collapsed) .svc-card__head::after {
+      transform: translateY(-30%) rotate(225deg);
+    }
+    .svc-card__img {
+      width: 48px;
+      height: 48px;
+    }
+    .svc-card__title {
+      font-size: 17px;
+    }
+    .svc-card__toggle::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+    .svc-card.is-collapsed .svc-card__head {
+      margin-bottom: 0;
+    }
+    .svc-card.is-collapsed .svc-card__content {
+      display: none;
     }
     .svc-cta {
-      margin: 22px 16px 0;
+      margin-top: 20px;
       padding: 22px 20px;
     }
     .svc-cta__actions {

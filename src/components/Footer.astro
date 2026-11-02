@@ -2,7 +2,6 @@
 import { Image } from 'astro:assets';
 import { nav, site } from '../data/site';
 import Icon from './Icon.astro';
-import OpenStatus from './OpenStatus.astro';
 import logo from '../assets/uploads/2024/05/Upload-Image-removebg-preview.png';
 
 const year = new Date().getFullYear();
@@ -40,7 +39,7 @@ const hasCookieYes = import.meta.env.PUBLIC_PREVIEW !== '1';
           <Icon name="pin" size={16} />
           <a href={site.mapsUrl} target="_blank" rel="noopener">
             {site.address.street}<br />
-            <span class="nowrap">{site.address.city}, {site.address.zip}</span><br />
+            <span class="nowrap">{site.address.zip} {site.address.city}</span><br />
             <span class="footer-note">{site.address.note}</span>
           </a>
         </li>
@@ -67,7 +66,6 @@ const hasCookieYes = import.meta.env.PUBLIC_PREVIEW !== '1';
           ))
         }
       </dl>
-      <OpenStatus compact class="footer-status" />
     </div>
   </div>
 
@@ -143,8 +141,8 @@ const hasCookieYes = import.meta.env.PUBLIC_PREVIEW !== '1';
   .footer-social a {
     display: grid;
     place-items: center;
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background: var(--c-white);
     color: var(--c-ink);
@@ -180,7 +178,7 @@ const hasCookieYes = import.meta.env.PUBLIC_PREVIEW !== '1';
 
   .footer-links a {
     display: inline-block;
-    padding: 5px 0;
+    padding: 10px 0;
     color: var(--c-ink);
     font-size: 16px;
     font-weight: 600;
@@ -196,7 +194,7 @@ const hasCookieYes = import.meta.env.PUBLIC_PREVIEW !== '1';
 
   .footer-contact {
     display: grid;
-    gap: 12px;
+    gap: 0;
   }
 
   .footer-contact li {
@@ -210,12 +208,13 @@ const hasCookieYes = import.meta.env.PUBLIC_PREVIEW !== '1';
 
   .footer-contact :global(svg) {
     flex: none;
-    margin-top: 3px;
+    margin-top: 13px;
     color: var(--c-orange-deep);
   }
 
   .footer-contact a {
     min-width: 0;
+    padding: 10px 0;
     color: var(--c-ink);
     overflow-wrap: break-word;
   }
@@ -257,10 +256,6 @@ const hasCookieYes = import.meta.env.PUBLIC_PREVIEW !== '1';
     color: var(--c-ink);
     font-weight: 800;
     white-space: nowrap;
-  }
-
-  .footer-grid :global(.footer-status) {
-    margin-top: 10px;
   }
 
   .footer-bottom {

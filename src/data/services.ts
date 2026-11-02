@@ -56,7 +56,7 @@ export const services: Service[] = [
     id: 'prevence',
     title: 'Prevence',
     image: prevence,
-    items: ['Vakcinace psů a koček', 'Čipování', 'Vystavení evropského pasu', 'Preventivní diagnostika a geriatrická péče'],
+    items: ['Očkování (vakcinace) psů a koček', 'Čipování', 'Vystavení evropského pasu', 'Preventivní diagnostika a geriatrická péče'],
     articles: [
       { slug: 'cipovani-zvirat-co-potrebujete-vedet', label: 'Čipování' },
       { slug: 'centralni-evidence-psu-od-1-cervence-2026-co-potrebuji-vedet-majitele-psu', label: 'Centrální evidence psů' },

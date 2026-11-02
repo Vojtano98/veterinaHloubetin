@@ -235,6 +235,12 @@ b {
   padding: var(--section-pad) 0;
 }
 
+/* Přechod poslední sekce do patičky */
+.page-end {
+  position: relative;
+  height: 72px;
+}
+
 .row {
   position: relative;
   width: var(--row-w);

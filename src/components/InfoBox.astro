@@ -1,7 +1,6 @@
 ---
 import { site } from '../data/site';
 import Icon from './Icon.astro';
-import OpenStatus from './OpenStatus.astro';
 
 // Kompaktní box s adresou, telefonem a otevírací dobou (úvod + konec článků)
 interface Props {
@@ -24,9 +23,9 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
   <a class="tile" href={site.mapsUrl} target="_blank" rel="noopener">
     <span class="tile__icon"><Icon name="pin" size={20} /></span>
     <span class="tile__body">
-      <span class="tile__label">Kde nás najdete</span>
+      <span class="tile__label">Adresa</span>
       <span class="tile__value">
-        {site.address.street}<br /><span class="nowrap">{site.address.city} {site.address.zip}</span>
+        {site.address.street}<br /><span class="nowrap">{site.address.zip} {site.address.city}</span>
       </span>
       <span class="tile__hint">U metra Hloubětín</span>
       <span class="tile__action"><Icon name="pin" size={14} /> Navigovat</span>
@@ -36,7 +35,7 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
   <a class="tile" href={site.phones.main.href}>
     <span class="tile__icon"><Icon name="phone" size={20} /></span>
     <span class="tile__body">
-      <span class="tile__label">Ordinace a pohotovost</span>
+      <span class="tile__label">Telefon</span>
       <span class="tile__value nowrap">{site.phones.main.label}</span>
       <span class="tile__action"><Icon name="phone" size={14} /> Zavolat</span>
     </span>
@@ -56,7 +55,6 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
           ))
         }
       </dl>
-      <OpenStatus compact class="tile__status" />
     </span>
   </div>
 </div>
@@ -200,12 +198,6 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     color: var(--c-ink);
     font-weight: 800;
     white-space: nowrap;
-  }
-
-  .tile :global(.tile__status) {
-    align-self: flex-start;
-    margin-top: 10px;
-    font-size: 13px;
   }
 
   /* Varianta pod články: vycentrovaný nadpis, dlaždice pod ním */

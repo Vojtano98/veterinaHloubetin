@@ -4,7 +4,6 @@ import Base from '../layouts/Base.astro';
 import Wave from '../components/Wave.astro';
 import InfoBox from '../components/InfoBox.astro';
 import Reviews from '../components/Reviews.astro';
-import ContactCards from '../components/ContactCards.astro';
 import ServicesSection from '../components/ServicesSection.astro';
 import InfoSection from '../components/InfoSection.astro';
 import TeamSection from '../components/TeamSection.astro';
@@ -38,7 +37,7 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
         <div class="hero__actions" data-mobilebar-hide>
           <a class="hero__btn hero__btn--primary" href="/rezervace-sluzeb/">
             <Icon name="calendar" size={18} />
-            Objednat se online
+            Objednat se
           </a>
           <!-- Na mobilu rovnou vytočí číslo, na počítači vede na Kontakty -->
           <a class="hero__btn hero__btn--ghost hero__desktop" href="/kontakty/">
@@ -57,7 +56,7 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
       </div>
     </div>
     <div class="row row--wide hero__box">
-      <InfoBox title="Jsme tu vždy pro Vás a Vaše mazlíčky." />
+      <InfoBox title="Kde nás najdete" />
     </div>
     <Wave variant="curve" position="bottom" color="#FFFFFF" height="5vw" />
   </section>
@@ -80,7 +79,7 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
 
   <TeamSection />
 
-  <ContactCards />
+  <div class="page-end"><Wave variant="waves" position="bottom" color="#f3eded" height="72px" /></div>
 </Base>
 
 <style>
@@ -194,6 +193,7 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
 
   /* Textový odkaz na sekci služeb pod tlačítky */
   .hero__more {
+    min-height: 44px;
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -230,7 +230,7 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
 
   /* ---------- RECENZE ---------- */
   .reviews-section {
-    padding: 60px 0 18px;
+    padding: 80px 0 40px;
   }
 
   .reviews-section .row {
@@ -351,6 +351,7 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
       display: inline-flex;
     }
     .hero__more {
+    min-height: 44px;
       margin-top: 16px;
       font-size: 15px;
     }
@@ -358,7 +359,7 @@ const heroSm = await getImage({ src: heroDog, width: 800, format: 'webp', qualit
       padding-bottom: 20px;
     }
     .reviews-section {
-      padding-top: 40px;
+      padding: 48px 0 24px;
     }
     .reviews-title {
       font-size: 22px;

@@ -22,7 +22,7 @@ export const GET: APIRoute = async () => {
     '',
     '## Hlavní stránky',
     '',
-    `- [Rezervace služeb](${url('/rezervace-sluzeb/')}): online rezervace termínu`,
+    `- [Objednání](${url('/rezervace-sluzeb/')}): online objednání na termín`,
     `- [Ceník](${url('/cenik-zakroku-a-vysetreni/')}): ceny zákroků a vyšetření`,
     `- [Kontakty](${url('/kontakty/')}): adresa, telefon, otevírací doba a kontaktní formulář`,
     `- [Články](${url('/clanky/')}): rady pro majitele zvířat`,

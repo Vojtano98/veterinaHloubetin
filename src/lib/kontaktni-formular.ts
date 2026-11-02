@@ -27,7 +27,7 @@ export const consentError = (checked: boolean) => (checked ? '' : 'Pro odeslán�
 
 /** Výsledek odeslání bez JavaScriptu (odeslat.php přesměruje zpět s ?odeslano=…&chyba=…) */
 export function resultText(sent: string, reason: string | null): { ok: boolean; text: string } {
-  if (sent === '1') return { ok: true, text: 'Děkujeme, zpráva byla odeslána. Ozveme se Vám co nejdříve.' };
+  if (sent === '1') return { ok: true, text: 'Děkujeme, zpráva byla odeslána. Ozveme se vám co nejdříve.' };
   const texts: Record<string, string> = {
     pole: 'Zprávu se nepodařilo odeslat – některé povinné pole nebylo vyplněné správně. Vyplňte prosím formulář znovu.',
     rychle: 'Formulář byl odeslán příliš rychle. Vyplňte ho prosím znovu.',

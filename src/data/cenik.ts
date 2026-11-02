@@ -5,8 +5,8 @@ export type PriceSection = { title: string; subtitle?: string; items: { name: st
 
 export const cenik: PriceSection[] = [
   {
-    title: "Vakcinace psů",
-    subtitle: "(cena dle typu vakcíny)",
+    title: "Očkování psů",
+    subtitle: "(vakcinace, cena dle typu vakcíny)",
     items: [
       {
         name: "infekční choroby",
@@ -23,8 +23,8 @@ export const cenik: PriceSection[] = [
     ]
   },
   {
-    title: "Vakcinace koček",
-    subtitle: "(cena dle typu vakcíny)",
+    title: "Očkování koček",
+    subtitle: "(vakcinace, cena dle typu vakcíny)",
     items: [
       {
         name: "infekční choroby",
@@ -41,8 +41,8 @@ export const cenik: PriceSection[] = [
     ]
   },
   {
-    title: "Vakcinace králíků",
-    subtitle: "(cena dle typu vakcíny)",
+    title: "Očkování králíků",
+    subtitle: "(vakcinace, cena dle typu vakcíny)",
     items: [
       {
         name: "myxomatóza + králičí mor I. i II.",
@@ -62,31 +62,31 @@ export const cenik: PriceSection[] = [
         price: "2 200 Kč"
       },
       {
-        name: "fena – 1 – 10 kg (inhalační anestezie *)",
+        name: "fena 1–10 kg *",
         price: "7 000 – 8 000 Kč"
       },
       {
-        name: "fena – 10 – 20 kg (inhalační anestezie *)",
+        name: "fena 10–20 kg *",
         price: "9 000 Kč"
       },
       {
-        name: "fena – 20 – 40 kg (inhalační anestezie *)",
+        name: "fena 20–40 kg *",
         price: "10 000 Kč"
       },
       {
-        name: "fena – nad 40 kg (inhalační anestezie *)",
+        name: "fena nad 40 kg *",
         price: "od 12 000 Kč"
       },
       {
-        name: "pes – dle velikosti (inhalační anestezie *)",
+        name: "pes dle velikosti *",
         price: "6 000 – 8 000 Kč"
       },
       {
-        name: "králík – samice (inhalační anestezie *)",
+        name: "králík samice *",
         price: "4 000 Kč"
       },
       {
-        name: "králík – samec (inhalační anestezie *)",
+        name: "králík samec *",
         price: "2 500 Kč"
       }
     ],

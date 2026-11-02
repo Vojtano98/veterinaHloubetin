@@ -292,7 +292,7 @@ const id = (name: string) => `${source}-${name}-chyba`;
         if (res.ok && data.ok) {
           form.reset();
           ts.value = String(Math.floor(Date.now() / 1000));
-          setStatus('ok', 'Děkujeme, zpráva byla odeslána. Ozveme se Vám co nejdříve.');
+          setStatus('ok', 'Děkujeme, zpráva byla odeslána. Ozveme se vám co nejdříve.');
           (window as any).dataLayer?.push({ event: 'contactFormSubmit', formSource: form.zdroj?.value });
         } else {
           setStatus('error', data.error || 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu nebo nám zavolejte.');

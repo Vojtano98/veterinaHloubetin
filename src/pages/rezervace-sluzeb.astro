@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import ContactCards from '../components/ContactCards.astro';
+import Wave from '../components/Wave.astro';
 import Icon from '../components/Icon.astro';
 import { site } from '../data/site';
 ---
@@ -10,12 +10,12 @@ import { site } from '../data/site';
   title="Rezervace služeb"
   description="Vyberte si čas dle vaší potřeby a zarezervujte si návštěvu na naší klinice ještě dnes. Veterinární klinika Hloubětín – online objednání na vakcinaci, čipování i vyšetření."
 >
-  <PageHero title="Rezervace služeb" crumbs={[{ label: 'Rezervace služeb' }]} />
+  <PageHero title="Objednání online" crumbs={[{ label: 'Objednání' }]} />
 
   <section class="section rez">
     <div class="row">
-      <p class="rez__lead"><strong>Pro objednání na základní úkony vašeho mazlíka můžete využít tento objednávací formulář.</strong></p>
-      <p class="rez__note"><em>Je potřeba Vás objednat ke konkrétnímu doktorovi.</em> Nenajdete svůj požadavek ve formuláři? <a href="#jine-objednani">Objednejte se telefonicky</a>.</p>
+      <p class="rez__lead"><strong>Online se objednáte na základní úkony.</strong></p>
+      <p class="rez__note">Objednáváme vás ke konkrétnímu lékaři. Nenajdete svůj požadavek ve formuláři? <a href="#jine-objednani">Objednejte se telefonicky.</a></p>
 
       <div class="rez__widget" data-rez-widget>
         <!-- Rezervační formulář Reservanto -->
@@ -39,21 +39,21 @@ import { site } from '../data/site';
         <h2 class="rez__other-title">Kdy se objednat telefonicky nebo e-mailem</h2>
         <div class="rez__other-grid">
           <div class="rez__text">
+            <ul>
+              <li>kontrola</li>
+              <li>potíže, které ve formuláři nenajdete</li>
+              <li>plazi (MVDr. Pavelková)</li>
+              <li>nemocní drobní savci (MVDr. Škubal)</li>
+            </ul>
             <p>
-              Pro objednání na kontrolu, s jinými problémy, než najdete ve formuláři, nebo pro objednání s
-              <strong>PLAZY (MVDr. Pavelková)</strong> či nemocnými <strong>DROBNÝMI SAVCI (MVDr. Škubal)</strong>, prosím využijte
-              telefon nebo <strong><a href="/kontakty/#napiste-nam">kontaktní formulář</a></strong> v záložce <strong>„Kontakty“</strong>.
+              Když telefon nezvedáme, máme plné ruce pacienta v ordinaci. V neakutních případech nám pošlete
+              <a href={`mailto:${site.email}`}>e-mail</a> s telefonním číslem a požadavkem, nebo napište přes
+              <a href="/kontakty/#napiste-nam">kontaktní formulář</a>. Zavoláme vám co nejdříve zpět.
             </p>
-            <p>
-              V případě, že telefon nezvedáme, máme jak doktor, tak sestřička plné ruce pacienta v ordinaci.<br />
-              V neakutních případech nám tedy prosím zašlete <strong><a href={`mailto:${site.email}`}>email</a></strong> s
-              telefonním číslem a Vaším požadavkem – zavoláme Vám co nejdříve zpět.
-            </p>
-            <p><strong>Děkujeme</strong></p>
           </div>
           <ul class="rez__phones">
             <li>
-              <span class="rez__phones-label">Objednání, ordinace a pohotovost</span>
+              <span class="rez__phones-label">Telefon</span>
               <a class="rez__phones-num" href={site.phones.main.href}><Icon name="phone" size={18} />{site.phones.main.label}</a>
             </li>
             <li>
@@ -66,7 +66,7 @@ import { site } from '../data/site';
     </div>
   </section>
 
-  <ContactCards />
+  <div class="page-end"><Wave variant="waves" position="bottom" color="#f3eded" height="72px" /></div>
 </Base>
 
 <script>
@@ -166,6 +166,11 @@ import { site } from '../data/site';
     font-family: var(--f-head);
     font-size: 16px;
     line-height: 1.75em;
+  }
+
+  .rez__text ul {
+    margin: 0 0 14px;
+    padding-left: 20px;
   }
 
   .rez__phones {

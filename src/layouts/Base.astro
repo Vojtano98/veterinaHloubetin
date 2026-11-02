@@ -218,12 +218,10 @@ const ld = [org, website, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd
     transform: none;
   }
 
+  /* Na telefonu je dole lišta s tlačítky, šipka by překrývala obsah */
   @media (max-width: 767px) {
     .to-top {
-      right: 12px;
-      bottom: calc(80px + env(safe-area-inset-bottom));
-      width: 40px;
-      height: 40px;
+      display: none;
     }
   }
 </style>

@@ -28,13 +28,11 @@ const hours = site.hours.map((h) => ({
   </a>
   <a class="info-bar__hours" href="/kontakty/" data-regular>
     <span class="info-bar__full">
-      Standardní provoz:
       {hours.map((h, i) => (
         <>
-          <span class="nowrap" data-days={h.days}>{h.full}</span>{i < hours.length - 1 ? ', ' : '.'}
+          <span class="nowrap" data-days={h.days}>{h.full}</span>{i < hours.length - 1 ? ', ' : ''}
         </>
       ))}
-      <strong>Těšíme se na Vás.</strong>
     </span>
     <span class="info-bar__short">
       {hours.map((h, i) => (
@@ -135,6 +133,10 @@ const hours = site.hours.map((h) => ({
   }
 
   @media (max-width: 767px) {
+    /* Hodiny jsou na telefonu v pilulce v hlavičce, lišta zůstává jen pro mimořádná oznámení */
+    .info-bar:not(.is-special) {
+      display: none;
+    }
     .info-bar {
       font-size: 14px;
       padding: 7px 10px;

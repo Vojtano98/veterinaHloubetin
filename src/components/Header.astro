@@ -29,7 +29,7 @@ const isActive = (href: string) => {
       <ul id="menu" class="menu" data-menu>
         {
           nav.map((item) => (
-            <li>
+            <li class:list={{ 'menu__desktop': item.href === '/rezervace-sluzeb/' }}>
               <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
                 {item.label}
               </a>
@@ -37,6 +37,7 @@ const isActive = (href: string) => {
           ))
         }
         <li class="menu__mobile-cta">
+          <a class="menu__book" href="/rezervace-sluzeb/">Objednat se</a>
           <a class="menu__call" href={site.phones.main.href}>Zavolat {site.phones.main.label}</a>
         </li>
       </ul>
@@ -192,16 +193,15 @@ const isActive = (href: string) => {
     opacity: 0.85;
   }
 
-  /* Tlačítko v hlavičce jen tam, kde se vejde vedle menu */
-  /* Co se vejde vedle menu: od 1360 px ukazatel i tlačítko, od 1120 px jen ukazatel */
-  @media (max-width: 1359px) and (min-width: 981px) {
-    .header-cta {
-      display: none;
+  /* Užší počítače: hlavička využije víc šířky okna, aby se vešla pilulka i tlačítko */
+  @media (min-width: 981px) and (max-width: 1239px) {
+    .header-row {
+      width: 92%;
     }
   }
 
-  @media (max-width: 1119px) and (min-width: 981px) {
-    .header-status {
+  @media (min-width: 981px) and (max-width: 1079px) {
+    .header-cta {
       display: none;
     }
   }
@@ -259,19 +259,23 @@ const isActive = (href: string) => {
       font-size: 13px;
     }
 
+    /* Panel přes celou šířku okna: vztahuje se k hlavičce, ne k řádku s obsahem */
+    .header-row {
+      position: static;
+    }
+
     .menu {
       position: absolute;
       top: 100%;
-      left: 10%;
-      right: 10%;
+      left: 0;
+      right: 0;
       display: none;
       flex-direction: column;
       flex-wrap: nowrap;
       gap: 0;
-      padding: 5% 0;
+      padding: 8px 0 16px;
       background: var(--c-white);
       border-top: 3px solid var(--c-orange);
-      border-radius: 0 0 10px 10px;
       box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.2);
     }
 
@@ -279,12 +283,27 @@ const isActive = (href: string) => {
       display: flex;
     }
 
+    /* Ztmavení stránky pod panelem, klik na něj menu zavře */
+    .menu.is-open::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.45);
+    }
+
+    .menu__desktop {
+      display: none;
+    }
+
     .menu a,
     .menu li:last-child a,
     .is-scrolled .menu a {
-      padding: 13px 5%;
+      padding: 15px 24px;
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      font-size: 15px;
+      font-size: 16px;
     }
 
     .menu a::after {
@@ -292,19 +311,29 @@ const isActive = (href: string) => {
     }
 
     .menu__mobile-cta {
+      display: grid;
+      gap: 8px;
+      padding: 16px 24px 0;
+    }
+
+    .menu .menu__book,
+    .menu .menu__call {
       display: block;
-      padding: 14px 5% 4px;
+      padding: 14px 16px;
+      border: 0;
+      border-radius: 100px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .menu .menu__book {
+      background: var(--c-cta);
+      color: var(--c-on-cta);
     }
 
     .menu .menu__call {
-      display: block;
-      padding: 12px 16px;
-      border: 0;
-      border-radius: 100px;
       background: var(--c-cream);
       color: var(--c-accent-text);
-      font-weight: 800;
-      text-align: center;
     }
   }
 
@@ -358,7 +387,7 @@ const isActive = (href: string) => {
   }
 
   /* Velmi úzké telefony (starší Androidy, zavřený Galaxy Fold): pilulka se vedle loga a menu nevejde,
-     stav provozu zůstává v boxu kontaktů a na stránce Kontakty */
+     stav provozu zůstává na stránce Kontakty */
   @media (max-width: 340px) {
     .header-status {
       display: none;
@@ -403,7 +432,7 @@ const isActive = (href: string) => {
     };
     burger.addEventListener('click', () => setOpen(burger.getAttribute('aria-expanded') !== 'true'));
     menu.addEventListener('click', (e) => {
-      if ((e.target as HTMLElement).closest('a')) setOpen(false);
+      if (e.target === menu || (e.target as HTMLElement).closest('a')) setOpen(false);
     });
     // Esc zavře menu a vrátí kurzor na tlačítko, ať návštěvník s klávesnicí neztratí místo na stránce
     document.addEventListener('keydown', (e) => {

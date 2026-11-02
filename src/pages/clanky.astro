@@ -4,7 +4,6 @@ import PageHero from '../components/PageHero.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import Reviews from '../components/Reviews.astro';
 import InfoBox from '../components/InfoBox.astro';
-import ContactCards from '../components/ContactCards.astro';
 import Wave from '../components/Wave.astro';
 import { animals, getArticles } from '../lib/articles';
 import { site } from '../data/site';
@@ -48,7 +47,7 @@ const jsonLd = [
   jsonLd={jsonLd}
   section="clanky"
 >
-  <PageHero title="Články" subtitle="a další zajímavá témata" crumbs={[{ label: 'Články' }]} />
+  <PageHero title="Články" subtitle="Rady pro majitele zvířat" crumbs={[{ label: 'Články' }]} />
 
   <section class="listing" aria-label="Seznam článků">
     <Wave variant="arch" position="top" color="#FFFFFF" height="54vw" class="listing__wave" />
@@ -86,7 +85,7 @@ const jsonLd = [
     </div>
   </section>
 
-  <ContactCards />
+  <div class="page-end"><Wave variant="waves" position="bottom" color="#f3eded" height="72px" /></div>
 </Base>
 
 <script>

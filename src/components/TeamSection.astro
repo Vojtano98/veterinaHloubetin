@@ -80,7 +80,7 @@ const nurses = team.filter((m) => !m.doctor && m.photo);
 
 <style>
   .crew {
-    padding: 40px 0 50px;
+    padding: 80px 0 40px;
     background-image: linear-gradient(180deg, rgba(255, 246, 239, 0) 0%, #fff6ef 30%, #fff7f4 85%, rgba(255, 255, 255, 0) 100%);
   }
 
@@ -328,7 +328,7 @@ const nurses = team.filter((m) => !m.doctor && m.photo);
 
   @media (max-width: 767px) {
     .crew {
-      padding: 30px 0 36px;
+      padding: 48px 0 16px;
     }
     .crew__title {
       font-size: 30px;
@@ -336,15 +336,19 @@ const nurses = team.filter((m) => !m.doctor && m.photo);
     .crew__lead {
       font-size: 16px;
     }
+    /* Fotka vedle textu, ať dva lékaři nezaberou několik obrazovek */
     .doc {
-      grid-template-columns: 1fr;
+      grid-template-columns: 112px minmax(0, 1fr);
     }
     .doc__photo {
       min-height: 0;
-      aspect-ratio: 4 / 3;
     }
     .doc__body {
-      padding: 20px;
+      padding: 14px;
+    }
+    .doc__name {
+      padding: 8px 0;
+      font-size: 18px;
     }
     /* Všechny sestry vedle sebe i na telefonu */
     .crew__nurses {
