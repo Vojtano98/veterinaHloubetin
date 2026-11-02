@@ -62,6 +62,11 @@ else if (indexed) {
 } else if (!robotsLines.includes('Disallow: /') || robotsLines.includes('Allow: /')) {
   fail('robots.txt nezakazuje procházení celého webu, ačkoli stránky jsou noindex');
 }
+if (indexed) {
+  const llms = read('llms.txt') ?? '';
+  if (!llms.startsWith('# ') || !llms.includes('## Články')) fail('llms.txt chybí nebo nemá očekávanou strukturu');
+  if (expectedOrigin && !llms.includes(`${expectedOrigin}/kontakty/`)) fail('llms.txt neodkazuje na adresu webu');
+}
 if (htaccess !== null && xRobots === indexed) {
   fail(indexed ? '.htaccess obsahuje X-Robots-Tag – ostrý web by se neindexoval' : '.htaccess neobsahuje X-Robots-Tag: noindex');
 }

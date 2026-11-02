@@ -44,7 +44,7 @@ ErrorDocument 404 /404.html
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^(wp-content/uploads/.+)-[0-9]+x[0-9]+\.(jpe?g|png|webp)$ /$1.$2 [L,R=301]
   # Sitemapy z pluginu Yoast
-  RewriteRule ^(sitemap_index|wp-sitemap|post-sitemap|page-sitemap|category-sitemap)\.xml$ /sitemap-index.xml [L,R=301]
+  RewriteRule ^(sitemap|sitemap_index|wp-sitemap|post-sitemap|page-sitemap|category-sitemap)\.xml$ /sitemap-index.xml [L,R=301]
   # Administrace WordPressu už neexistuje
   RewriteRule ^(wp-admin|wp-login\.php|xmlrpc\.php) - [G,L]
 
@@ -84,6 +84,10 @@ ErrorDocument 404 /404.html
   </FilesMatch>
   <FilesMatch "\.(html|xml|txt)$">
     Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+  # robots.txt a llms.txt obsahují češtinu
+  <FilesMatch "\.txt$">
+    Header set Content-Type "text/plain; charset=utf-8"
   </FilesMatch>
 </IfModule>
 

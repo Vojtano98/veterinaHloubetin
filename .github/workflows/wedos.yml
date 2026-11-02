@@ -32,6 +32,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Celá historie: sitemapa bere datum změny stránek z gitu
+          fetch-depth: 0
       - name: Jsou nastavené přístupy?
         id: pristup
         env:

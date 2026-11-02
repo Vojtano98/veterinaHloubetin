@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -63,6 +64,23 @@ const articleDates = Object.fromEntries(
     }),
 );
 
+// Ostatní stránky: datum posledního commitu souborů, ze kterých vznikají
+const gitDate = (...files) => {
+  try {
+    return new Date(execSync(`git log -1 --format=%cI -- ${files.join(' ')}`, { encoding: 'utf8' }).trim()).toISOString();
+  } catch {
+    return undefined;
+  }
+};
+const pageDates = {
+  '/': gitDate('src/pages/index.astro', 'src/data/services.ts', 'src/data/team.ts', 'src/data/reviews.json'),
+  '/cenik-zakroku-a-vysetreni/': gitDate('src/pages/cenik-zakroku-a-vysetreni.astro', 'src/data/cenik.ts'),
+  '/clanky/': gitDate('src/pages/clanky.astro', 'src/content/clanky'),
+  '/kontakty/': gitDate('src/pages/kontakty.astro'),
+  '/ochrana-osobnich-udaju/': gitDate('src/pages/ochrana-osobnich-udaju.astro', 'src/content/stranky/ochrana-osobnich-udaju.md'),
+  '/rezervace-sluzeb/': gitDate('src/pages/rezervace-sluzeb.astro'),
+};
+
 // Náhled na GitHub Pages běží v podsložce (např. /veterinaHloubetin/), produkce v kořeni domény
 const base = process.env.BASE_PATH || '/';
 
@@ -77,8 +95,11 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
+      // Sitemapa je jen seznam stránek, jmenné prostory pro zprávy, obrázky a videa nepotřebuje
+      namespaces: { news: false, xhtml: false, image: false, video: false },
       serialize(item) {
-        const lastmod = articleDates[new URL(item.url).pathname];
+        const { pathname } = new URL(item.url);
+        const lastmod = articleDates[pathname] ?? pageDates[pathname];
         return lastmod ? { ...item, lastmod } : item;
       },
     }),

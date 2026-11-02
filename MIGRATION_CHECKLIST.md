@@ -169,7 +169,7 @@ Když cokoli z bodů 1–3 selže a nejde to opravit do 30 minut, následuje [pl
 - Obsah je v čistém HTML bez závislosti na JavaScriptu, `robots.txt` nikoho neomezuje.
 - Klinika je popsaná jako `VeterinaryCare` s adresou, GPS, hodinami, spádovou oblastí a odkazy na profily (`sameAs`).
 - Články mají autora, shrnutí na začátku, otázky a odpovědi (`FAQPage`) a datum aktualizace.
-- `llms.txt` záměrně není: velcí poskytovatelé nepotvrdili, že ho používají, a robots a sitemapa pokrývají totéž.
+- `llms.txt` shrnuje kliniku, služby a články v Markdownu a vzniká z dat webu při každém sestavení. Velcí poskytovatelé nepotvrdili, že ho používají, je to levné doplnění, ne náhrada za robots a sitemapu.
 
 Další růst už nezáleží na technice, ale na recenzích, zmínkách na jiných webech a pravidelných článcích.
 
