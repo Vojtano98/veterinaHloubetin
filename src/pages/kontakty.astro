@@ -68,8 +68,8 @@ const jsonLd = {
           <Icon name="mail" size={26} class="blurb__icon" />
           <div>
             <h2 class="blurb__title">E-mail</h2>
-            <p><a class="u" href={`mailto:${site.email}`}>{site.email}</a></p>
-            <p><a class="u" href="#napiste-nam">Napsat zprávu přes formulář</a></p>
+            <p><a class="blurb__phone blurb__mail" href={`mailto:${site.email}`}>{site.email.split('@')[0]}@<wbr />{site.email.split('@')[1]}</a></p>
+            <a class="blurb__action" href="#napiste-nam">Napsat zprávu</a>
           </div>
         </div>
       </div>
@@ -195,9 +195,9 @@ const jsonLd = {
     border-radius: 16px;
     background: var(--c-white);
     box-shadow: 0 10px 30px -22px rgba(0, 0, 0, 0.35);
-    color: var(--c-text);
+    color: var(--c-ink);
     font-family: var(--f-head);
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
     line-height: 1.6;
     transition: border-color 200ms ease, transform 200ms ease;
@@ -221,7 +221,7 @@ const jsonLd = {
 
   .blurb__title {
     padding-bottom: 2px;
-    color: var(--c-label);
+    color: var(--c-accent-text);
     font-family: var(--f-head);
     font-size: 13px;
     font-weight: 800;
@@ -249,6 +249,28 @@ const jsonLd = {
     color: var(--c-accent-text);
   }
 
+  .blurb__mail {
+    font-size: 18px;
+  }
+
+  .blurb__action {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 10px;
+    padding: 0 20px;
+    border-radius: 100px;
+    background: var(--c-cta);
+    color: var(--c-on-cta);
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .blurb__action:hover {
+    opacity: 1;
+    background: var(--c-cta-hover);
+  }
+
   .u {
     color: inherit;
     text-decoration: underline;
@@ -257,9 +279,9 @@ const jsonLd = {
 
   .directions {
     padding: 24px 26px;
-    color: var(--c-text);
+    color: var(--c-ink);
     font-family: var(--f-head);
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 500;
   }
 
@@ -276,7 +298,7 @@ const jsonLd = {
     align-items: center;
     gap: 6px;
     padding: 8px 0 2px;
-    color: var(--c-label);
+    color: var(--c-accent-text);
     font-family: var(--f-head);
     font-size: 13px;
     font-weight: 800;
