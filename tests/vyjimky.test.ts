@@ -168,12 +168,12 @@ describe('openStatus – pilulka Otevřeno / Zavřeno', () => {
   const stav = (list: Vyjimka[], iso: string, compact = true) => openStatus(rozvrh, list, compact, at(iso));
 
   test('běžný den: před otevřením, otevřeno, po zavření', () => {
-    assert.deepEqual(stav([], '2026-11-03T07:30:00+01:00'), { open: false, emergency: false, text: 'Zavřeno · dnes 8:00' });
+    assert.deepEqual(stav([], '2026-11-03T07:30:00+01:00'), { open: false, emergency: false, text: 'Otevíráme dnes v 8:00' });
     assert.deepEqual(stav([], '2026-11-03T12:00:00+01:00'), { open: true, emergency: false, text: 'Otevřeno do 19:00' });
-    assert.deepEqual(stav([], '2026-11-03T19:00:00+01:00'), { open: false, emergency: false, text: 'Zavřeno · zítra 8:00' });
+    assert.deepEqual(stav([], '2026-11-03T19:00:00+01:00'), { open: false, emergency: false, text: 'Otevíráme zítra v 8:00' });
   });
   test('o půlnoci je 0:00, ne 24:00', () => {
-    assert.equal(stav([], '2026-11-03T00:00:00+01:00').text, 'Zavřeno · dnes 8:00');
+    assert.equal(stav([], '2026-11-03T00:00:00+01:00').text, 'Otevíráme dnes v 8:00');
   });
   test('dlouhý text', () => {
     assert.equal(stav([], '2026-11-03T12:00:00+01:00', false).text, 'Nyní otevřeno · zavíráme v 19:00');
@@ -181,9 +181,9 @@ describe('openStatus – pilulka Otevřeno / Zavřeno', () => {
   });
   test('jiné hodiny a zavřeno přeskočí na další otevřený den', () => {
     const list: Vyjimka[] = [{ kind: 'hodiny', date: '2026-10-29', opens: '09:00', closes: '19:00' }, { kind: 'hodiny', date: '2026-12-24' }, { kind: 'hodiny', date: '2026-12-25' }];
-    assert.equal(stav(list, '2026-10-29T08:30:00+01:00').text, 'Zavřeno · dnes 9:00');
-    assert.equal(stav(list, '2026-10-28T20:00:00+01:00').text, 'Zavřeno · zítra 9:00');
-    assert.equal(stav(list, '2026-12-23T20:00:00+01:00').text, 'Zavřeno · so 8:00');
+    assert.equal(stav(list, '2026-10-29T08:30:00+01:00').text, 'Otevíráme dnes v 9:00');
+    assert.equal(stav(list, '2026-10-28T20:00:00+01:00').text, 'Otevíráme zítra v 9:00');
+    assert.equal(stav(list, '2026-12-23T20:00:00+01:00').text, 'Otevíráme v sobotu v 8:00');
   });
   test('probíhající a dnešní pohotovost', () => {
     const list: Vyjimka[] = [{ from: '2026-11-07T20:30:00+01:00', to: '2026-11-08T08:00:00+01:00' }];
@@ -194,8 +194,8 @@ describe('openStatus – pilulka Otevřeno / Zavřeno', () => {
   });
   test('v noci změny času zůstává „zítra“ správný den (dřív přeskakoval)', () => {
     const zima: Vyjimka[] = [{ kind: 'hodiny', date: '2026-10-25' }];
-    assert.equal(stav(zima, '2026-10-25T00:15:00+02:00').text, 'Zavřeno · zítra 8:00');
+    assert.equal(stav(zima, '2026-10-25T00:15:00+02:00').text, 'Otevíráme zítra v 8:00');
     const leto: Vyjimka[] = [{ kind: 'hodiny', date: '2027-03-28' }, { kind: 'hodiny', date: '2027-03-29', opens: '10:00', closes: '14:00' }];
-    assert.equal(stav(leto, '2027-03-27T23:15:00+01:00').text, 'Zavřeno · po 10:00');
+    assert.equal(stav(leto, '2027-03-27T23:15:00+01:00').text, 'Otevíráme v pondělí v 10:00');
   });
 });

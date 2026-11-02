@@ -124,7 +124,6 @@ export const untilText = (to: Date, now = new Date()) => `${until(to, now)}${tim
 export type Rozvrh = ([string, string] | null)[];
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const dayShort = ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'];
 
 const toMin = (t: string) => {
   const [h, m] = t.split(':').map(Number);
@@ -161,15 +160,13 @@ export function openStatus(schedule: Rozvrh, list: Vyjimka[], compact: boolean, 
   if (open) {
     text = compact ? `Otevřeno do ${fmt(today![1])}` : `Nyní otevřeno · zavíráme v ${fmt(today![1])}`;
   } else if (opensLaterToday) {
-    text = compact ? `Zavřeno · dnes ${fmt(today![0])}` : `Nyní zavřeno · otevíráme dnes v ${fmt(today![0])}`;
+    text = compact ? `Otevíráme dnes v ${fmt(today![0])}` : `Nyní zavřeno · otevíráme dnes v ${fmt(today![0])}`;
   } else {
     for (let i = 1; i <= 7; i++) {
       const hours = hoursIn(i);
       if (!hours) continue;
-      const d = (day + i) % 7;
-      text = compact
-        ? `Zavřeno · ${i === 1 ? 'zítra' : dayShort[d]} ${fmt(hours[0])}`
-        : `Nyní zavřeno · otevíráme ${i === 1 ? 'zítra' : dayIn[d]} v ${fmt(hours[0])}`;
+      const when = `${i === 1 ? 'zítra' : dayIn[(day + i) % 7]} v ${fmt(hours[0])}`;
+      text = compact ? `Otevíráme ${when}` : `Nyní zavřeno · otevíráme ${when}`;
       break;
     }
   }
