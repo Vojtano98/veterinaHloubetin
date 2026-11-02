@@ -137,12 +137,12 @@ function nowInPrague(d: Date) {
   return { day: WEEKDAYS.indexOf(get('weekday')), min: Number(get('hour')) * 60 + Number(get('minute')) };
 }
 
-/** Stav pro pilulku „Otevřeno / Zavřeno“; compact = krátký text do hlavičky a patičky */
+/** Stav pro pilulku „Otevřeno / Zavřeno“; compact = dva řádky do hlavičky a patičky (title a pod ním text) */
 export function openStatus(schedule: Rozvrh, list: Vyjimka[], compact: boolean, now = new Date()) {
   const ex = current(list, now);
   if (ex) {
-    const text = compact ? `Pohotovost do ${time(ex.to)}` : `Mimořádná pohotovost · do ${untilText(ex.to, now)}`;
-    return { open: false, emergency: true, text };
+    const text = compact ? `Do ${untilText(ex.to, now)}` : `Mimořádná pohotovost · do ${untilText(ex.to, now)}`;
+    return { open: false, emergency: true, title: compact ? 'Pohotovost' : '', text };
   }
 
   const { day, min } = nowInPrague(now);
@@ -156,9 +156,10 @@ export function openStatus(schedule: Rozvrh, list: Vyjimka[], compact: boolean, 
   const today = hoursIn(0);
   const open = Boolean(today && min >= toMin(today[0]) && min < toMin(today[1]));
   const opensLaterToday = Boolean(today && min < toMin(today[0]));
+  const title = !compact ? '' : open ? 'Otevřeno' : 'Zavřeno';
   let text = '';
   if (open) {
-    text = compact ? `Otevřeno do ${fmt(today![1])}` : `Nyní otevřeno · zavíráme v ${fmt(today![1])}`;
+    text = compact ? `Zavíráme v ${fmt(today![1])}` : `Nyní otevřeno · zavíráme v ${fmt(today![1])}`;
   } else if (opensLaterToday) {
     text = compact ? `Otevíráme dnes v ${fmt(today![0])}` : `Nyní zavřeno · otevíráme dnes v ${fmt(today![0])}`;
   } else {
@@ -174,10 +175,10 @@ export function openStatus(schedule: Rozvrh, list: Vyjimka[], compact: boolean, 
   // Po zavírací době, ale ještě dnes začne mimořádná pohotovost: oranžově, ne červeně jako „zavřeno“
   const later = laterToday(list, now);
   if (!open && later && !opensLaterToday) {
-    const text = compact ? `Pohotovost od ${time(later.from)}` : `Dnes mimořádná pohotovost od ${time(later.from)}`;
-    return { open: false, emergency: true, text };
+    const text = compact ? `Dnes od ${time(later.from)}` : `Dnes mimořádná pohotovost od ${time(later.from)}`;
+    return { open: false, emergency: true, title: compact ? 'Pohotovost' : '', text };
   }
-  return { open, emergency: false, text };
+  return { open, emergency: false, title, text };
 }
 
 const ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(Z|[+-]\d{2}:\d{2})$/;

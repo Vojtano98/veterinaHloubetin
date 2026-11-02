@@ -20,7 +20,10 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
   hidden
 >
   <span class="open-status__dot" aria-hidden="true"></span>
-  <span data-open-text></span>
+  <span class="open-status__text">
+    <strong class="open-status__title" data-open-title hidden></strong>
+    <span data-open-text></span>
+  </span>
 </p>
 
 <style>
@@ -40,10 +43,27 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
   }
 
   .open-status--compact {
-    gap: 6px;
-    padding: 4px 10px;
-    font-size: 12px;
+    gap: 8px;
+    padding: 4px 12px 4px 10px;
+    border-radius: 14px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.25;
     white-space: nowrap;
+  }
+
+  .open-status__text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .open-status__title {
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .open-status__title[hidden] {
+    display: none;
   }
 
   .open-status--compact .open-status__dot {
@@ -96,6 +116,9 @@ const { class: className, compact = false } = Astro.props as { class?: string; c
     const schedule: Rozvrh = JSON.parse(el.dataset.schedule || '[]');
     const vyjimky: Vyjimka[] = JSON.parse(el.dataset.vyjimky || '[]');
     const status = openStatus(schedule, vyjimky, el.dataset.compact === '1');
+    const title = el.querySelector<HTMLElement>('[data-open-title]')!;
+    title.textContent = status.title;
+    title.hidden = !status.title;
     el.querySelector<HTMLElement>('[data-open-text]')!.textContent = status.text;
     el.classList.toggle('is-open', status.open);
     el.classList.toggle('is-emergency', status.emergency);

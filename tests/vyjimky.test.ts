@@ -168,9 +168,9 @@ describe('openStatus – pilulka Otevřeno / Zavřeno', () => {
   const stav = (list: Vyjimka[], iso: string, compact = true) => openStatus(rozvrh, list, compact, at(iso));
 
   test('běžný den: před otevřením, otevřeno, po zavření', () => {
-    assert.deepEqual(stav([], '2026-11-03T07:30:00+01:00'), { open: false, emergency: false, text: 'Otevíráme dnes v 8:00' });
-    assert.deepEqual(stav([], '2026-11-03T12:00:00+01:00'), { open: true, emergency: false, text: 'Otevřeno do 19:00' });
-    assert.deepEqual(stav([], '2026-11-03T19:00:00+01:00'), { open: false, emergency: false, text: 'Otevíráme zítra v 8:00' });
+    assert.deepEqual(stav([], '2026-11-03T07:30:00+01:00'), { open: false, emergency: false, title: 'Zavřeno', text: 'Otevíráme dnes v 8:00' });
+    assert.deepEqual(stav([], '2026-11-03T12:00:00+01:00'), { open: true, emergency: false, title: 'Otevřeno', text: 'Zavíráme v 19:00' });
+    assert.deepEqual(stav([], '2026-11-03T19:00:00+01:00'), { open: false, emergency: false, title: 'Zavřeno', text: 'Otevíráme zítra v 8:00' });
   });
   test('o půlnoci je 0:00, ne 24:00', () => {
     assert.equal(stav([], '2026-11-03T00:00:00+01:00').text, 'Otevíráme dnes v 8:00');
@@ -178,6 +178,7 @@ describe('openStatus – pilulka Otevřeno / Zavřeno', () => {
   test('dlouhý text', () => {
     assert.equal(stav([], '2026-11-03T12:00:00+01:00', false).text, 'Nyní otevřeno · zavíráme v 19:00');
     assert.equal(stav([], '2026-11-07T13:00:00+01:00', false).text, 'Nyní zavřeno · otevíráme zítra v 16:00');
+    assert.equal(stav([], '2026-11-07T13:00:00+01:00', false).title, '');
   });
   test('jiné hodiny a zavřeno přeskočí na další otevřený den', () => {
     const list: Vyjimka[] = [{ kind: 'hodiny', date: '2026-10-29', opens: '09:00', closes: '19:00' }, { kind: 'hodiny', date: '2026-12-24' }, { kind: 'hodiny', date: '2026-12-25' }];
@@ -187,9 +188,9 @@ describe('openStatus – pilulka Otevřeno / Zavřeno', () => {
   });
   test('probíhající a dnešní pohotovost', () => {
     const list: Vyjimka[] = [{ from: '2026-11-07T20:30:00+01:00', to: '2026-11-08T08:00:00+01:00' }];
-    assert.deepEqual(stav(list, '2026-11-07T21:00:00+01:00'), { open: false, emergency: true, text: 'Pohotovost do 8:00' });
+    assert.deepEqual(stav(list, '2026-11-07T21:00:00+01:00'), { open: false, emergency: true, title: 'Pohotovost', text: 'Do zítřka 8:00' });
     assert.equal(stav(list, '2026-11-07T21:00:00+01:00', false).text, 'Mimořádná pohotovost · do zítřka 8:00');
-    assert.deepEqual(stav(list, '2026-11-07T13:00:00+01:00'), { open: false, emergency: true, text: 'Pohotovost od 20:30' });
+    assert.deepEqual(stav(list, '2026-11-07T13:00:00+01:00'), { open: false, emergency: true, title: 'Pohotovost', text: 'Dnes od 20:30' });
     assert.equal(stav(list, '2026-11-07T10:00:00+01:00').open, true);
   });
   test('v noci změny času zůstává „zítra“ správný den (dřív přeskakoval)', () => {
