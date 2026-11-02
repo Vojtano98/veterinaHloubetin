@@ -22,6 +22,8 @@ Oddíl **G** je plán návratu, **H** kontrolní příkazy.
 
   Starý WordPress posílá přes plugin Easy WP SMTP, proto se ho to netýká.
 
+  Záznam je nastavený od 2. 11. 2026. Zkušební zpráva z test.veterinahloubetin.cz dorazila do ordinace: SPF, DKIM i DMARC prošly, spam skóre −7,23, diakritika i Reply-To v pořádku.
+
 **Porovnání živého WordPressu s novým webem** (všech 20 stránek ze sitemapy):
 
 | Co | Výsledek |
