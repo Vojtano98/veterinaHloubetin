@@ -51,7 +51,7 @@ Oddíl **G** je plán návratu, **H** kontrolní příkazy.
 | ☐ | Příjemce e-mailů z formuláře | klinika | výchozí `ordinace@veterinahloubetin.cz` |
 | ☐ | Mapa a logo Firmy.cz až po souhlasu s cookies? | klinika | P1-6 |
 | ☐ | Povinný souhlas u formuláře, nebo informační věta | klinika | P2-4 |
-| ☐ | **Hlavní telefon:** starý web používá v části odkazů `+420 281 863 796`, nový všude `+420 773 665 751`. Potvrdit, že je to správně | klinika | stejné číslo musí být na Google profilu a Firmy.cz (E4) |
+| ☑ | **Hlavní telefon:** `+420 773 665 751`, pevná linka `+420 281 863 796` byla z webu odstraněna dřív | rozhodnuto | stejné číslo musí být na Google profilu a Firmy.cz (E4) |
 | ☐ | Sklik retargeting zapnout/vypnout | klinika | z auditu GTM |
 | ☐ | Termín výměny: **úterý nebo středa po 19:00** | vy | druhý den je čas na opravy, ne v pátek |
 
@@ -59,15 +59,15 @@ Oddíl **G** je plán návratu, **H** kontrolní příkazy.
 
 1. ☐ **Soubory:** přes FileZillu stáhnout celou složku `www/domains/veterinahloubetin.cz/` do počítače. Soubor `www/.htaccess` zvlášť.
 2. ☐ **Databáze:** administrace WEDOS → Webhosting → databáze → phpMyAdmin → Export. Ověřit, že soubor není prázdný.
-3. ☐ **Search Console:** Výkon → 12 měsíců → Exportovat (stránky, dotazy). Podle tohoto souboru se bude měřit, jestli se pozice udržely.
-4. ☐ **GA4:** 50 nejnavštěvovanějších vstupních stránek za 12 měsíců. Každá musí mít na novém webu stránku nebo přesměrování. Co chybí, doplnit do `public/.htaccess`.
+3. ☐ *Volitelné:* **Search Console:** Výkon → 12 měsíců → Exportovat (stránky, dotazy). Data zůstávají v Search Console 16 měsíců, jde stáhnout i po výměně.
+4. ☐ *Volitelné:* **GA4:** 50 nejnavštěvovanějších vstupních stránek za 12 měsíců. Každá musí mít na novém webu stránku nebo přesměrování. Co chybí, doplnit do `public/.htaccess`. Jde udělat i po výměně, chybějící adresy ukáže i Accesslog (D6).
 5. ☐ **GTM:** v pracovním prostoru připravit změny podle auditu (`contactFormSubmit`, telefon, kontrola `reservationComplete`). **Nepublikovat.**
 
 ## C. Test na `test.veterinahloubetin.cz` (etapa 7)
 
 Na ostrý web to nemá vliv, WordPress běží dál.
 
-1. ☐ Administrace WEDOS → Konfigurace PHP: verze musí být **8.1 nebo vyšší**. Pokud je nižší, nejdřív ověřit, že ji WordPress zvládne; změna se projeví do 30 minut.
+1. ☑ Hosting běží na **PHP 8.2.35** (potřeba 8.1+). Přes proxy server vidí skutečnou adresu návštěvníka a `HTTPS=on` (ověřeno 2. 11. 2026 přes `info.php`), limit odesílání i přesměrování na HTTPS tedy fungují.
 2. ☐ Sestavit neindexovaný build (výchozí režim):
 
    ```bash
@@ -88,8 +88,7 @@ Na ostrý web to nemá vliv, WordPress běží dál.
    ```
 
 5. ☐ Otestovat formulář podle etapy 7 v [plánu](IMPLEMENTATION_PLAN.md). Navíc:
-   - v Gmailu „Zobrazit originál“: **DKIM a DMARC musí být PASS**. Když SPF selže, přidat do SPF adresy webhostingu podle návodu WEDOS pro doménu za Protection (`v=spf1 mx a ip4:… include:_spf.we.wedos.net -all`);
-   - po 5 zprávách z Wi-Fi odeslat šestou z telefonu **přes mobilní data**. Musí projít. Když ne, server vidí místo návštěvníka adresu proxy a limit by platil pro všechny dohromady, je potřeba opravit `odeslat.php`.
+   - v Gmailu „Zobrazit originál“: **DKIM a DMARC musí být PASS**. Když SPF selže, přidat do SPF adresy webhostingu podle návodu WEDOS pro doménu za Protection (`v=spf1 mx a ip4:… include:_spf.we.wedos.net -all`).
 6. ☐ Spustit [kontroly z oddílu H](#h-kontrolní-příkazy) nad testovací adresou, jen s tím, že `X-Robots-Tag: noindex` tam být **musí**.
 7. ☐ Rezervace na telefonu do posledního kroku bez odeslání, souhlas s cookies, konzole prohlížeče bez hlášení CSP, PageSpeed mobil (úvod, rezervace, článek).
 8. ☐ Hotové výsledky si zapsat. Bez úspěšného testu formuláře se do D nejde.

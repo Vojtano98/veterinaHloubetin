@@ -209,6 +209,9 @@ Seřazeno podle skutečného dopadu, ne podle snadnosti.
 - **Důkaz:** kód (prokázáno); duplicitu nelze ověřit, dokud nový web neběží s GTM (na náhledu jsou obě integrace vypnuté).
 - **Ověření:** na testovací adrese WEDOS se zapnutým GTM spočítat v síťovém panelu požadavky na `cdn-cookieyes.com/.../script.js`
   a zkontrolovat v konzoli objekt CookieYes.
+- **Výsledek 2. 11. 2026 (test.veterinahloubetin.cz):** potvrzeno. Načítají se dva různé skripty: `d5b6c77aecb3df59a7c59563` z webu
+  (stejný jako na WordPressu) a `5cfe4f28d3b2e213a2c75d46` z GTM. Viditelná lišta je jedna, cookie `cookieyes-consent` se ukládá.
+  V GTM je shodná značka i pro současný WordPress, nejde tedy o zhoršení proti dnešku.
 - **Řešení:** Ponechat jen jednu cestu – buď přímý skript (a v GTM značku pozastavit), nebo jen GTM šablonu. Rozhodnout po ověření.
 - **Přínos:** Spolehlivý souhlas, rychlejší první vykreslení.
 - **Náročnost:** S. **Riziko regrese:** střední (souhlasy a Consent Mode – testovat s Tag Assistantem).
