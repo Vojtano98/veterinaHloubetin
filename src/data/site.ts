@@ -19,12 +19,12 @@ export const site = {
   },
 
   address: {
-    street: 'Mochovská 535',
+    street: 'Mochovská 535/38',
     city: 'Praha',
     zip: '198 00',
     note: 'Obchodní dům Havana',
-    short: 'Mochovská 535, 198 00 Praha',
-    full: 'Mochovská 535, 198 00 Praha',
+    short: 'Mochovská 535/38, 198 00 Praha',
+    full: 'Mochovská 535/38, 198 00 Praha',
     lat: 50.1069901,
     lng: 14.537373,
   },
