@@ -3,7 +3,8 @@ import { site } from '../data/site';
 import Icon from './Icon.astro';
 
 // Kompaktní pruh s adresou, telefonem a otevírací dobou (úvod + konec článků).
-// Na počítači tři sloupce s oddělovači: text v každém sloupci plyne přirozeně, jen tlačítka jsou dole v jedné linii.
+// Na počítači dva sloupce: vlevo adresa a telefon pod sebou (tlačítka vpravo), vpravo ordinační hodiny.
+// Na tabletu a telefonu tři řádky pod sebou.
 interface Props {
   title: string;
   subtitle?: string;
@@ -21,10 +22,11 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     {subtitle && <p class="info-box__subtitle">{subtitle}</p>}
   </div>
 
+  <div class="ib-group">
   <div class="ib-item">
     <span class="ib-icon"><Icon name="pin" size={18} /></span>
     <p class="ib-label">Adresa</p>
-    <p class="ib-value">{site.address.street}<br /><span class="nowrap">{site.address.zip} {site.address.city}</span></p>
+    <p class="ib-value">{site.address.street}<span class="ib-comma">,</span><br class="ib-br" /> <span class="nowrap">{site.address.zip} {site.address.city}</span></p>
     <p class="ib-meta">U metra Hloubětín</p>
     <a class="ib-action" href={site.mapsUrl} target="_blank" rel="noopener"><Icon name="pin" size={14} /> Navigovat</a>
   </div>
@@ -35,6 +37,7 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     <p class="ib-value nowrap">{site.phones.main.label}</p>
     <p class="ib-meta">Ordinace i pohotovost</p>
     <a class="ib-action" href={site.phones.main.href}><Icon name="phone" size={14} /> Zavolat</a>
+  </div>
   </div>
 
   <div class="ib-item">
@@ -191,22 +194,53 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     text-align: center;
   }
 
-  /* Užší počítače: bez ikon a o kousek menší údaj, ať se každý údaj vejde na jeden řádek */
-  @media (min-width: 981px) and (max-width: 1279px) {
-    .ib-item {
-      grid-template-columns: minmax(0, 1fr);
+  /* Adresa a telefon jsou na tabletu a telefonu samostatné řádky (skupina se neprojeví) */
+  .ib-group {
+    display: contents;
+  }
+
+  .ib-comma {
+    display: none;
+  }
+
+  /* Počítač: adresa a telefon v jednom širším poli vlevo, ordinační hodiny vpravo */
+  @media (min-width: 981px) {
+    .info-box {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
     }
-    .ib-icon {
+    .ib-group {
+      display: grid;
+      align-content: center;
+      padding: 0 18px;
+    }
+    .ib-group .ib-item {
+      grid-template-columns: 36px minmax(0, 1fr) auto;
+      grid-template-rows: auto auto auto;
+      padding: 0;
+    }
+    .ib-group .ib-item + .ib-item {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #efe6dd;
+      border-left: 0;
+    }
+    .ib-group .ib-action {
+      grid-column: 3;
+      grid-row: 1 / -1;
+      align-self: center;
+      margin-top: 0;
+    }
+    /* Hodiny bez mezery před tlačítkem, celý sloupec svisle na střed vedle adresy a telefonu */
+    .ib-group + .ib-item {
+      grid-template-rows: auto auto auto auto;
+      align-content: center;
+      border-left: 1px solid #efe6dd;
+    }
+    .ib-comma {
+      display: inline;
+    }
+    .ib-br {
       display: none;
-    }
-    .ib-label,
-    .ib-value,
-    .ib-meta,
-    .ib-action {
-      grid-column: 1;
-    }
-    .ib-value {
-      font-size: 14px;
     }
   }
 
@@ -236,7 +270,8 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
       align-self: center;
       margin-top: 0;
     }
-    .ib-item + .ib-item {
+    .ib-item + .ib-item,
+    .ib-group + .ib-item {
       border-top: 1px solid #efe6dd;
       border-left: 0;
     }
