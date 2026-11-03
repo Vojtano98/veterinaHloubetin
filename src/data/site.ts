@@ -74,9 +74,9 @@ export const site = {
 
 export const nav = [
   { label: 'Služby', href: '/#sluzby' },
-  { label: 'Ceník', href: '/cenik-zakroku-a-vysetreni/' },
-  { label: 'Objednání', href: '/rezervace-sluzeb/' },
   { label: 'O nás', href: '/#onas' },
   { label: 'Články', href: '/clanky/' },
+  { label: 'Objednání', href: '/rezervace-sluzeb/' },
+  { label: 'Ceník', href: '/cenik-zakroku-a-vysetreni/' },
   { label: 'Kontakty', href: '/kontakty/' },
 ];
