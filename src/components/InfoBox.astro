@@ -1,7 +1,6 @@
 ---
 import { site } from '../data/site';
 import Icon from './Icon.astro';
-import OpenStatus from './OpenStatus.astro';
 
 // Kompaktní pruh s adresou, telefonem a otevírací dobou (úvod + konec článků).
 // Na počítači tři sloupce s oddělovači, řádky (popisek, údaj, doplněk, tlačítko) sdílejí výšku napříč sloupci (subgrid).
@@ -51,7 +50,6 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
         ))
       }
     </dl>
-    <div class="ib-meta"><OpenStatus class="ib-status" /></div>
     <a class="ib-action" href="/rezervace-sluzeb/"><Icon name="calendar" size={14} /> Objednat se</a>
   </div>
 </div>
@@ -156,21 +154,6 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     font-size: 13px;
     font-weight: 600;
     line-height: 1.4;
-  }
-
-  /* Stav ordinace jako běžný řádek textu, ne pilulka */
-  .ib-meta :global(.ib-status) {
-    gap: 6px;
-    padding: 0;
-    background: none;
-    font-size: 13px;
-    font-weight: 700;
-    line-height: 1.4;
-  }
-
-  .ib-meta :global(.ib-status .open-status__dot) {
-    width: 7px;
-    height: 7px;
   }
 
   .ib-action {
