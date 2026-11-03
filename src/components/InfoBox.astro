@@ -4,7 +4,7 @@ import Icon from './Icon.astro';
 import OpenStatus from './OpenStatus.astro';
 
 // Kompaktní pruh s adresou, telefonem a otevírací dobou (úvod + konec článků).
-// Na počítači tři sloupce s oddělovači, řádky (popisek, údaj, doplněk) sdílejí výšku napříč sloupci (subgrid).
+// Na počítači tři sloupce s oddělovači, řádky (popisek, údaj, doplněk, tlačítko) sdílejí výšku napříč sloupci (subgrid).
 interface Props {
   title: string;
   subtitle?: string;
@@ -14,8 +14,6 @@ interface Props {
 }
 
 const { title, subtitle, class: className, layout = 'row' } = Astro.props;
-// Hodiny na jeden řádek: „Po–Pá 8–19 · So 8–12 · Ne 16–18“
-const hours = site.hours.map((h) => `${h.short} ${h.time.replace(/:00/g, '')}`);
 ---
 
 <div class:list={['info-box', `info-box--${layout}`, className]}>
@@ -27,7 +25,7 @@ const hours = site.hours.map((h) => `${h.short} ${h.time.replace(/:00/g, '')}`);
   <div class="ib-item">
     <span class="ib-icon"><Icon name="pin" size={18} /></span>
     <p class="ib-label">Adresa</p>
-    <p class="ib-value">{site.address.street}, <span class="nowrap">{site.address.zip} {site.address.city}</span></p>
+    <p class="ib-value">{site.address.street}<br /><span class="nowrap">{site.address.zip} {site.address.city}</span></p>
     <p class="ib-meta">U metra Hloubětín</p>
     <a class="ib-action" href={site.mapsUrl} target="_blank" rel="noopener"><Icon name="pin" size={14} /> Navigovat</a>
   </div>
@@ -43,7 +41,16 @@ const hours = site.hours.map((h) => `${h.short} ${h.time.replace(/:00/g, '')}`);
   <div class="ib-item">
     <span class="ib-icon"><Icon name="clock" size={18} /></span>
     <p class="ib-label">Ordinační hodiny</p>
-    <p class="ib-value">{hours.map((h, i) => <><span class="nowrap">{h}</span>{i < hours.length - 1 ? ' · ' : ''}</>)}</p>
+    <dl class="ib-value ib-hours">
+      {
+        site.hours.map((h) => (
+          <div>
+            <dt>{h.short}</dt>
+            <dd>{h.time}</dd>
+          </div>
+        ))
+      }
+    </dl>
     <div class="ib-meta"><OpenStatus class="ib-status" /></div>
     <a class="ib-action" href="/rezervace-sluzeb/"><Icon name="calendar" size={14} /> Objednat se</a>
   </div>
@@ -126,6 +133,22 @@ const hours = site.hours.map((h) => `${h.short} ${h.time.replace(/:00/g, '')}`);
     font-size: 16px;
     font-weight: 800;
     line-height: 1.4;
+  }
+
+  /* Ordinační hodiny pod sebou: den a čas ve dvou sloupcích */
+  .ib-hours div {
+    display: grid;
+    grid-template-columns: 60px auto;
+  }
+
+  .ib-hours dt {
+    color: var(--c-label);
+    font-weight: 700;
+  }
+
+  .ib-hours dd {
+    margin: 0;
+    white-space: nowrap;
   }
 
   .ib-meta {
