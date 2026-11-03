@@ -3,7 +3,7 @@ import { site } from '../data/site';
 import Icon from './Icon.astro';
 
 // Kompaktní pruh s adresou, telefonem a otevírací dobou (úvod + konec článků).
-// Na počítači tři sloupce s oddělovači, řádky (popisek, údaj, doplněk, tlačítko) sdílejí výšku napříč sloupci (subgrid).
+// Na počítači tři sloupce s oddělovači: text v každém sloupci plyne přirozeně, jen tlačítka jsou dole v jedné linii.
 interface Props {
   title: string;
   subtitle?: string;
@@ -58,7 +58,6 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
   .info-box {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: auto auto auto auto;
     padding: 20px 8px;
     border-radius: 18px;
     background: var(--c-white);
@@ -86,8 +85,7 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
   .ib-item {
     display: grid;
     grid-template-columns: 36px minmax(0, 1fr);
-    grid-template-rows: subgrid;
-    grid-row: span 4;
+    grid-template-rows: auto auto auto 1fr;
     column-gap: 12px;
     row-gap: 3px;
     padding: 0 18px;
@@ -160,9 +158,10 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     display: inline-flex;
     grid-column: 2;
     grid-row: 4;
+    align-self: end;
     justify-self: start;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 12px;
     gap: 6px;
     min-height: 36px;
     padding: 0 14px;
@@ -182,7 +181,6 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
 
   /* Pod články: viditelný nadpis uprostřed nad sloupci */
   .info-box--stacked {
-    grid-template-rows: auto auto auto auto auto;
     padding: 28px 8px 24px;
     border: 1px solid #f2e8de;
   }
