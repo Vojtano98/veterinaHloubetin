@@ -1,15 +1,15 @@
 ---
 import { site } from '../data/site';
 import Icon from './Icon.astro';
+import OpenStatus from './OpenStatus.astro';
 
-// Kompaktní pruh s adresou, telefonem a otevírací dobou (úvod + konec článků).
-// Na počítači dva sloupce: vlevo adresa a telefon pod sebou (tlačítka vpravo), vpravo ordinační hodiny.
-// Na tabletu a telefonu tři řádky pod sebou.
+// Box s adresou, telefonem a otevírací dobou (úvod + konec článků): nadpis vlevo, tři podbarvené dlaždice.
+// Tlačítka a stav ordinace jsou ve všech dlaždicích dole v jedné linii.
 interface Props {
   title: string;
   subtitle?: string;
   class?: string;
-  /** „stacked“ = viditelný nadpis s podnadpisem nad sloupci (pod články); jinak je nadpis jen pro čtečky */
+  /** „stacked“ = nadpis nahoře uprostřed a pod ním tři stejně široké dlaždice */
   layout?: 'row' | 'stacked';
 }
 
@@ -17,62 +17,77 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
 ---
 
 <div class:list={['info-box', `info-box--${layout}`, className]}>
-  <div class:list={['info-box__intro', { 'sr-only': layout === 'row' }]}>
+  <div class="info-box__intro">
     <h2 class="info-box__title">{title}</h2>
     {subtitle && <p class="info-box__subtitle">{subtitle}</p>}
   </div>
 
-  <div class="ib-group">
-  <div class="ib-item">
-    <span class="ib-icon"><Icon name="pin" size={18} /></span>
-    <p class="ib-label">Adresa</p>
-    <p class="ib-value">{site.address.street}<span class="ib-comma">,</span><br class="ib-br" /> <span class="nowrap">{site.address.zip} {site.address.city}</span></p>
-    <p class="ib-meta">U metra Hloubětín</p>
-    <a class="ib-action" href={site.mapsUrl} target="_blank" rel="noopener"><Icon name="pin" size={14} /> Navigovat</a>
-  </div>
+  <a class="tile" href={site.mapsUrl} target="_blank" rel="noopener">
+    <span class="tile__icon"><Icon name="pin" size={20} /></span>
+    <span class="tile__body">
+      <span class="tile__label">Adresa</span>
+      <span class="tile__value">
+        {site.address.street}<br /><span class="nowrap">{site.address.zip} {site.address.city}</span>
+      </span>
+      <span class="tile__hint">U metra Hloubětín</span>
+      <span class="tile__foot"><span class="tile__action"><Icon name="pin" size={14} /> Navigovat</span></span>
+    </span>
+  </a>
 
-  <div class="ib-item">
-    <span class="ib-icon"><Icon name="phone" size={18} /></span>
-    <p class="ib-label">Telefon</p>
-    <p class="ib-value nowrap">{site.phones.main.label}</p>
-    <p class="ib-meta">Ordinace i pohotovost</p>
-    <a class="ib-action" href={site.phones.main.href}><Icon name="phone" size={14} /> Zavolat</a>
-  </div>
-  </div>
+  <a class="tile" href={site.phones.main.href}>
+    <span class="tile__icon"><Icon name="phone" size={20} /></span>
+    <span class="tile__body">
+      <span class="tile__label">Telefon</span>
+      <span class="tile__value nowrap">{site.phones.main.label}</span>
+      <span class="tile__hint">Ordinace i pohotovost</span>
+      <span class="tile__foot"><span class="tile__action"><Icon name="phone" size={14} /> Zavolat</span></span>
+    </span>
+  </a>
 
-  <div class="ib-item">
-    <span class="ib-icon"><Icon name="clock" size={18} /></span>
-    <p class="ib-label">Ordinační hodiny</p>
-    <dl class="ib-value ib-hours">
-      {
-        site.hours.map((h) => (
-          <div>
-            <dt>{h.short}</dt>
-            <dd>{h.time}</dd>
-          </div>
-        ))
-      }
-    </dl>
-    <a class="ib-action" href="/rezervace-sluzeb/"><Icon name="calendar" size={14} /> Objednat se</a>
+  <div class="tile tile--hours">
+    <span class="tile__icon"><Icon name="clock" size={20} /></span>
+    <span class="tile__body">
+      <span class="tile__label">Ordinační hodiny</span>
+      <dl class="hours">
+        {
+          site.hours.map((h) => (
+            <div>
+              <dt>{h.short}</dt>
+              <dd>{h.time}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <span class="tile__foot"><OpenStatus compact class="tile__status" /></span>
+    </span>
   </div>
 </div>
 
 <style>
   .info-box {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    padding: 20px 8px;
-    border-radius: 18px;
+    grid-template-columns: 1.1fr 1fr 1fr 1.05fr;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 20px;
     background: var(--c-white);
     box-shadow: 0 20px 40px -24px rgba(0, 0, 0, 0.4);
     font-family: var(--f-head);
+  }
+
+  .info-box__intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px 14px;
   }
 
   .info-box__title {
     padding: 0;
     color: var(--c-heading);
     font-family: var(--f-head);
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 800;
     line-height: 1.25;
   }
@@ -80,45 +95,48 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
   .info-box__subtitle {
     margin-top: 6px;
     color: var(--c-text);
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.5;
   }
 
-  /* Sloupec: ikona vlevo, vpravo popisek, údaj, doplněk a pod nimi tlačítko */
-  .ib-item {
-    display: grid;
-    grid-template-columns: 36px minmax(0, 1fr);
-    grid-template-rows: auto auto auto 1fr;
-    column-gap: 12px;
-    row-gap: 3px;
-    padding: 0 18px;
+  .tile {
+    min-width: 0;
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 14px;
+    background: #fbf7f3;
+    color: var(--c-ink);
+    transition: background 200ms ease, transform 200ms ease;
   }
 
-  .ib-item + .ib-item {
-    border-left: 1px solid #efe6dd;
-  }
-
-  .ib-icon {
-    display: grid;
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    place-items: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+  a.tile:hover {
+    opacity: 1;
     background: var(--c-cream);
+    transform: translateY(-2px);
+  }
+
+  .tile__icon {
+    display: grid;
+    flex: 0 0 auto;
+    align-self: flex-start;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--c-white);
     color: var(--c-orange-deep);
+    box-shadow: 0 4px 10px -6px rgba(0, 0, 0, 0.25);
   }
 
-  .ib-label,
-  .ib-value,
-  .ib-meta {
-    grid-column: 2;
-    margin: 0;
-    padding: 0;
+  .tile__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
   }
 
-  .ib-label {
+  .tile__label {
     color: var(--c-accent-text);
     font-size: 11px;
     font-weight: 800;
@@ -127,44 +145,32 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     text-transform: uppercase;
   }
 
-  .ib-value {
+  .tile__value {
+    margin-top: 2px;
     color: var(--c-ink);
     font-size: 16px;
     font-weight: 800;
-    line-height: 1.4;
+    line-height: 1.35;
   }
 
-  /* Ordinační hodiny pod sebou: den a čas ve dvou sloupcích */
-  .ib-hours div {
-    display: grid;
-    grid-template-columns: 60px auto;
-  }
-
-  .ib-hours dt {
-    color: var(--c-label);
-    font-weight: 700;
-  }
-
-  .ib-hours dd {
-    margin: 0;
-    white-space: nowrap;
-  }
-
-  .ib-meta {
+  .tile__hint {
+    margin-top: 2px;
     color: var(--c-label);
     font-size: 13px;
     font-weight: 600;
-    line-height: 1.4;
   }
 
-  .ib-action {
+  /* Spodní řádek dlaždice: tlačítko nebo stav ordinace, ve všech dlaždicích ve stejné výšce */
+  .tile__foot {
+    display: flex;
+    margin-top: auto;
+    padding-top: 12px;
+  }
+
+  /* Viditelné tlačítko akce v dlaždici (celá dlaždice je odkaz) */
+  .tile__action {
     display: inline-flex;
-    grid-column: 2;
-    grid-row: 4;
-    align-self: end;
-    justify-self: start;
     align-items: center;
-    margin-top: 12px;
     gap: 6px;
     min-height: 36px;
     padding: 0 14px;
@@ -177,132 +183,150 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     transition: background 200ms ease;
   }
 
-  .ib-action:hover {
-    opacity: 1;
+  /* Stav ordinace stejně vysoký jako tlačítka */
+  .tile :global(.tile__status) {
+    min-height: 36px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+
+  a.tile:hover .tile__action {
     background: var(--c-cta-hover);
   }
 
-  /* Pod články: viditelný nadpis uprostřed nad sloupci */
+  .hours {
+    display: grid;
+    gap: 1px;
+    margin: 4px 0 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .hours div {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+  }
+
+  .hours dt {
+    color: var(--c-label);
+    font-weight: 700;
+  }
+
+  .hours dd {
+    margin: 0;
+    color: var(--c-ink);
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  /* Varianta pod články: vycentrovaný nadpis, dlaždice pod ním */
   .info-box--stacked {
-    padding: 28px 8px 24px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 28px 24px 24px;
     border: 1px solid #f2e8de;
   }
 
   .info-box--stacked .info-box__intro {
     grid-column: 1 / -1;
-    padding: 0 18px 20px;
+    align-items: center;
+    padding: 0 0 12px;
     text-align: center;
   }
 
-  /* Adresa a telefon jsou na tabletu a telefonu samostatné řádky (skupina se neprojeví) */
-  .ib-group {
-    display: contents;
+  .info-box--stacked .info-box__title {
+    font-size: 28px;
   }
 
-  .ib-comma {
-    display: none;
+  .info-box--stacked .info-box__subtitle {
+    font-size: 16px;
   }
 
-  /* Počítač: adresa a telefon v jednom širším poli vlevo, ordinační hodiny vpravo */
-  @media (min-width: 981px) {
+  @media (max-width: 1100px) {
     .info-box {
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      grid-template-columns: 1fr 1fr 1fr;
     }
-    .ib-group {
-      display: grid;
-      align-content: center;
-      padding: 0 18px;
-    }
-    .ib-group .ib-item {
-      grid-template-columns: 36px minmax(0, 1fr) auto;
-      grid-template-rows: auto auto auto;
-      padding: 0;
-    }
-    .ib-group .ib-item + .ib-item {
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid #efe6dd;
-      border-left: 0;
-    }
-    .ib-group .ib-action {
-      grid-column: 3;
-      grid-row: 1 / -1;
-      align-self: center;
-      margin-top: 0;
-    }
-    /* Hodiny bez mezery před tlačítkem, celý sloupec svisle na střed vedle adresy a telefonu */
-    .ib-group + .ib-item {
-      grid-template-rows: auto auto auto auto;
-      align-content: center;
-      border-left: 1px solid #efe6dd;
-    }
-    .ib-comma {
-      display: inline;
-    }
-    .ib-br {
-      display: none;
-    }
-  }
-
-  /* Tablety a telefony: řádky pod sebou, tlačítko vpravo */
-  @media (max-width: 980px) {
-    .info-box,
-    .info-box--stacked {
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-rows: none;
-      padding: 6px 4px;
-    }
-    .info-box--stacked {
-      padding-top: 22px;
-    }
-    .info-box--stacked .info-box__intro {
-      padding-bottom: 10px;
-    }
-    .ib-item {
-      grid-template-columns: 36px minmax(0, 1fr) auto;
-      grid-template-rows: auto auto auto;
-      grid-row: auto;
-      padding: 14px 14px;
-    }
-    .ib-action {
-      grid-column: 3;
-      grid-row: 1 / -1;
-      align-self: center;
-      margin-top: 0;
-    }
-    .ib-item + .ib-item,
-    .ib-group + .ib-item {
-      border-top: 1px solid #efe6dd;
-      border-left: 0;
+    .info-box__intro {
+      grid-column: 1 / -1;
+      padding-bottom: 4px;
     }
   }
 
   @media (max-width: 767px) {
     .info-box {
-      border-radius: 16px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+      padding: 12px;
+      border-radius: 18px;
     }
-    .info-box__title {
+    .info-box__intro {
+      padding: 8px 6px 4px;
+    }
+    .info-box__title,
+    .info-box--stacked .info-box__title {
       font-size: 20px;
+    }
+    .info-box--stacked {
+      padding: 18px 12px 12px;
+    }
+    .info-box--stacked .info-box__intro {
+      padding-bottom: 6px;
     }
     .info-box__subtitle {
       font-size: 14px;
     }
-    .ib-value {
+    .tile {
+      padding: 12px;
+    }
+    .tile__hint {
+      display: none;
+    }
+    .tile__value {
       font-size: 15px;
+    }
+    .tile__foot {
+      padding-top: 10px;
+    }
+    .hours div {
+      grid-template-columns: 52px 1fr;
     }
   }
 
-  /* Telefony: tlačítko pod textem, vedle by se údaje lámaly */
-  @media (max-width: 599px) {
-    .ib-item {
-      grid-template-columns: 36px minmax(0, 1fr);
-      grid-template-rows: auto auto auto auto;
+  /* Tablety: tři dlaždice vedle sebe by telefon a hodiny ořízly */
+  @media (min-width: 768px) and (max-width: 980px) {
+    .info-box,
+    .info-box--stacked {
+      grid-template-columns: minmax(0, 1fr);
     }
-    .ib-action {
+  }
+
+  /* Dlaždice přes celou šířku: tlačítko vpravo vedle údaje, na užším telefonu se nevejde */
+  @media (min-width: 480px) and (max-width: 980px) {
+    .tile {
+      align-items: center;
+    }
+    .tile__icon {
+      align-self: center;
+    }
+    .tile__body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 12px;
+    }
+    .tile__label,
+    .tile__value,
+    .tile__hint {
+      grid-column: 1;
+    }
+    .hours {
+      grid-column: 1;
+    }
+    .tile__foot {
       grid-column: 2;
-      grid-row: 4;
-      justify-self: start;
-      margin-top: 8px;
+      grid-row: 1 / span 3;
+      align-self: center;
+      margin-top: 0;
+      padding-top: 0;
     }
   }
 </style>
