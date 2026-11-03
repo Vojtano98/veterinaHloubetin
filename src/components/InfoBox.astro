@@ -1,8 +1,10 @@
 ---
 import { site } from '../data/site';
 import Icon from './Icon.astro';
+import OpenStatus from './OpenStatus.astro';
 
-// Kompaktní box s adresou, telefonem a otevírací dobou (úvod + konec článků)
+// Box s adresou, telefonem a otevírací dobou (úvod + konec článků): nadpis nahoře, tři stejně vysoké dlaždice,
+// tlačítka a stav ordinace zarovnané v jedné linii u spodního okraje
 interface Props {
   title: string;
   subtitle?: string;
@@ -28,7 +30,7 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
         {site.address.street}<br /><span class="nowrap">{site.address.zip} {site.address.city}</span>
       </span>
       <span class="tile__hint">U metra Hloubětín</span>
-      <span class="tile__action"><Icon name="pin" size={14} /> Navigovat</span>
+      <span class="tile__foot"><span class="tile__action"><Icon name="pin" size={14} /> Navigovat</span></span>
     </span>
   </a>
 
@@ -37,7 +39,8 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     <span class="tile__body">
       <span class="tile__label">Telefon</span>
       <span class="tile__value nowrap">{site.phones.main.label}</span>
-      <span class="tile__action"><Icon name="phone" size={14} /> Zavolat</span>
+      <span class="tile__hint">Ordinace i pohotovost</span>
+      <span class="tile__foot"><span class="tile__action"><Icon name="phone" size={14} /> Zavolat</span></span>
     </span>
   </a>
 
@@ -55,6 +58,7 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
           ))
         }
       </dl>
+      <span class="tile__foot"><OpenStatus compact class="tile__status" /></span>
     </span>
   </div>
 </div>
@@ -62,7 +66,7 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
 <style>
   .info-box {
     display: grid;
-    grid-template-columns: 1.1fr 1fr 1fr 1.05fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: stretch;
     gap: 10px;
     padding: 14px;
@@ -73,10 +77,8 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
   }
 
   .info-box__intro {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 10px 14px;
+    grid-column: 1 / -1;
+    padding: 8px 6px 4px;
   }
 
   .info-box__title {
@@ -98,7 +100,6 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
   .tile {
     min-width: 0;
     display: flex;
-    align-items: flex-start;
     gap: 12px;
     padding: 16px;
     border-radius: 14px;
@@ -116,6 +117,7 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
   .tile__icon {
     display: grid;
     flex: 0 0 auto;
+    align-self: flex-start;
     place-items: center;
     width: 40px;
     height: 40px;
@@ -127,6 +129,7 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
 
   .tile__body {
     display: flex;
+    flex: 1;
     flex-direction: column;
     min-width: 0;
   }
@@ -141,11 +144,11 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
   }
 
   .tile__value {
-    margin-top: 2px;
+    margin-top: 4px;
     color: var(--c-ink);
     font-size: 16px;
     font-weight: 800;
-    line-height: 1.35;
+    line-height: 1.4;
   }
 
   .tile__hint {
@@ -155,18 +158,24 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     font-weight: 600;
   }
 
+  /* Spodní řádek dlaždice: tlačítko nebo stav ordinace, ve všech dlaždicích ve stejné výšce */
+  .tile__foot {
+    display: flex;
+    margin-top: auto;
+    padding-top: 14px;
+  }
+
   /* Viditelné tlačítko akce v dlaždici (celá dlaždice je odkaz) */
   .tile__action {
     display: inline-flex;
-    align-self: flex-start;
     align-items: center;
     gap: 6px;
-    margin-top: 10px;
-    padding: 5px 12px;
+    min-height: 40px;
+    padding: 0 16px;
     border-radius: 100px;
     background: var(--c-cta);
     color: var(--c-on-cta);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 800;
     transition: background 200ms ease;
   }
@@ -175,12 +184,16 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     background: var(--c-cta-hover);
   }
 
+  .tile :global(.tile__status) {
+    min-height: 40px;
+  }
+
   .hours {
     display: grid;
-    gap: 1px;
+    gap: 2px;
     margin: 4px 0 0;
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 15px;
+    line-height: 1.4;
   }
 
   .hours div {
@@ -200,17 +213,14 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     white-space: nowrap;
   }
 
-  /* Varianta pod články: vycentrovaný nadpis, dlaždice pod ním */
+  /* Varianta pod články: vycentrovaný nadpis s podnadpisem */
   .info-box--stacked {
-    grid-template-columns: repeat(3, 1fr);
     gap: 12px;
     padding: 28px 24px 24px;
     border: 1px solid #f2e8de;
   }
 
   .info-box--stacked .info-box__intro {
-    grid-column: 1 / -1;
-    align-items: center;
     padding: 0 0 12px;
     text-align: center;
   }
@@ -223,25 +233,18 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     font-size: 16px;
   }
 
-  @media (max-width: 1100px) {
+  /* Tablety a telefony: dlaždice pod sebou, tři vedle sebe by telefon a hodiny ořízly */
+  @media (max-width: 980px) {
     .info-box {
-      grid-template-columns: 1fr 1fr 1fr;
-    }
-    .info-box__intro {
-      grid-column: 1 / -1;
-      padding-bottom: 4px;
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 
   @media (max-width: 767px) {
     .info-box {
-      grid-template-columns: minmax(0, 1fr);
       gap: 8px;
       padding: 12px;
       border-radius: 18px;
-    }
-    .info-box__intro {
-      padding: 8px 6px 4px;
     }
     .info-box__title,
     .info-box--stacked .info-box__title {
@@ -257,11 +260,7 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
       font-size: 14px;
     }
     .tile {
-      align-items: flex-start;
       padding: 12px;
-    }
-    .tile--hours {
-      align-items: flex-start;
     }
     .tile__hint {
       display: none;
@@ -269,46 +268,36 @@ const { title, subtitle, class: className, layout = 'row' } = Astro.props;
     .tile__value {
       font-size: 15px;
     }
-    .hours div {
-      grid-template-columns: 52px 1fr;
+    .tile__foot {
+      padding-top: 10px;
     }
   }
 
-  /* Tablety: tři dlaždice vedle sebe by telefon a hodiny ořízly */
-  @media (min-width: 768px) and (max-width: 980px) {
-    .info-box,
-    .info-box--stacked {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
-
-  /* Dlaždice přes celou šířku: tlačítko vpravo vedle údaje, na užším telefonu se nevejde */
+  /* Dlaždice přes celou šířku: tlačítko a stav ordinace vpravo vedle údaje, na užším telefonu se nevejdou */
   @media (min-width: 480px) and (max-width: 980px) {
     .tile {
       align-items: center;
     }
+    .tile__icon {
+      align-self: center;
+    }
     .tile__body {
-      flex: 1;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       column-gap: 12px;
     }
     .tile__label,
     .tile__value,
+    .tile__hint,
     .hours {
-      grid-column: 1 / -1;
-    }
-    a.tile .tile__label,
-    a.tile .tile__value,
-    .tile__hint {
       grid-column: 1;
     }
-    .tile__action {
+    .tile__foot {
       grid-column: 2;
       grid-row: 1 / span 3;
       align-self: center;
       margin-top: 0;
-      padding: 9px 16px;
+      padding-top: 0;
     }
   }
 </style>
