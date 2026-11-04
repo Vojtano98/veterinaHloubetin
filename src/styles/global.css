@@ -7,6 +7,25 @@
 @import '@fontsource-variable/nunito/wght-italic.css';
 @import '@fontsource-variable/open-sans/wght.css';
 
+/* Náhradní Arial s rozměry webových písem: než se písma načtou, text se zalomí stejně a stránka neposkočí */
+@font-face {
+  font-family: 'Nunito Fallback';
+  src: local('Arial');
+  size-adjust: 99%;
+  ascent-override: 102.12%;
+  descent-override: 35.66%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Open Sans Fallback';
+  src: local('Arial');
+  size-adjust: 103.6%;
+  ascent-override: 103.19%;
+  descent-override: 28.28%;
+  line-gap-override: 0%;
+}
+
 :root {
   /* Barvy */
   --c-orange: #f99420;
@@ -51,8 +70,8 @@
   --c-focus: var(--c-orange); /* rámeček fokusu při ovládání klávesnicí */
 
   /* Typografie */
-  --f-head: 'Nunito Variable', 'Nunito', Helvetica, Arial, Lucida, sans-serif;
-  --f-body: 'Open Sans Variable', 'Open Sans', Arial, sans-serif;
+  --f-head: 'Nunito Variable', 'Nunito', 'Nunito Fallback', Helvetica, Arial, Lucida, sans-serif;
+  --f-body: 'Open Sans Variable', 'Open Sans', 'Open Sans Fallback', Arial, sans-serif;
 
   /* Stíny a zaoblení */
   --sh-card: 6px 6px 18px 0 rgba(0, 0, 0, 0.12);
