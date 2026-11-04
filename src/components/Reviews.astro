@@ -24,7 +24,8 @@ const initials = (name: string) =>
     .join('')
     .slice(0, 2)
     .toUpperCase();
-const palette = ['#f99420', '#316eff', '#2bb3a3', '#a35ad6', '#e0574f', '#4c9a2a'];
+// Tmavší odstíny, aby bílé iniciály měly kontrast aspoň 4,5:1
+const palette = ['#b45309', '#2f6af5', '#1f8175', '#9955c9', '#c54d46', '#418424'];
 ---
 
 <div class="reviews" data-reviews>
@@ -158,7 +159,7 @@ const palette = ['#f99420', '#316eff', '#2bb3a3', '#a35ad6', '#e0574f', '#4c9a2a
   }
 
   .review__date {
-    color: var(--c-muted);
+    color: var(--c-label);
     font-size: 12px;
   }
 

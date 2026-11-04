@@ -91,7 +91,8 @@ export default defineConfig({
   trailingSlash: 'always',
   build: {
     format: 'directory',
-    inlineStylesheets: 'auto',
+    // Celé CSS přímo ve stránce: bez souborů, které by na mobilu zdržovaly první vykreslení
+    inlineStylesheets: 'always',
   },
   integrations: [
     sitemap({
