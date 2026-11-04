@@ -22,7 +22,7 @@ Chybně zapsaná výjimka v `site.ts` (tvar data, letní/zimní čas, pořadí �
 
 | Co | Soubor |
 | --- | --- |
-| Telefony, e-mail, adresa, otevírací doba, mimořádné časy (`vyjimky`), sociální sítě, GTM, CookieYes, Reservanto | `src/data/site.ts` |
+| Telefony, e-mail, adresa, otevírací doba, mimořádné časy (`vyjimky`), sociální sítě, GTM, Reservanto (lištu CookieYes načítá GTM) | `src/data/site.ts` |
 | Ceník | `src/data/cenik.ts` |
 | Služby na úvodní stránce | `src/data/services.ts` |
 | Tým (lékaři, sestry, fotky) | `src/data/team.ts` |
