@@ -26,6 +26,8 @@ ErrorDocument 404 /404.html
   RewriteRule ^o-nas/?$ /#onas [NE,L,R=301]
   # Zkrácený odkaz z patičky starého webu
   RewriteRule ^cenik/?$ /cenik-zakroku-a-vysetreni/ [L,R=301]
+  # Stará adresa kontaktů, vedou na ni ještě reklamy a výsledky hledání
+  RewriteRule ^kontakt/?$ /kontakty/ [L,R=301]
   # Kategorie, stránkování, autoři a RSS z WordPressu
   RewriteRule ^(category|author)/ /clanky/ [L,R=301]
   RewriteRule ^clanky/page/ /clanky/ [L,R=301]
