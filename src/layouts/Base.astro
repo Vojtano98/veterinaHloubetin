@@ -137,10 +137,7 @@ const ld = [org, website, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd
     <link rel="apple-touch-icon" href={icon180.src} />
     {indexing && <link rel="sitemap" href="/sitemap-index.xml" />}
 
-    <!-- CookieYes musí být načten před GTM kvůli správě souhlasů -->
-    {!isPreview && <script is:inline id="cookieyes" type="text/javascript" src={site.integrations.cookieyes}></script>}
-
-    <!-- Google Tag Manager -->
+    <!-- Google Tag Manager; lištu CookieYes a výchozí souhlasy načítá GTM (značka CookieYes CMP na Consent Initialization) -->
     {!isPreview && (<script is:inline define:vars={{ gtmId: site.integrations.gtm }}>
       window.dataLayer = window.dataLayer || [];
       (function (w, d, s, l, i) {

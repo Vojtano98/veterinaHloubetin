@@ -67,7 +67,6 @@ export const site = {
 
   integrations: {
     gtm: 'GTM-K4QX5VTT',
-    cookieyes: 'https://cdn-cookieyes.com/client_data/d5b6c77aecb3df59a7c59563/script.js',
     reservantoId: '16767',
   },
 };
